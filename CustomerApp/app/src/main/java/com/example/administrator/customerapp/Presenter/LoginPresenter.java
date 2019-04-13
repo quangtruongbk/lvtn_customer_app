@@ -18,13 +18,13 @@ import retrofit2.Response;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-
 public class LoginPresenter implements LoginContract.Presenter {
     private RetrofitInterface callAPIService;
     private LoginContract.View mView;
-
+    private Account account;
     public LoginPresenter(@NonNull LoginContract.View mView) {
         this.mView = mView;
+        this.account = new Account();
     }
 
     @Override
@@ -33,16 +33,16 @@ public class LoginPresenter implements LoginContract.Presenter {
         callAPIService.logIn(email, password).enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
+                mView.hideProgressBar();
                 if(response.code() == 200) {
-                    Account temp = new Account();
-                    temp = response.body();
+                    if(response.body()!=null) account = response.body();
                     Log.d("1abc", response.toString());
                     if(response.body() != null) {
                         String tempBody  = response.body().toString();
                         Log.d("1abc", "Dang nhap thanh cong" + response.body().getStatus());
                     }
                     if(response.body().getStatus().equals("1")){
-                        mView.openMainActivity(temp);
+                        mView.openMainActivity(account);
                     }
 
                     else if(response.body().getStatus().equals("-1")){
@@ -65,11 +65,40 @@ public class LoginPresenter implements LoginContract.Presenter {
                     mView.showDialog("Đăng nhập thất bại do lỗi hệ thống", false);
                 }
             }
-
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
-                Log.d("1abc", "error loading from API");
+                mView.hideProgressBar();
+                mView.showDialog("Kết nối với máy chủ thất bại", false);
             }
         });
     }
+
+        @Override
+    public void resendVerifyEmail() {
+            if (account == null) {
+                mView.showDialog("Gặp lỗi khi gửi lại email", false);
+            } else {
+                String accountID = account.getId();
+                String email = account.getEmail();
+                Log.d("1abc", "AccountID: " + accountID);
+                callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+                callAPIService.resendVerifyEmail(accountID, email).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        mView.hideProgressBar();
+                        if (response.code() == 200) {
+                            mView.showDialog("Gửi Email xác thực thành công. Vui lòng kiểm tra hộp thư của bạn!", false);
+                        } else if (response.code() == 500) {
+                            mView.showDialog("Gửi Email xác thực bị lỗi do lỗi hệ thống!", false);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        mView.hideProgressBar();
+                        Log.d("1abc", "error loading from API" + call);
+                    }
+                });
+            }
+        }
 }

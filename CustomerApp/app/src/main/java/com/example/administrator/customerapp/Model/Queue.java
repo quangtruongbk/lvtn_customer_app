@@ -11,7 +11,7 @@ public class Queue {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("branchId")
+    @SerializedName("branchID")
     @Expose
     private String branchId;
     @SerializedName("status")

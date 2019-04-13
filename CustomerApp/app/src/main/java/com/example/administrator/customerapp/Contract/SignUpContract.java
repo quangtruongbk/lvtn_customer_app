@@ -4,15 +4,14 @@ import com.example.administrator.customerapp.BasePresenter;
 import com.example.administrator.customerapp.BaseView;
 import com.example.administrator.customerapp.Model.Account;
 
-public interface LoginContract {
+public interface SignUpContract {
 
     interface View extends BaseView<Presenter> {
-        void showDialog(String message, Boolean isVerifyEmail);
-        void openMainActivity(Account account);
+        void showDialog(String message);
+        void openLoginActivity();
     }
 
     interface Presenter extends BasePresenter {
-        void logIn(String email, String password);
-        void resendVerifyEmail();
+        void signUp(String email, String name, String phone, String password);
     }
 }

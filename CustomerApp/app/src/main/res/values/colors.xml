@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#F57224</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorLightOrange">#F57224</color>
@@ -14,4 +14,6 @@
     <color name="colorLightPink">#FD5DA8</color>
     <color name="colorLightPurple">#800080</color>
     <color name="colorLightGrey">#E8EAEC</color>
+    <color name="colorGreen">#0b6623</color>
+
 </resources>

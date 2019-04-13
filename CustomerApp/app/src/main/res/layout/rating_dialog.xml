@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đăng ký"
+            android:text="Đánh giá"
             android:textColor="#ffffff"
             android:textSize="20dp" />
     </android.support.v7.widget.Toolbar>
@@ -37,122 +37,81 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:text="Họ và tên:"
+                android:layout_marginTop="10dp"
+                android:text="Thời gian chờ đợi:"
                 android:textColor="@color/colorOrange"
                 android:textSize="20dp" />
 
-            <EditText
-                android:id="@+id/nameTxt"
-                android:layout_width="match_parent"
+            <RatingBar
+                android:id="@+id/watingRatingStar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:backgroundTint="@color/colorOrange"
-                android:drawablePadding="15dp"
-                android:padding="8dp"
-                android:textColor="@color/colorOrange"
-                android:textColorHint="@color/colorOrange" />
+                android:layout_marginLeft="10dp"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:text="Email:"
+                android:layout_marginTop="10dp"
+                android:text="Chất lượng dịch vụ:"
                 android:textColor="@color/colorOrange"
                 android:textSize="20dp" />
 
-            <EditText
-                android:id="@+id/emailTxt"
-                android:layout_width="match_parent"
+            <RatingBar
+                android:id="@+id/serviceRatingStar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:backgroundTint="@color/colorOrange"
-                android:drawablePadding="15dp"
-                android:inputType="textMultiLine"
-                android:padding="8dp"
-                android:textColor="@color/colorOrange"
-                android:textColorHint="@color/colorOrange" />
+                android:layout_margin="10dp"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:text="Điện thoại:"
+                android:layout_marginTop="10dp"
+                android:text="Không gian:"
                 android:textColor="@color/colorOrange"
                 android:textSize="20dp" />
 
-            <EditText
-                android:id="@+id/phoneTxt"
-                android:layout_width="match_parent"
+            <RatingBar
+                android:id="@+id/spaceRatingStar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:backgroundTint="@color/colorOrange"
-                android:drawablePadding="15dp"
-                android:inputType="number"
-                android:padding="8dp"
-                android:textColor="@color/colorOrange"
-                android:textColorHint="@color/colorOrange" />
+                android:layout_margin="10dp"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:text="Mật khẩu:"
+                android:layout_marginTop="10dp"
+                android:text="Nhận xét:"
                 android:textColor="@color/colorOrange"
                 android:textSize="20dp" />
 
             <EditText
-                android:id="@+id/passwordTxt"
+                android:id="@+id/commentTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:backgroundTint="@color/colorOrange"
                 android:drawablePadding="15dp"
-                android:inputType="textPassword"
-                android:padding="8dp"
-                android:textColor="@color/colorOrange"
-                android:textColorHint="@color/colorOrange" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:text="Xác nhận mật khẩu:"
-                android:textColor="@color/colorOrange"
-                android:textSize="20dp" />
-
-            <EditText
-                android:id="@+id/confirmPasswordTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:backgroundTint="@color/colorOrange"
-                android:drawablePadding="15dp"
-                android:inputType="textPassword"
                 android:padding="8dp"
                 android:textColor="@color/colorOrange"
                 android:textColorHint="@color/colorOrange" />
 
             <Button
-                android:id="@+id/signUpBtn"
+                android:id="@+id/reviewBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:background="@color/colorOrange"
-                android:text="Đăng ký"
+                android:text="Đánh giá"
                 android:textColor="@color/colorWhite"
                 android:textSize="20dp" />
         </LinearLayout>

@@ -1,9 +1,11 @@
 package com.example.administrator.customerapp.Activity;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -18,18 +20,28 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.support.v4.app.FragmentManager;
+import android.widget.TextView;
 
+import com.example.administrator.customerapp.Contract.MainActivityContract;
 import com.example.administrator.customerapp.Fragment.HistoryFragment;
 import com.example.administrator.customerapp.Fragment.HomeFragment;
 import com.example.administrator.customerapp.Fragment.MyAccountFragment;
 import com.example.administrator.customerapp.Fragment.RatingFragment;
 import com.example.administrator.customerapp.Model.Account;
+import com.example.administrator.customerapp.Presenter.MainActivityPresenter;
 import com.example.administrator.customerapp.R;
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract.View {
 
     private FragmentManager framentManager;
+    private AlertDialog waitingDialog;
+    private AlertDialog.Builder waitingDialogBuilder;
+    private AlertDialog.Builder noticeDialog;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+    private MainActivityContract.Presenter mainActivityPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +53,16 @@ public class MainActivity extends AppCompatActivity
         this.setContentView(R.layout.activity_main);
 
         //Get Account Infomation
-        Account account = (Account) getIntent().getSerializableExtra("Account");
-        Log.d("1abc", "Mainactivity: " + account.getId() + account.getName());
-
+        sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        String accountString = sharedPreferences.getString("MyAccount", "empty");
+        Gson gson = new Gson();
+        Account account = new Account();
+        if(!accountString.equals("null")) {
+            account = gson.fromJson(accountString, Account.class);
+        }
+        editor = sharedPreferences.edit();
+        Log.d("1abc", "Token: " + account.getId() + account.getName() + " " + account.getToken());
+        mainActivityPresenter = new MainActivityPresenter(this, this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -55,8 +74,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+        TextView nameTxt = (TextView) headerView.findViewById(R.id.nameTxt);
+        TextView emailTxt = (TextView) headerView.findViewById(R.id.emailTxt);
+        nameTxt.setText(account.getName());
+        emailTxt.setText(account.getEmail());
 
-        Log.d("1abc", "create");
+        assignDialog();
 
         framentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = framentManager.beginTransaction();
@@ -65,6 +89,9 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
+    public void setMenu(){
+
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -83,7 +110,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -97,35 +123,68 @@ public class MainActivity extends AppCompatActivity
         Log.d("1abc", "ID: " + id);
 
         if (id == R.id.navHome) {
-            Log.d("1abc", "1");
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             fragmentTransaction.replace(R.id.frameFragment, new HomeFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navAccount) {
-            Log.d("1abc", "2");
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             fragmentTransaction.replace(R.id.frameFragment, new MyAccountFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navHistory) {
-            Log.d("1abc", "3");
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             fragmentTransaction.replace(R.id.frameFragment, new HistoryFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navRating) {
-            Log.d("1abc", "4");
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             fragmentTransaction.replace(R.id.frameFragment, new RatingFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navLogout) {
-
+            mainActivityPresenter.logout();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void assignDialog(){
+        noticeDialog = new AlertDialog.Builder(this);
+        waitingDialogBuilder = new AlertDialog.Builder(this);
+    }
+
+    @Override
+    public void showDialog(String message){
+        noticeDialog.setMessage(message)
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        // Create the AlertDialog object and return it
+        noticeDialog.show();
+    }
+
+    @Override
+    @TargetApi(21)
+    public void showProgressBar() {
+        waitingDialogBuilder.setView(R.layout.waiting_dialog);
+        waitingDialogBuilder.setCancelable(false);
+        waitingDialog = waitingDialogBuilder.show();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        waitingDialog.dismiss();
+    }
+
+    @Override
+    public void openLoginActivity() {
+        Intent intent = new Intent(MainActivity.this, Login.class);
+        startActivity(intent);
+        finish();
+    }
+
 }

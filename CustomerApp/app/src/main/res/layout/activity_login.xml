@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorWhite"
+    android:background="@color/colorLightGrey"
    >
+
     <ImageView
-        android:layout_marginTop="40dp"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="fitCenter"
-        android:layout_gravity="center"
+        android:layout_width="280dp"
+        android:layout_height="90dp"
         android:layout_centerInParent="true"
-        />
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/logo" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <EditText
         android:id="@+id/emailTxt"
@@ -71,7 +80,7 @@
         android:textColor="@color/colorOrange" />
 
     <TextView
-        android:id="@+id/signup_txt"
+        android:id="@+id/signUpTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

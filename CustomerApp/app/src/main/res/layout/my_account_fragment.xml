@@ -29,13 +29,96 @@
         </android.support.v7.widget.Toolbar>
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Họ và tên:"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/nameTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="THIS IS TEXT" />
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="15dp"
+            android:padding="8dp"
+            android:textColor="@color/colorOrange"
+            android:textSize="20dp"
+            />
 
-        <ListView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Email:"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/emailTxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="15dp"
+            android:padding="8dp"
+            android:textColor="@color/colorOrange"
+            android:textSize="20dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Điện thoại:"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/phoneTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawablePadding="15dp"
+            android:padding="8dp"
+            android:textColor="@color/colorOrange"
+            android:textSize="20dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+            <Button
+                android:id="@+id/changeInfoBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cập nhật tài khoản"
+                android:textColor="@color/colorWhite"
+                android:layout_margin="5dp"
+                android:padding="5dp"
+                android:background="@color/colorOrange"/>
+
+            <Button
+                android:id="@+id/changePasswordBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đổi mật khẩu"
+                android:textColor="@color/colorWhite"
+                android:layout_margin="5dp"
+                android:padding="5dp"
+                android:background="@color/colorOrange"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

@@ -3,37 +3,29 @@ package com.example.administrator.customerapp.Adapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebViewFragment;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.administrator.customerapp.CallAPI.RetrofitInterface;
 import com.example.administrator.customerapp.Fragment.QueueFragment;
 import com.example.administrator.customerapp.Model.Branch;
 import com.example.administrator.customerapp.R;
 
-import android.support.v4.app.Fragment;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerViewHolder> {
 
-    private List<Branch> branchList = new ArrayList<Branch>();
+    private ArrayList<Branch> branchList = new ArrayList<Branch>();
     private Context context;
     private FragmentManager fragmentManager;
 
-    public BranchAdapter(List<Branch> data, Context context) {
+    public BranchAdapter(ArrayList<Branch> data, Context context) {
         this.branchList = data;
         this.context = context;
     }
@@ -51,7 +43,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         holder.addressTxt.setText("Địa chỉ: " + branchList.get(position).getAddress());
         holder.phoneTxt.setText("Số điện thoại: " + branchList.get(position).getPhone().toString());
         holder.statusTxt.setText("Tình trạng: " + branchList.get(position).getStatus().toString());
-
         holder.branchRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +73,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             nameTxt = (TextView) itemView.findViewById(R.id.nameTxt);
-            addressTxt = (TextView) itemView.findViewById(R.id.addressTxt);
+            addressTxt = (TextView) itemView.findViewById(R.id.phoneTxt);
             phoneTxt = (TextView) itemView.findViewById(R.id.phoneTxt);
             statusTxt = (TextView) itemView.findViewById(R.id.statusTxt);
             branchRow = (RelativeLayout) itemView.findViewById(R.id.branchRow);
