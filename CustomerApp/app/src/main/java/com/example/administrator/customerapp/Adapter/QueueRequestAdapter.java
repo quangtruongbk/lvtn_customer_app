@@ -44,7 +44,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
         if(queueRequestList.get(position).getCustomerEmail()!=null) holder.emailTxt.setText(queueRequestList.get(position).getCustomerEmail().toString());
         if(queueRequestList.get(position).getCustomerPhone()!=null) holder.phoneTxt.setText(queueRequestList.get(position).getCustomerPhone().toString());
         holder.sttTxt.setText(Integer.toString(position + 1));
-        if(account.getId().equals(queueRequestList.get(position).getAccountID())) holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(0,96,225));
+        if(account.getId().equals(queueRequestList.get(position).getAccountID())) holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(135,206,250));
     }
 
     @Override

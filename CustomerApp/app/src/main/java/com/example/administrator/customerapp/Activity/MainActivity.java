@@ -26,7 +26,7 @@ import com.example.administrator.customerapp.Contract.MainActivityContract;
 import com.example.administrator.customerapp.Fragment.HistoryFragment;
 import com.example.administrator.customerapp.Fragment.HomeFragment;
 import com.example.administrator.customerapp.Fragment.MyAccountFragment;
-import com.example.administrator.customerapp.Fragment.RatingFragment;
+import com.example.administrator.customerapp.Fragment.QRCodeFragment;
 import com.example.administrator.customerapp.Model.Account;
 import com.example.administrator.customerapp.Presenter.MainActivityPresenter;
 import com.example.administrator.customerapp.R;
@@ -137,9 +137,9 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.frameFragment, new HistoryFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        } else if (id == R.id.navRating) {
+        } else if (id == R.id.navQRCode) {
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frameFragment, new RatingFragment());
+            fragmentTransaction.replace(R.id.frameFragment, new QRCodeFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navLogout) {

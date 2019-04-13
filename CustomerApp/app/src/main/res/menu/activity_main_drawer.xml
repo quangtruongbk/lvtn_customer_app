@@ -17,9 +17,9 @@
             android:icon="@drawable/history"
             android:title="Lịch sử" />
         <item
-            android:id="@+id/navRating"
-            android:icon="@drawable/rating"
-            android:title="Đánh giá" />
+            android:id="@+id/navQRCode"
+            android:icon="@drawable/qrcode"
+            android:title="QR Code" />
         <item
             android:id="@+id/navLogout"
             android:icon="@drawable/logout"

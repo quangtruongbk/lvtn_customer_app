@@ -72,7 +72,7 @@
                 android:layout_marginRight="20dp"
                 android:backgroundTint="@color/colorOrange"
                 android:drawablePadding="15dp"
-                android:inputType="textMultiLine"
+                android:inputType="textEmailAddress"
                 android:padding="8dp"
                 android:textColor="@color/colorOrange"
                 android:textColorHint="@color/colorOrange" />
@@ -95,7 +95,7 @@
                 android:layout_marginRight="20dp"
                 android:backgroundTint="@color/colorOrange"
                 android:drawablePadding="15dp"
-                android:inputType="number"
+                android:inputType="phone"
                 android:padding="8dp"
                 android:textColor="@color/colorOrange"
                 android:textColorHint="@color/colorOrange" />

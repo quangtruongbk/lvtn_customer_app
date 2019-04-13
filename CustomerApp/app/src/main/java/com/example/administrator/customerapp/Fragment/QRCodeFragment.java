@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 
 import com.example.administrator.customerapp.R;
 
-public class RatingFragment extends Fragment {
+public class QRCodeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.rating_fragment, container, false);
+        View view = inflater.inflate(R.layout.qr_fragment, container, false);
         return view;
     }
 }

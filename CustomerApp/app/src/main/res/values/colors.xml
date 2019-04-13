@@ -2,13 +2,13 @@
 <resources>
     <color name="colorPrimary">#F57224</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#59818E</color>
     <color name="colorLightOrange">#F57224</color>
-    <color name="colorTitleBar">#59818E</color>
+    <color name="colorTitleBar">#2A94BD</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#111111</color>
     <color name="colorOrange">#FF601C</color>
-    <color name="colorBlue">#3063AA</color>
+    <color name="colorBlue">#87cefa</color>
     <color name="colorLightBrown">#D19F7E</color>
     <color name="colorLightYellow">#FFBF00</color>
     <color name="colorLightPink">#FD5DA8</color>

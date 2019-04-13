@@ -143,7 +143,7 @@ public class HistoryFragment extends Fragment implements HistoryContract.View{
         nameTxt.setText("Tên: " + history.getCustomerName());
         phoneTxt.setText("SĐT: " + history.getCustomerPhone());
         emailTxt.setText("Email: " + history.getCustomerEmail());
-        timeTxt.setText("Thời gian tạo: " + history.getCreatedAt());
+        timeTxt.setText("Thời gian đăng ký: " + history.getCreatedAt());
         statusTxt.setText("Trạng thái: " + history.getStatus()); //Bo sung status
         branchNameTxt.setText("Cơ sở: " + history.getBranchName());
         queueNameTxt.setText("Hàng đợi: " + history.getQueueName());
@@ -156,5 +156,4 @@ public class HistoryFragment extends Fragment implements HistoryContract.View{
 
         fullHistoryDialog = fullHistoryDialogBuidler.show();
     }
-
 }

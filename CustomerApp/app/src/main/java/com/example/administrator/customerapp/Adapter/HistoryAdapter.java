@@ -39,6 +39,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
     private AlertDialog ratingDialog;
     private AlertDialog reviewDialog;
     private AlertDialog.Builder reviewDialogBuilder;
+    private AlertDialog.Builder fullHistoryDialogBuidler;
+    private AlertDialog fullHistoryDialog;
     private HistoryContract.Presenter historyPresenter;
     private Account account;
     public HistoryAdapter(ArrayList<History> data, Context context, HistoryContract.Presenter historyPresenter, Account account) {
@@ -53,6 +55,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.history_row, parent, false);
         reviewDialogBuilder = new AlertDialog.Builder(this.context);
+        fullHistoryDialogBuidler = new AlertDialog.Builder(this.context);
         return new RecyclerViewHolder(view);
     }
 
@@ -73,12 +76,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
             else if (historyList.get(position).getStatus().equals("2")) {
                 holder.statusTxt.setText("Trạng thái: Đã xong");
                 holder.ratingBtn.setVisibility(View.VISIBLE);
-                holder.startTimeTxt.setVisibility(View.VISIBLE);
-                holder.endTimeTxt.setVisibility(View.VISIBLE);
+        //        holder.startTimeTxt.setVisibility(View.VISIBLE);
+        //        holder.endTimeTxt.setVisibility(View.VISIBLE);
             } else if (historyList.get(position).getStatus().equals("3")) {
-                holder.statusTxt.setText("Trạng thái: Đã xong");
-                holder.startTimeTxt.setVisibility(View.VISIBLE);
-                holder.endTimeTxt.setVisibility(View.VISIBLE);
+                holder.statusTxt.setText("Trạng thái: Đã xong (Đã đánh giá)");
+         //       holder.startTimeTxt.setVisibility(View.VISIBLE);
+         //       holder.endTimeTxt.setVisibility(View.VISIBLE);
             }
         }
         if (historyList.get(position).getCreatedAt() != null)
@@ -91,6 +94,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
             holder.branchNameTxt.setText("Cơ sở: " + historyList.get(position).getBranchName());
         if (historyList.get(position).getQueueName() != null)
             holder.queueNameTxt.setText("Hàng đợi: " + historyList.get(position).getQueueName());
+        if(historyList.get(position).getStatus().equals("2")) {
+            holder.historyRelativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showFullHistoryForNotCommentDialog(historyList.get(position));
+                }
+            });
+        }
+
         if(historyList.get(position).getStatus().equals("3")) {
             holder.historyRelativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,6 +111,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
                 }
             });
         }
+
         holder.ratingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,5 +204,44 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
                 historyPresenter.createReview(account.getId(), queueRequestID, waitingScore.getRating(), serviceScore.getRating(), spaceScore.getRating(),comment);
             }
         });
+    }
+
+    public void showFullHistoryForNotCommentDialog( History history) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.history_dialog, null);
+        fullHistoryDialogBuidler.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                fullHistoryDialog.dismiss();
+            }
+        });
+        fullHistoryDialogBuidler.setView(v);
+        TextView nameTxt = (TextView) v.findViewById(R.id.nameTxt);
+        TextView emailTxt = (TextView) v.findViewById(R.id.emailTxt);
+        TextView phoneTxt = (TextView) v.findViewById(R.id.phoneTxt);
+        TextView timeTxt = (TextView) v.findViewById(R.id.timeTxt);
+        TextView statusTxt = (TextView) v.findViewById(R.id.statusTxt);
+        TextView branchNameTxt = (TextView) v.findViewById(R.id.branchNameTxt);
+        TextView queueNameTxt = (TextView) v.findViewById(R.id.queueNameTxt);
+        TextView startTimeTxt = (TextView) v.findViewById(R.id.startTimeTxt);
+        TextView endTimeTxt = (TextView) v.findViewById(R.id.endTimeTxt);
+        TextView waitingScoreTxt = (TextView) v.findViewById(R.id.waitingScoreTxt);
+        TextView serviceScoreTxt = (TextView) v.findViewById(R.id.serviceScoreTxt);
+        TextView spaceScoreTxt = (TextView) v.findViewById(R.id.spaceScoreTxt);
+        TextView commentTxt = (TextView) v.findViewById(R.id.commentTxt);
+        TextView ratingBtn = (Button) v.findViewById(R.id.ratingBtn);
+        nameTxt.setText("Tên: " + history.getCustomerName());
+        phoneTxt.setText("SĐT: " + history.getCustomerPhone());
+        emailTxt.setText("Email: " + history.getCustomerEmail());
+        timeTxt.setText("Thời gian đăng ký: " + history.getCreatedAt());
+        statusTxt.setText("Trạng thái: " + history.getStatus()); //Bo sung status
+        branchNameTxt.setText("Cơ sở: " + history.getBranchName());
+        queueNameTxt.setText("Hàng đợi: " + history.getQueueName());
+        startTimeTxt.setText("Thời gian băt đầu: " + history.getStartTime());
+        endTimeTxt.setText("Thời gian kết thúc: " + history.getEndTime());
+        waitingScoreTxt.setVisibility(View.GONE);
+        serviceScoreTxt.setVisibility(View.GONE);
+        spaceScoreTxt.setVisibility(View.GONE);
+        commentTxt.setVisibility(View.GONE);
+        fullHistoryDialog = fullHistoryDialogBuidler.show();
     }
 }
