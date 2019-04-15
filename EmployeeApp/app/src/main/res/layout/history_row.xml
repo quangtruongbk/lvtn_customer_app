@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id = "@+id/historyRelativeLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:clickable="true"
+    android:background="#ffffff"
+    >
+
+    <TextView
+        android:id="@+id/nameTxt"
+        android:textColor="@color/colorOrange"
+        android:textSize="25dp"
+        android:text="Tên khách hàng"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/emailTxt"
+        android:textSize="16dp"
+        android:text="Email:"
+        android:layout_below="@+id/nameTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/phoneTxt"
+        android:textSize="16dp"
+        android:text="Số điện thoại:"
+        android:layout_below="@+id/emailTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/timeTxt"
+        android:textSize="16dp"
+        android:text="Thời gian đăng ký:"
+        android:layout_below="@+id/phoneTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/branchNameTxt"
+        android:textSize="16dp"
+        android:text="Cơ sở:"
+        android:layout_below="@+id/timeTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/queueNameTxt"
+        android:textSize="16dp"
+        android:text="Hàng đợi:"
+        android:layout_below="@+id/branchNameTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/statusTxt"
+        android:textSize="16dp"
+        android:text="Tình trạng:"
+        android:layout_below="@+id/queueNameTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/startTimeTxt"
+        android:textSize="16dp"
+        android:text="Thời gian vào:"
+        android:layout_below="@+id/statusTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/endTimeTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startTimeTxt"
+        android:text="Thời gian xong:"
+        android:textSize="16dp"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/ratingBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/endTimeTxt"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorLightOrange"
+        android:text="Đánh giá"
+        android:visibility="gone"
+        android:textColor="@color/colorWhite"/>
+</RelativeLayout>

@@ -30,7 +30,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void logIn(String email, String password){
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.logIn(email, password).enqueue(new Callback<Account>() {
+        callAPIService.logIn(email, password, "customer").enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
                 mView.hideProgressBar();

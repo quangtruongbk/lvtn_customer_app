@@ -42,7 +42,11 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         holder.nameTxt.setText(branchList.get(position).getName());
         holder.addressTxt.setText("Địa chỉ: " + branchList.get(position).getAddress());
         holder.phoneTxt.setText("Số điện thoại: " + branchList.get(position).getPhone().toString());
-        holder.statusTxt.setText("Tình trạng: " + branchList.get(position).getStatus().toString());
+        if(branchList.get(position).getStatus().toString() != null) {
+            if(branchList.get(position).getStatus().toString().equals("0")) holder.statusTxt.setText("Tình trạng: Đóng cửa");
+            if(branchList.get(position).getStatus().toString().equals("1")) holder.statusTxt.setText("Tình trạng: Đang nhận khách");
+            if(branchList.get(position).getStatus().toString().equals("-1")) holder.statusTxt.setText("Tình trạng: Đã khóa");
+        }
         holder.branchRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

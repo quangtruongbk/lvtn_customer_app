@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navHome"
+            android:icon="@drawable/home"
+            android:title="Trang chủ" />
+        <item
+            android:id="@+id/navAccount"
+            android:icon="@drawable/account"
+            android:title="Tài khoản của tôi" />
+        <item
+            android:id="@+id/navCreateBranch"
+            android:icon="@drawable/branch"
+            android:title="Tạo cơ sở" />
+        <item
+            android:id="@+id/navQRCode"
+            android:icon="@drawable/qrcode"
+            android:title="Mã QR" />
+        <item
+            android:id="@+id/navLogout"
+            android:icon="@drawable/logout"
+            android:title="Đăng xuất" />
+    </group>
+
+</menu>

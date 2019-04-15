@@ -34,13 +34,13 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
     }
 
     @Override
-    public void changeInfo(String accountID, final String name, final String phone) {
+    public void changeInfo(String token, String accountID, final String name, final String phone) {
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         sharedPreferences = context.getSharedPreferences("data", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        callAPIService.changeInfo(accountID, name, phone).enqueue(new Callback<Void>() {
+        callAPIService.changeInfo(token, accountID, name, phone).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
@@ -73,10 +73,10 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
     }
 
     @Override
-    public void changePassword(String accountID, String oldPassword, String newPassword) {
+    public void changePassword(String token, String accountID, String oldPassword, String newPassword) {
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.changePassword(accountID, oldPassword, newPassword).enqueue(new Callback<Void>() {
+        callAPIService.changePassword(token, accountID, oldPassword, newPassword).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();

@@ -29,6 +29,8 @@ import com.example.administrator.customerapp.Presenter.LoginPresenter;
 import com.example.administrator.customerapp.R;
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 
@@ -42,6 +44,7 @@ public class Login extends AppCompatActivity implements LoginContract.View{
     private EditText emailTxt;
     private EditText passwordTxt;
     private TextView signUpTxt;
+    private TextView forgotPasswordTxt;
     private Button loginBtn;
     private ProgressBar progressBar;
     private LoginContract.Presenter loginPresenter;
@@ -74,6 +77,7 @@ public class Login extends AppCompatActivity implements LoginContract.View{
         emailTxt = (EditText) findViewById(R.id.emailTxt);
         passwordTxt = (EditText) findViewById(R.id.passwordTxt);
         signUpTxt = (TextView) findViewById(R.id.signUpTxt);
+        forgotPasswordTxt = (TextView) findViewById(R.id.forgotPasswordTxt);
         loginBtn = (Button) findViewById(R.id.login_btn);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +95,13 @@ public class Login extends AppCompatActivity implements LoginContract.View{
                 startActivity(intent);
             }
         });
-
+        forgotPasswordTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, ForgotPassword.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

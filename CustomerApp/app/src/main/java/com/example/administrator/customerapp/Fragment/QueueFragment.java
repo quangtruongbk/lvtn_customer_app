@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.customerapp.Adapter.BranchAdapter;
@@ -51,6 +53,9 @@ public class QueueFragment extends Fragment implements QueueContract.View{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.queue_fragment, container, false);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
+        toolbarTitle.setText("Hàng đợi");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         queueRecyclerView = (RecyclerView) view.findViewById(R.id.queueRecyclerView);
         assignDialog();

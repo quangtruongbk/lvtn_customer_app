@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +60,9 @@ public class HistoryFragment extends Fragment implements HistoryContract.View{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.history_fragment, container, false);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
+        toolbarTitle.setText("Lịch sử");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         historyRecyclerView = (RecyclerView) view.findViewById(R.id.historyRequestRecyclerView);
         assignDialog();
@@ -71,7 +75,7 @@ public class HistoryFragment extends Fragment implements HistoryContract.View{
         if (!accountString.equals("null")) {
             account = gson.fromJson(accountString, Account.class);
         }
-        historyPresenter.getHistoryFromServer(account.getId());
+        historyPresenter.getHistoryFromServer(account.getToken(), account.getId());
         return view;
     }
 

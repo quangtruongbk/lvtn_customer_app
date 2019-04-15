@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.support.v4.app.FragmentManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.administrator.customerapp.Contract.MainActivityContract;
@@ -81,6 +83,13 @@ public class MainActivity extends AppCompatActivity
         emailTxt.setText(account.getEmail());
 
         assignDialog();
+        Button menuBtn = findViewById(R.id.menuBtn);
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
 
         framentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = framentManager.beginTransaction();
@@ -89,9 +98,11 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    public void setMenu(){
-
+    public void openMenu(){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.openDrawer(Gravity.LEFT);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

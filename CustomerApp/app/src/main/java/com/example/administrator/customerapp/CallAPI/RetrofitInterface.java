@@ -16,6 +16,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -23,7 +24,7 @@ import retrofit2.http.Query;
 public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("/login")
-    Call<Account> logIn(@Field("email") String email, @Field("password") String password);
+    Call<Account> logIn(@Field("email") String email, @Field("password") String password, @Field("type") String type );
 
     @GET("account/logout")
     Call<Void> logout();
@@ -38,7 +39,7 @@ public interface RetrofitInterface {
     Call<ArrayList<QueueRequest>> getQueueRequest(@Path("queueID") String queueID);
 
     @GET("history/accountid={accountID}/json")
-    Call<ArrayList<History>> getHistory(@Path("accountID") String accountID);
+    Call<ArrayList<History>> getHistory(@Header("token") String token, @Path("accountID") String accountID);
 
     @FormUrlEncoded
     @POST("/account/verify/resend")
@@ -50,15 +51,19 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("/account/changeinfo")
-    Call<Void> changeInfo(@Field("accountid") String accountID, @Field("name")String name, @Field("phone")String phone);
+    Call<Void> changeInfo(@Header("token") String token, @Field("accountid") String accountID, @Field("name")String name, @Field("phone")String phone);
 
     @FormUrlEncoded
     @POST("/account/changepassword")
-    Call<Void> changePassword(@Field("accountid") String accountID, @Field("oldpassword")String oldPassword, @Field("newpassword")String newPassword);
+    Call<Void> changePassword(@Header("token") String token, @Field("accountid") String accountID, @Field("oldpassword")String oldPassword, @Field("newpassword")String newPassword);
+
+    @FormUrlEncoded
+    @POST("/account/resetpassword")
+    Call<Void> forgotPassword(@Field("email") String email);
 
     @FormUrlEncoded
     @POST("/review/create")
-    Call<Void> createReview(@Field("accountid")String accountID, @Field("queuerequestid")String queueRequestID, @Field("waitingscore")Float waitingScore, @Field("servicescore")Float serviceScore, @Field("spacescore") Float spaceScore, @Field("comment") String comment);
+    Call<Void> createReview(@Header("token") String token, @Field("accountid")String accountID, @Field("queuerequestid")String queueRequestID, @Field("waitingscore")Float waitingScore, @Field("servicescore")Float serviceScore, @Field("spacescore") Float spaceScore, @Field("comment") String comment);
 
     @GET("/review?")
     Call<Review> getReview(@Query("queuerequestid") String queueRequestID);

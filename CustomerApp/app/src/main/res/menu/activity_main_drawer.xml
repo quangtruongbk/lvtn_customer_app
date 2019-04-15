@@ -11,7 +11,7 @@
         <item
             android:id="@+id/navAccount"
             android:icon="@drawable/account"
-            android:title="Tài khoản của bạn" />
+            android:title="Tài khoản của tôi" />
         <item
             android:id="@+id/navHistory"
             android:icon="@drawable/history"
@@ -19,7 +19,7 @@
         <item
             android:id="@+id/navQRCode"
             android:icon="@drawable/qrcode"
-            android:title="QR Code" />
+            android:title="Mã QR" />
         <item
             android:id="@+id/navLogout"
             android:icon="@drawable/logout"

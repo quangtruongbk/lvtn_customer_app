@@ -37,7 +37,11 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         holder.nameTxt.setText(queueList.get(position).getName());
         holder.numberTxt.setText("Số lượng (Chưa có): " );
-        holder.statusTxt.setText("Tình trạng: " + queueList.get(position).getStatus().toString());
+        if(queueList.get(position).getStatus().toString() != null) {
+            if(queueList.get(position).getStatus().toString().equals("0")) holder.statusTxt.setText("Tình trạng: Ngừng nhận khách");
+            if(queueList.get(position).getStatus().toString().equals("1")) holder.statusTxt.setText("Tình trạng: Đang nhận khách");
+            if(queueList.get(position).getStatus().toString().equals("-1")) holder.statusTxt.setText("Tình trạng: Đã khóa");
+        }
         holder.queueRelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

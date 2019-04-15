@@ -26,10 +26,10 @@ public class HistoryPresenter implements HistoryContract.Presenter{
     }
 
     @Override
-    public void getHistoryFromServer(String accountID){
+    public void getHistoryFromServer(String token, String accountID){
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.getHistory(accountID).enqueue(new Callback<ArrayList<History>>() {
+        callAPIService.getHistory(token, accountID).enqueue(new Callback<ArrayList<History>>() {
             @Override
             public void onResponse(Call<ArrayList<History>> call, Response<ArrayList<History>> response) {
                 mView.hideProgressBar();
@@ -56,10 +56,10 @@ public class HistoryPresenter implements HistoryContract.Presenter{
     }
 
     @Override
-    public void createReview(String accountID, String queueRequestID, Float waitingScore, Float serviceScore, Float spaceScore, String comment){
+    public void createReview(String token, String accountID, String queueRequestID, Float waitingScore, Float serviceScore, Float spaceScore, String comment){
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.createReview(accountID, queueRequestID, waitingScore, serviceScore, spaceScore, comment).enqueue(new Callback<Void>() {
+        callAPIService.createReview(token, accountID, queueRequestID, waitingScore, serviceScore, spaceScore, comment).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">EmployeeApp</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="BASE_URL"></string>
+    <string name="remainerEmail">Hệ thống quản lý hàng đợi xin thông báo: Yêu cầu của bạn đang chuẩn bị tới lượt, xin vui lòng hãy đến ngay cơ sở để chuẩn bị. Xin cảm ơn quý khách.</string>
+    <string name="accidentEmail">Hệ thống quản lý hàng đợi xin thông báo: Do sự cố ngoài ý muốn mà hệ thống  buộc lòng phải hủy yêu cầu của bạn. Mong quý khách thông cảm.</string>
+
+</resources>

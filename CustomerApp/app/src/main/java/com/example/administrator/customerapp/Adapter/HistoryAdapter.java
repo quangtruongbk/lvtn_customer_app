@@ -201,7 +201,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
                 String comment;
                 if (commentTxt.getText().length() == 0)  comment = "";
                 else comment = commentTxt.getText().toString();
-                historyPresenter.createReview(account.getId(), queueRequestID, waitingScore.getRating(), serviceScore.getRating(), spaceScore.getRating(),comment);
+                historyPresenter.createReview(account.getToken(), account.getId(), queueRequestID, waitingScore.getRating(), serviceScore.getRating(), spaceScore.getRating(),comment);
             }
         });
     }

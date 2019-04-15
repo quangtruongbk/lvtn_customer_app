@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/editBtn"
+        android:icon="@drawable/edit"
+        android:title="Chỉnh sửa" />
+
+    <item
+        android:id="@+id/closeOpenQueueBtn"
+        android:icon="@drawable/cancel"
+        android:title="Dừng nhận khách" />
+
+</menu>

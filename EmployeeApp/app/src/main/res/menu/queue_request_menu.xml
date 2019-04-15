@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/receiveCustomerBtn"
+        android:icon="@drawable/customer"
+        android:title="Đón khách" />
+
+    <item
+        android:id="@+id/callCustomerBtn"
+        android:icon="@drawable/phone"
+        android:title="Gọi điện" />
+
+    <item
+        android:id="@+id/emailCustomerBtn"
+        android:icon="@drawable/email"
+        android:title="Gửi email" />
+
+    <item
+        android:id="@+id/editBtn"
+        android:icon="@drawable/edit"
+        android:title="Chỉnh sửa" />
+
+    <item
+        android:id="@+id/cancelBtn"
+        android:icon="@drawable/cancel"
+        android:title="Hủy" />
+</menu>

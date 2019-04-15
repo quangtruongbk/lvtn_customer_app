@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,9 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.my_account_fragment, container, false);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
+        toolbarTitle.setText("Tài khoản của tôi");
         nameTxt = (TextView) view.findViewById(R.id.nameTxt);
         emailTxt = (TextView) view.findViewById(R.id.emailTxt);
         phoneTxt = (TextView) view.findViewById(R.id.phoneTxt);
@@ -125,7 +129,7 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
                 } else {
                     nameTxt.setError(null);
                 }
-                if(validFlag == true) myAccountPresenter.changeInfo(account.getId(), name, phone);
+                if(validFlag == true) myAccountPresenter.changeInfo(account.getToken(), account.getId(), name, phone);
             }
         });
 
@@ -163,7 +167,7 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
                 } else {
                     confirmNewPasswordTxt.setError(null);
                 }
-                if(validFlag == true) myAccountPresenter.changePassword(account.getId(), oldPasswordTxt.getText().toString(), newPasswordTxt.getText().toString());
+                if(validFlag == true) myAccountPresenter.changePassword(account.getToken(), account.getId(), oldPasswordTxt.getText().toString(), newPasswordTxt.getText().toString());
             }
         });
         changePasswordDialog = changePasswordDialogBuilder.show();

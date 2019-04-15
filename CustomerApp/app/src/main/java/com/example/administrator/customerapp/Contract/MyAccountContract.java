@@ -13,7 +13,7 @@ public interface MyAccountContract {
     }
 
     interface Presenter extends BasePresenter {
-        void changeInfo(String accountID, String name, String phone);
-        void changePassword(String accountID, String oldPassword, String newPassword);
+        void changeInfo(String token, String accountID, String name, String phone);
+        void changePassword(String token, String accountID, String oldPassword, String newPassword);
     }
 }

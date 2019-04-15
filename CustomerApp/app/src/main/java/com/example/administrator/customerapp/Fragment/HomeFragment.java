@@ -8,10 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.administrator.customerapp.Activity.MainActivity;
 import com.example.administrator.customerapp.Adapter.BranchAdapter;
 import com.example.administrator.customerapp.Contract.HomeContract;
 import com.example.administrator.customerapp.Model.Branch;
@@ -38,6 +42,9 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.home_fragment, container, false);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
+        toolbarTitle.setText("Trang chủ");
         branchRecyclerView = (RecyclerView) view.findViewById(R.id.branchRecyclerView);
         assignDialog();
         homePresenter = new HomePresenter(this);

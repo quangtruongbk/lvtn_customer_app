@@ -18,8 +18,8 @@ public interface HistoryContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getHistoryFromServer(String accountID);
+        void getHistoryFromServer(String token, String accountID);
         void getReview(String queueRequestID, Account account, History history);
-        void createReview(String accountID, String queueRequestID, Float waitingScore, Float serviceScore, Float spaceScore, String comment);
+        void createReview(String token, String accountID, String queueRequestID, Float waitingScore, Float serviceScore, Float spaceScore, String comment);
     }
 }

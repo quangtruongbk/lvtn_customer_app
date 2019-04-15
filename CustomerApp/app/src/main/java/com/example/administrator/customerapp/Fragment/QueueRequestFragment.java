@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,6 +60,9 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.queue_request_fragment, container, false);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
+        toolbarTitle.setText("Lượt yêu cầu");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         queueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.queueRequestRecyclerView);
         createQueueRequestFab = (FloatingActionButton) view.findViewById(R.id.createQueueRequestFab);
