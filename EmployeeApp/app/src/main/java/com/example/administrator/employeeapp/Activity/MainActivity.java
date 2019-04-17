@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.administrator.employeeapp.Contract.MainActivityContract;
+import com.example.administrator.employeeapp.Fragment.CreateBranchFragment;
 import com.example.administrator.employeeapp.Fragment.HistoryFragment;
 import com.example.administrator.employeeapp.Fragment.HomeFragment;
 import com.example.administrator.employeeapp.Fragment.MyAccountFragment;
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
         } else if (id == R.id.navCreateBranch) {
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frameFragment, new HistoryFragment());
+            fragmentTransaction.replace(R.id.frameFragment, new CreateBranchFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navQRCode) {

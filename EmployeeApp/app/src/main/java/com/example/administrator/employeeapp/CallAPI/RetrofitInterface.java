@@ -88,4 +88,11 @@ public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("/queuerequest/sendemail")
     Call<Void> sendEmail(@Header("token") String token, @Field("email")String email, @Field("message")String message);
+
+    @FormUrlEncoded
+    @POST("/branch/create")
+    Call<Void> createBranch(@Header("token") String token, @Field("name")String name, @Field("city")String city,
+                            @Field("district")String district, @Field("ward")String ward, @Field("restaddress")String restAddress,
+                            @Field("phone")String phone, @Field("capacity")Integer capacity, @Field("opentime")String openHour,
+                            @Field("closetime")String closeHour, @Field("city")String workingDay);
 }

@@ -23,7 +23,6 @@
         android:text="Tên cơ sở"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -50,5 +49,22 @@
         android:layout_below="@+id/phoneTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/openHoursTxt"
+        android:textSize="16dp"
+        android:text="Thời gian hoạt động:"
+        android:layout_below="@+id/statusTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/openDayTxt"
+        android:textSize="16dp"
+        android:text="Ngày hoạt động:"
+        android:layout_below="@+id/openHoursTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
 </RelativeLayout>

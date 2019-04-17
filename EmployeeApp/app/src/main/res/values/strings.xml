@@ -9,5 +9,13 @@
     <string name="BASE_URL"></string>
     <string name="remainerEmail">Hệ thống quản lý hàng đợi xin thông báo: Yêu cầu của bạn đang chuẩn bị tới lượt, xin vui lòng hãy đến ngay cơ sở để chuẩn bị. Xin cảm ơn quý khách.</string>
     <string name="accidentEmail">Hệ thống quản lý hàng đợi xin thông báo: Do sự cố ngoài ý muốn mà hệ thống  buộc lòng phải hủy yêu cầu của bạn. Mong quý khách thông cảm.</string>
-
+        <string-array name="dayfOfWeek">
+            <item>2</item>
+            <item>3</item>
+            <item>4</item>
+            <item>5</item>
+            <item>6</item>
+            <item>7</item>
+            <item>Chủ nhật</item>
+        </string-array>
 </resources>
