@@ -2,6 +2,7 @@ package com.example.administrator.employeeapp.CallAPI;
 
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Model.History;
 import com.example.administrator.employeeapp.Model.Queue;
 import com.example.administrator.employeeapp.Model.QueueRequest;
@@ -45,6 +46,9 @@ public interface RetrofitInterface {
 
     @GET("history/accountid={accountID}/json")
     Call<ArrayList<History>> getHistory(@Header("token") String token, @Path("accountID") String accountID);
+
+    @GET("employee?")
+    Call<Employee> getEmployeeInfo(@Header("token") String token, @Query("accountid") String accountID);
 
     @FormUrlEncoded
     @POST("/account/verify/resend")
@@ -90,9 +94,21 @@ public interface RetrofitInterface {
     Call<Void> sendEmail(@Header("token") String token, @Field("email")String email, @Field("message")String message);
 
     @FormUrlEncoded
+    @POST("/queuerequest/create")
+    Call<Void> createQueueRequest(@Header("token") String token, @Field("accountid")String accountID, @Field("queueid")String queueID, @Field("customername")String name, @Field("customerphone")String phone, @Field("customeremail")String email);
+
+    @FormUrlEncoded
     @POST("/branch/create")
     Call<Void> createBranch(@Header("token") String token, @Field("name")String name, @Field("city")String city,
                             @Field("district")String district, @Field("ward")String ward, @Field("restaddress")String restAddress,
                             @Field("phone")String phone, @Field("capacity")Integer capacity, @Field("opentime")String openHour,
-                            @Field("closetime")String closeHour, @Field("city")String workingDay);
+                            @Field("closetime")String closeHour, @Field("workingday")String workingDay, @Field("note") String note);
+
+    @FormUrlEncoded
+    @PUT("/branch/changeinfo")
+    Call<Void> changeInfoBranch(@Header("token") String token, @Field("branchid") String branchID, @Field("name")String name, @Field("city")String city,
+                            @Field("district")String district, @Field("ward")String ward, @Field("restaddress")String restAddress,
+                            @Field("phone")String phone, @Field("capacity")Integer capacity, @Field("opentime")String openHour,
+                            @Field("closetime")String closeHour, @Field("workingday")String workingDay, @Field("note") String note);
+
 }

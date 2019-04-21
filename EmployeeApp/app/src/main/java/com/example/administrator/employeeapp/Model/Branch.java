@@ -1,4 +1,8 @@
 package com.example.administrator.employeeapp.Model;
+import com.example.administrator.employeeapp.Model.SupportedModel.Address;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,22 +16,34 @@ public class Branch {
     private String name;
     @SerializedName("address")
     @Expose
-    private String address;
-    @SerializedName("capacity")
-    @Expose
-    private String capacity;
+    private Address address;
     @SerializedName("phone")
     @Expose
     private String phone;
-    @SerializedName("status")
-    @Expose
-    private String status;
     @SerializedName("opentime")
     @Expose
     private String opentime;
     @SerializedName("closetime")
     @Expose
     private String closetime;
+    @SerializedName("capacity")
+    @Expose
+    private String capacity;
+    @SerializedName("status")
+    @Expose
+    private String status;
+    @SerializedName("createdAt")
+    @Expose
+    private String createdAt;
+    @SerializedName("updatedAt")
+    @Expose
+    private String updatedAt;
+    @SerializedName("workingDate")
+    @Expose
+    private String workingDate;
+    @SerializedName("note")
+    @Expose
+    private String note;
 
     public String getId() {
         return id;
@@ -45,20 +61,12 @@ public class Branch {
         this.name = name;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public String getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(String capacity) {
-        this.capacity = capacity;
     }
 
     public String getPhone() {
@@ -67,14 +75,6 @@ public class Branch {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getOpentime() {
@@ -92,4 +92,53 @@ public class Branch {
     public void setClosetime(String closetime) {
         this.closetime = closetime;
     }
+
+    public String getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(String capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getWorkingDate() {
+        return workingDate;
+    }
+
+    public void setWorkingDate(String workingDate) {
+        this.workingDate = workingDate;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
 }

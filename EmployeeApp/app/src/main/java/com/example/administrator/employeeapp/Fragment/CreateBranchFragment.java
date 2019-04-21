@@ -71,6 +71,7 @@ public class CreateBranchFragment extends Fragment implements CreateBranchContra
     private TextView phoneTxt;
     private TextView capacityTxt;
     private TextView restOfAddressTxt;
+    private TextView noteTxt;
     private TimePicker openHourTimePicker;
     private TimePicker closeHourTimePicker;
     private Spinner startWorkingDateSpinner;
@@ -84,10 +85,6 @@ public class CreateBranchFragment extends Fragment implements CreateBranchContra
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Activity a;
-        if (context instanceof Activity) {
-            a = (Activity) context;
-        }
     }
 
     @Nullable
@@ -109,7 +106,8 @@ public class CreateBranchFragment extends Fragment implements CreateBranchContra
         wardSpinner = (Spinner) view.findViewById(R.id.wardSpinner);
         openHourTimePicker = (TimePicker) view.findViewById(R.id.branchOpenTimePicker);
         closeHourTimePicker = (TimePicker) view.findViewById(R.id.branchCloseTimePicker);
-        createBranchBtn = (Button) view.findViewById(R.id.branchCreateBtn);
+        noteTxt = (TextView) view.findViewById(R.id.noteTxt);
+        createBranchBtn = (Button) view.findViewById(R.id.createBranchBtn);
         createBranchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +131,8 @@ public class CreateBranchFragment extends Fragment implements CreateBranchContra
                     openHour = Integer.toString(openHourTimePicker.getCurrentHour()) + ":" + Integer.toString(openHourTimePicker.getCurrentMinute());
                     closeHour = Integer.toString(closeHourTimePicker.getCurrentHour()) + ":" + Integer.toString(closeHourTimePicker.getCurrentMinute());
                 }
-                createBranchPresenter.createBranch(account.getToken(), name, city, district, ward, restOfAddress, phone, Integer.parseInt(capacity), openHour, closeHour, startWorkingDate + "-" + endWorkingDate);
+                String note = noteTxt.getText().toString().trim();
+                createBranchPresenter.createBranch(account.getToken(), name, city, district, ward, restOfAddress, phone, Integer.parseInt(capacity), openHour, closeHour, startWorkingDate + "-" + endWorkingDate, note);
             }
         });
         database = new MyDatabaseHelper(getActivity());
@@ -156,71 +155,71 @@ public class CreateBranchFragment extends Fragment implements CreateBranchContra
     }
 
     public void setUpSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dayfOfWeek, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        startWorkingDateSpinner.setAdapter(adapter);
-        endWorkingDateSpinner.setAdapter(adapter);
-        GetAddressHelper getAddressHelper = new GetAddressHelper();
-        new Thread(new Runnable(){
+        new Thread(new Runnable() {
             @Override
-            public void run(){
-            }
-        }).start();
-
-        getAddressHelper = database.getCity();
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_spinner_item,
-                getAddressHelper.getCityName()
-        );
-        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ArrayList<String> cityID = new ArrayList<>();
-        cityID = getAddressHelper.getCityID();
-        citySpinner.setAdapter(cityAdapter);
-        final ArrayList<String> finalCityID = cityID;
-        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                GetAddressHelper getAddressHelper2 = new GetAddressHelper();
-                getAddressHelper2 = database.getDistrict(finalCityID.get(position));
-                Log.d("1abc", "finalCityID.get(position): " + finalCityID.get(position));
-                final ArrayList<String> districtName = getAddressHelper2.getDistrictName();
-                final ArrayList<String> districtID = getAddressHelper2.getDistrictID();
-                ArrayAdapter<String> districtAdapter = new ArrayAdapter<String>(
+            public void run() {
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.dayfOfWeek, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                startWorkingDateSpinner.setAdapter(adapter);
+                endWorkingDateSpinner.setAdapter(adapter);
+                GetAddressHelper getAddressHelper = new GetAddressHelper();
+                getAddressHelper = database.getCity();
+                ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(
                         getActivity(),
                         android.R.layout.simple_spinner_item,
-                        districtName
+                        getAddressHelper.getCityName()
                 );
-                districtSpinner.setAdapter(districtAdapter);
-
-                districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayList<String> cityID = new ArrayList<>();
+                cityID = getAddressHelper.getCityID();
+                citySpinner.setAdapter(cityAdapter);
+                final ArrayList<String> finalCityID = cityID;
+                citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         GetAddressHelper getAddressHelper2 = new GetAddressHelper();
-                        getAddressHelper2 = database.getWard(districtID.get(position));
-                        ArrayList<String> wardName = new ArrayList<String>();
-                        wardName = getAddressHelper2.getWardName();
-                        ArrayAdapter<String> wardAdapter = new ArrayAdapter<String>(
+                        getAddressHelper2 = database.getDistrict(finalCityID.get(position));
+                        Log.d("1abc", "finalCityID.get(position): " + finalCityID.get(position));
+                        final ArrayList<String> districtName = getAddressHelper2.getDistrictName();
+                        final ArrayList<String> districtID = getAddressHelper2.getDistrictID();
+                        ArrayAdapter<String> districtAdapter = new ArrayAdapter<String>(
                                 getActivity(),
                                 android.R.layout.simple_spinner_item,
-                                wardName
+                                districtName
                         );
-                        wardSpinner.setAdapter(wardAdapter);
+                        districtSpinner.setAdapter(districtAdapter);
+
+                        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                                GetAddressHelper getAddressHelper2 = new GetAddressHelper();
+                                getAddressHelper2 = database.getWard(districtID.get(position));
+                                ArrayList<String> wardName = new ArrayList<String>();
+                                wardName = getAddressHelper2.getWardName();
+                                ArrayAdapter<String> wardAdapter = new ArrayAdapter<String>(
+                                        getActivity(),
+                                        android.R.layout.simple_spinner_item,
+                                        wardName
+                                );
+                                wardSpinner.setAdapter(wardAdapter);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parentView) {
+                                // your code here
+                            }
+
+                        });
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parentView) {
                         // your code here
                     }
-
                 });
             }
+        }).start();
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-        });
     }
 
     public Boolean validateForm() {
@@ -282,10 +281,10 @@ public class CreateBranchFragment extends Fragment implements CreateBranchContra
         waitingDialog.dismiss();
     }
 
-    public void performActionAsync(){
-        new Thread(new Runnable(){
+    public void performActionAsync() {
+        new Thread(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
             }
         }).start();
     }

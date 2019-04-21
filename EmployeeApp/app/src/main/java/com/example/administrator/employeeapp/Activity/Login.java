@@ -25,6 +25,7 @@ import com.example.administrator.employeeapp.CallAPI.RetrofitInterface;
 import com.example.administrator.employeeapp.Contract.LoginContract;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Presenter.LoginPresenter;
 import com.example.administrator.employeeapp.R;
 import com.google.gson.Gson;
@@ -43,13 +44,11 @@ public class Login extends AppCompatActivity implements LoginContract.View{
 
     private EditText emailTxt;
     private EditText passwordTxt;
-    private TextView signUpTxt;
     private TextView forgotPasswordTxt;
     private Button loginBtn;
     private ProgressBar progressBar;
     private LoginContract.Presenter loginPresenter;
-    private AlertDialog waitingDialog;
-    private AlertDialog.Builder waitingDialogBuilder;
+    private Dialog waitingDialog;
     private AlertDialog.Builder noticeDialog;
     private AlertDialog.Builder resendEmailDialog;
     private SharedPreferences sharedPreferences;
@@ -61,10 +60,9 @@ public class Login extends AppCompatActivity implements LoginContract.View{
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_login);
-        waitingDialogBuilder = new AlertDialog.Builder(this);
+        showProgressBar();
         noticeDialog = new AlertDialog.Builder(this);
         resendEmailDialog = new AlertDialog.Builder(this);
-        showProgressBar();
         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         editor =sharedPreferences.edit();
         loginPresenter = new LoginPresenter(this);
@@ -79,37 +77,36 @@ public class Login extends AppCompatActivity implements LoginContract.View{
                 account = gson.fromJson(accountString, Account.class);
             }
             loginPresenter.getAccount(account.getToken(), account.getId());
+        }else {
+            hideProgressBar();
+            emailTxt = (EditText) findViewById(R.id.emailTxt);
+            passwordTxt = (EditText) findViewById(R.id.passwordTxt);
+            forgotPasswordTxt = (TextView) findViewById(R.id.forgotPasswordTxt);
+            loginBtn = (Button) findViewById(R.id.login_btn);
+            progressBar = (ProgressBar) findViewById(R.id.progressBar);
+            loginBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("1abc", "Login");
+                    showProgressBar();
+                    loginPresenter.logIn(emailTxt.getText().toString(), passwordTxt.getText().toString());
+                }
+            });
+            forgotPasswordTxt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Login.this, ForgotPassword.class);
+                    startActivity(intent);
+                }
+            });
         }
-        emailTxt = (EditText) findViewById(R.id.emailTxt);
-        passwordTxt = (EditText) findViewById(R.id.passwordTxt);
-        signUpTxt = (TextView) findViewById(R.id.signUpTxt);
-        forgotPasswordTxt = (TextView) findViewById(R.id.forgotPasswordTxt);
-        loginBtn = (Button) findViewById(R.id.login_btn);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("1abc", "Login");
-                showProgressBar();
-                loginPresenter.logIn(emailTxt.getText().toString(), passwordTxt.getText().toString());
-            }
-        });
-        signUpTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, SignUp.class);
-                startActivity(intent);
-            }
-        });
-        forgotPasswordTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, ForgotPassword.class);
-                startActivity(intent);
-            }
-        });
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(waitingDialog.isShowing()) waitingDialog.dismiss();
+    }
     @Override
     public void showDialog(String message, Boolean isVerifyEmail){
         if(isVerifyEmail){
@@ -142,11 +139,14 @@ public class Login extends AppCompatActivity implements LoginContract.View{
     }
 
     @Override
-    public void openMainActivity(Account account) {
+    public void openMainActivity(Account account, Employee employee) {
         editor.putBoolean("isLogin", true);
         Gson gson = new Gson();
-        String json = gson.toJson(account);
-        editor.putString("MyAccount", json);
+        String accountJSON = gson.toJson(account);
+        editor.putString("MyAccount", accountJSON);
+        String employeeJSON = gson.toJson(employee);
+        editor.putString("Employee", employeeJSON);
+        Log.d("4abc", employeeJSON);
         editor.commit();
         Intent intent = new Intent(Login.this, MainActivity.class);
         startActivity(intent);
@@ -154,15 +154,15 @@ public class Login extends AppCompatActivity implements LoginContract.View{
     }
 
     @Override
-    @TargetApi(21)
     public void showProgressBar() {
-        waitingDialogBuilder.setView(R.layout.waiting_dialog);
-        waitingDialogBuilder.setCancelable(false);
-        waitingDialog = waitingDialogBuilder.show();
+        waitingDialog = new Dialog(this);
+        waitingDialog.setContentView(R.layout.waiting_dialog);
+        waitingDialog.setCancelable(false);
+        waitingDialog.show();
     }
 
     @Override
     public void hideProgressBar() {
-        waitingDialog.dismiss();
+        if(waitingDialog.isShowing()) waitingDialog.dismiss();
     }
 }

@@ -11,6 +11,7 @@ import com.example.administrator.employeeapp.CallAPI.APIClient;
 import com.example.administrator.employeeapp.CallAPI.RetrofitInterface;
 import com.example.administrator.employeeapp.Contract.LoginContract;
 import com.example.administrator.employeeapp.Model.Account;
+import com.example.administrator.employeeapp.Model.Employee;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,6 +23,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     private RetrofitInterface callAPIService;
     private LoginContract.View mView;
     private Account account;
+    private Employee employee;
     public LoginPresenter(@NonNull LoginContract.View mView) {
         this.mView = mView;
         this.account = new Account();
@@ -33,30 +35,35 @@ public class LoginPresenter implements LoginContract.Presenter {
         callAPIService.logIn(email, password, "employee").enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
-                mView.hideProgressBar();
                 if(response.code() == 200) {
                     if(response.body()!=null) account = response.body();
                     if(response.body().getStatus().equals("1")){
-                        mView.openMainActivity(account);
+                        getEmployeeInfo(account.getToken(), account.getId());
                     }
 
                     else if(response.body().getStatus().equals("-1")){
+                        mView.hideProgressBar();
                         mView.showDialog("Tài khoản của bạn đã bị khóa!", false);
                     }
 
                     else if(response.body().getStatus().equals("-2")) {
+                        mView.hideProgressBar();
                         mView.showDialog("Tài khoản chưa xác thực, hãy kiểm tra email của bạn để xác thực tài khoản!", true);
                     }
-                    if(response.errorBody()!=null)
-                        Log.d("1abc", response.errorBody().toString());
+                    else{
+                        mView.hideProgressBar();
+                    }
 
                 }else if(response.code() == 401){
+                    mView.hideProgressBar();
                     Log.d("1abc", "Đang nhap that bai");
                     mView.showDialog("Đăng nhập thất bại, hãy kiểm tra lại email và mật khẩu!", false);
                 }else if(response.code() == 403){
+                    mView.hideProgressBar();
                     Log.d("1abc", "Da dang nhap roi");
                     Log.d("1abc", "Da dang nhap roi");
                 }else if(response.code() == 500){
+                    mView.hideProgressBar();
                     mView.showDialog("Đăng nhập thất bại do lỗi hệ thống", false);
                 }
             }
@@ -103,16 +110,42 @@ public class LoginPresenter implements LoginContract.Presenter {
         callAPIService.getAccount(token, accountID).enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
-                mView.hideProgressBar();
                 if(response.code() == 200) {
-                    if(response.body()!=null) account = response.body();
-                    mView.openMainActivity(account);
+                    if(response.body()!=null) {
+                        account = response.body();
+                        getEmployeeInfo(account.getToken(), account.getId());
+                    }
                 }else if(response.code() == 500){
+                    mView.hideProgressBar();
                     mView.showDialog("Lấy dữ liệu tài khoản thất bại do lỗi hệ thống", false);
                 }
             }
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
+                t.printStackTrace();
+                mView.hideProgressBar();
+                mView.showDialog("Kết nối với máy chủ thất bại", false);
+            }
+        });
+    }
+
+    @Override
+    public void getEmployeeInfo(String token, String accountID) {
+        callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+        callAPIService.getEmployeeInfo(token, accountID).enqueue(new Callback<Employee>() {
+            @Override
+            public void onResponse(Call<Employee> call, Response<Employee> response) {
+                if(response.code() == 200) {
+                    if(response.body()!=null) {
+                        employee = response.body();
+                    }
+                    mView.openMainActivity(account, employee);
+                }else if(response.code() == 500){
+                    mView.showDialog("Lấy dữ liệu về quyền và vai trò của tài khoản thất bại do lỗi hệ thống", false);
+                }
+            }
+            @Override
+            public void onFailure(Call<Employee> call, Throwable t) {
                 t.printStackTrace();
                 mView.hideProgressBar();
                 mView.showDialog("Kết nối với máy chủ thất bại", false);

@@ -2,7 +2,7 @@ package com.example.administrator.employeeapp.Fragment;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,32 +10,35 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.administrator.employeeapp.Activity.MainActivity;
 import com.example.administrator.employeeapp.Adapter.BranchAdapter;
 import com.example.administrator.employeeapp.Contract.HomeContract;
+import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
 import com.example.administrator.employeeapp.Presenter.HomePresenter;
 import com.example.administrator.employeeapp.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import static android.content.Context.MODE_PRIVATE;
 
 public class HomeFragment extends Fragment implements HomeContract.View {
     private RecyclerView branchRecyclerView;
     private BranchAdapter branchAdapter;
     private ArrayList<Branch> branchArrayList;
     private HomeContract.Presenter homePresenter;
+    private Account account;
     private AlertDialog waitingDialog;
     private AlertDialog.Builder waitingDialogBuilder;
     private AlertDialog.Builder noticeDialog;
+    private SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
@@ -47,7 +50,15 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         toolbarTitle.setText("Trang chủ");
         branchRecyclerView = (RecyclerView) view.findViewById(R.id.branchRecyclerView);
         assignDialog();
-        homePresenter = new HomePresenter(this);
+        sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);
+        String accountString = sharedPreferences.getString("MyAccount", "empty");
+        Gson gson = new Gson();
+        account = new Account();
+        if (!accountString.equals("empty")) {
+            account = gson.fromJson(accountString, Account.class);
+        }
+
+        homePresenter = new HomePresenter(this, account);
         homePresenter.getBranchFromServer();
         return view;
     }
@@ -58,15 +69,30 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     }
 
     @Override
-    public void showDialog(String message){
-        noticeDialog.setMessage(message)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        // Create the AlertDialog object and return it
-        noticeDialog.show();
+    public void showDialog(String message, Boolean isSuccess){
+        LayoutInflater inflater = getLayoutInflater();
+        if(isSuccess) {
+            View layout = inflater.inflate(R.layout.custom_toast_success,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        }else{
+            View layout = inflater.inflate(R.layout.custom_toast_fail,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
+        }
     }
 
     @Override
@@ -85,7 +111,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public void setUpAdapter(ArrayList<Branch> branch){
         Log.d("1abc", "Branch: " + branch.get(0).getName());
-        if(branch != null) branchAdapter = new BranchAdapter(branch, getActivity());
+        if(branch != null) branchAdapter = new BranchAdapter(branch, getActivity(), homePresenter, account);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         branchRecyclerView.setLayoutManager(layoutManager);

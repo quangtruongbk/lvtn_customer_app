@@ -175,4 +175,45 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    public String getCityID(String city) {
+        String cityID="";
+        String selectQuery = "SELECT  * FROM  'province' WHERE name='"+city+"'";
+        SQLiteDatabase db;
+        try {
+            db = this.getWritableDatabase();
+        } catch (SQLException mSQLException) {
+            throw mSQLException;
+        }
+        Cursor cursor = db.rawQuery(selectQuery, null);//selectQuery,selectedArguments
+        if (cursor.moveToFirst()) {
+            do {
+                cityID = cursor.getString(0);
+                Log.d("1abc", "getString: " + cursor.getString(0) + " " + cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return cityID;
+    }
+
+    public String getDistrictID(String district) {
+        String cityID="";
+        String selectQuery = "SELECT  * FROM  'district' WHERE name='"+district+"'";
+        SQLiteDatabase db;
+        try {
+            db = this.getWritableDatabase();
+        } catch (SQLException mSQLException) {
+            throw mSQLException;
+        }
+        Cursor cursor = db.rawQuery(selectQuery, null);//selectQuery,selectedArguments
+        if (cursor.moveToFirst()) {
+            do {
+                cityID = cursor.getString(0);
+                Log.d("1abc", "getString: " + cursor.getString(0) + " " + cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return cityID;
+    }
 }

@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:text="Số nhà, tòa nhà, hẻm..." />
+                android:text="Đường, số nhà, tòa nhà, hẻm..." />
 
             <EditText
                 android:id="@+id/branchAddressTxt"
@@ -262,8 +262,30 @@
                     android:layout_marginTop="20dp"></Spinner>
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Ghi chú:"
+                android:textColor="@color/colorOrange"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/noteTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:backgroundTint="@color/colorOrange"
+                android:drawablePadding="15dp"
+                android:padding="8dp"
+                android:textColor="@color/colorOrange"
+                android:textColorHint="@color/colorOrange" />
+
             <Button
-                android:id="@+id/branchCreateBtn"
+                android:id="@+id/createBranchBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"

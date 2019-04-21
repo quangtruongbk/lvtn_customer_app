@@ -12,6 +12,6 @@ public interface CreateBranchContract {
 
     interface Presenter extends BasePresenter {
         void createBranch(String token, String name, String city, String district, String ward, String restAddress, String phone,
-                          Integer capacity, String openHour, String closeHour, String workingDay);
+                          Integer capacity, String openHour, String closeHour, String workingDay, String note);
     }
 }

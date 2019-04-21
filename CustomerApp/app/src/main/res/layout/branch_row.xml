@@ -30,6 +30,7 @@
         android:id="@+id/addressTxt"
         android:textSize="16dp"
         android:text="Địa chỉ:"
+        android:drawableLeft="@drawable/address"
         android:layout_below="@+id/nameTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -38,6 +39,7 @@
         android:id="@+id/phoneTxt"
         android:textSize="16dp"
         android:text="SĐT:"
+        android:drawableLeft="@drawable/phone4"
         android:layout_below="@+id/addressTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -46,6 +48,7 @@
         android:id="@+id/statusTxt"
         android:textSize="16dp"
         android:text="Tình trạng:"
+        android:drawableLeft="@drawable/heart"
         android:layout_below="@+id/phoneTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -54,6 +57,7 @@
         android:id="@+id/openHoursTxt"
         android:textSize="16dp"
         android:text="Thời gian hoạt động:"
+        android:drawableLeft="@drawable/clock"
         android:layout_below="@+id/statusTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -62,7 +66,17 @@
         android:id="@+id/openDayTxt"
         android:textSize="16dp"
         android:text="Ngày hoạt động:"
+        android:drawableLeft="@drawable/calendar"
         android:layout_below="@+id/openHoursTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/noteTxt"
+        android:textSize="16dp"
+        android:text="Ghi chú"
+        android:drawableLeft="@drawable/note"
+        android:layout_below="@+id/openDayTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

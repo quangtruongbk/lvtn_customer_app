@@ -37,6 +37,7 @@ public class HomePresenter implements HomeContract.Presenter{
 
             @Override
             public void onFailure(Call<ArrayList<Branch>> call, Throwable t) {
+                t.printStackTrace();
                 mView.hideProgressBar();
                 mView.showDialog("Không thể kết nối được với máy chủ!");
             }

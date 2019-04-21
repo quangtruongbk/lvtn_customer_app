@@ -6,6 +6,7 @@ import com.example.administrator.customerapp.Model.History;
 import com.example.administrator.customerapp.Model.Queue;
 import com.example.administrator.customerapp.Model.QueueRequest;
 import com.example.administrator.customerapp.Model.Review;
+import com.example.administrator.customerapp.Model.SupportedModel.SpecificQueueRequest;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,13 @@ public interface RetrofitInterface {
 
     @GET("queuerequest/queueid={queueID}/json")
     Call<ArrayList<QueueRequest>> getQueueRequest(@Path("queueID") String queueID);
+
+    @GET("queuerequest/accountid={accountID}/json")
+    Call<SpecificQueueRequest> getSpecificQueueRequest(@Header("token") String token, @Path("accountID") String accountID);
+
+    @FormUrlEncoded
+    @POST("/queuerequest/create")
+    Call<Void> createQueueRequest(@Header("token") String token, @Field("accountid")String accountID, @Field("queueid")String queueID, @Field("customername")String name, @Field("customerphone")String phone, @Field("customeremail")String email);
 
     @GET("history/accountid={accountID}/json")
     Call<ArrayList<History>> getHistory(@Header("token") String token, @Path("accountID") String accountID);

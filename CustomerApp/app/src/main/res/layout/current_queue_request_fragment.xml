@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/historyRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="#ffffff"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingBottom="10dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="10dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/nameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Tên khách hàng"
+                android:textColor="@color/colorOrange"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/emailTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameTxt"
+                android:text="Email:"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/phoneTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/emailTxt"
+                android:text="Số điện thoại:"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/timeTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/phoneTxt"
+                android:text="Thời gian đăng ký:"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/branchNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/timeTxt"
+                android:text="Cơ sở:"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/queueNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/branchNameTxt"
+                android:text="Hàng đợi:"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/statusTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/queueNameTxt"
+                android:text="Tình trạng:"
+                android:textSize="16dp" />
+
+            <ImageView
+                android:id="@+id/QRCodeImg"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_below="@+id/statusTxt"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp" />
+
+            <Button
+                android:id="@+id/followingInQueueBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/QRCodeImg"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorLightOrange"
+                android:text="Theo dõi trực tiếp tại hàng đợi"
+                android:textColor="@color/colorWhite" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

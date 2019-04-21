@@ -24,9 +24,9 @@ public class CreateBranchPresenter implements CreateBranchContract.Presenter {
 
     @Override
     public void createBranch(String token, String name, String city, String district, String ward, String restAddress, String phone,
-                             Integer capacity, String openHour, String closeHour, String workingDay) {
+                             Integer capacity, String openHour, String closeHour, String workingDay, String note) {
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.createBranch(account.getToken(), name, city, district, ward, restAddress, phone, capacity, openHour, closeHour, workingDay).enqueue(new Callback<Void>() {
+        callAPIService.createBranch(account.getToken(), name, city, district, ward, restAddress, phone, capacity, openHour, closeHour, workingDay, note).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
@@ -36,7 +36,6 @@ public class CreateBranchPresenter implements CreateBranchContract.Presenter {
                     mView.showDialog("Tạo cơ sở mới thất bại do lỗi hệ thống");
                 }
             }
-
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 t.printStackTrace();

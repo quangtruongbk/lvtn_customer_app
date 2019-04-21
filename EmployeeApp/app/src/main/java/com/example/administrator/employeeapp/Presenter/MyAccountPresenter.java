@@ -10,6 +10,7 @@ import com.example.administrator.employeeapp.Contract.HomeContract;
 import com.example.administrator.employeeapp.Contract.MyAccountContract;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -26,11 +27,14 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
     private Context context;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private Account account;
+    private Employee employee;
 
-    public MyAccountPresenter(@NonNull MyAccountContract.View mView, Context context)
-    {
+    public MyAccountPresenter(@NonNull MyAccountContract.View mView, Context context, Account account, Employee employee) {
         this.mView = mView;
         this.context = context;
+        this.account = account;
+        this.employee = employee;
     }
 
     @Override
@@ -39,17 +43,16 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         sharedPreferences = context.getSharedPreferences("data", MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
         callAPIService.changeInfo(token, accountID, name, phone).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    mView.showDialog("Cập nhật thông tin tài khoản thành công!");
+                    mView.showDialog("Cập nhật thông tin tài khoản thành công!", true);
                     String accountString = sharedPreferences.getString("MyAccount", "empty");
                     Gson gson = new Gson();
                     Account account = new Account();
-                    if(!accountString.equals("empty")) {
+                    if (!accountString.equals("empty")) {
                         account = gson.fromJson(accountString, Account.class);
                         account.setName(name);
                         account.setPhone(phone);
@@ -59,7 +62,7 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
                     }
                     mView.openMainActivity();
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể cập nhật được thông tin tài khoản do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể cập nhật được thông tin tài khoản do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
@@ -67,7 +70,7 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
                 t.printStackTrace();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
     }
@@ -81,21 +84,50 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    mView.showDialog("Cập nhật mật khẩu thành công!");
+                    mView.showDialog("Cập nhật mật khẩu thành công!", true);
                     mView.openMainActivity();
                 }
                 if (response.code() == 406) {
-                    mView.showDialog("Xác thực mật khẩu cũ không trùng khớp, xin vui lòng thử lại!");
+                    mView.showDialog("Xác thực mật khẩu cũ không trùng khớp, xin vui lòng thử lại!", false);
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể cập nhật được mật khẩu do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể cập nhật được mật khẩu do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
+    }
+
+    @Override
+    public void setUpRole(final Account account, final Employee employee){
+            mView.showProgressBar();
+            callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+            callAPIService.getBranch().enqueue(new Callback<ArrayList<Branch>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Branch>> call, Response<ArrayList<Branch>> response) {
+                    mView.hideProgressBar();
+                    if(response.code() == 200) {
+                        ArrayList<Branch> newBranch = new ArrayList<Branch>();
+                        newBranch = response.body();
+                        if(newBranch!=null) {
+                            mView.setUpRoleAdapter(newBranch);
+                        }
+                    }else if(response.code() == 500){
+                        mView.showDialog("Không thể lấy được danh sách cơ sở do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Branch>> call, Throwable t) {
+                    t.printStackTrace();
+                    mView.hideProgressBar();
+                    mView.showDialog("Không thể kết nối được với máy chủ!", false);
+                }
+            });
     }
 
 

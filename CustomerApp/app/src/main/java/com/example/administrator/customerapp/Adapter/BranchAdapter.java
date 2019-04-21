@@ -40,13 +40,16 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         holder.nameTxt.setText(branchList.get(position).getName());
-        holder.addressTxt.setText("Địa chỉ: " + branchList.get(position).getAddress());
+        holder.addressTxt.setText("Địa chỉ: " + branchList.get(position).getAddress().getRest() + ", " + branchList.get(position).getAddress().getWard() + ", " + branchList.get(position).getAddress().getDistrict() + ", " + branchList.get(position).getAddress().getCity());
         holder.phoneTxt.setText("Số điện thoại: " + branchList.get(position).getPhone().toString());
         if(branchList.get(position).getStatus().toString() != null) {
             if(branchList.get(position).getStatus().toString().equals("0")) holder.statusTxt.setText("Tình trạng: Đóng cửa");
             if(branchList.get(position).getStatus().toString().equals("1")) holder.statusTxt.setText("Tình trạng: Đang nhận khách");
             if(branchList.get(position).getStatus().toString().equals("-1")) holder.statusTxt.setText("Tình trạng: Đã khóa");
         }
+        holder.openHourTxt.setText("Giờ hoạt động: " + branchList.get(position).getOpentime() + "-" + branchList.get(position).getClosetime());
+        holder.workingDateTxt.setText("Ngày hoạt động: " + branchList.get(position).getWorkingDate());
+        holder.noteTxt.setText("Ghi chú: " + branchList.get(position).getNote());
         holder.branchRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,15 +75,21 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         TextView addressTxt;
         TextView statusTxt;
         TextView phoneTxt;
+        TextView openHourTxt;
+        TextView workingDateTxt;
+        TextView noteTxt;
         RelativeLayout branchRow;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             nameTxt = (TextView) itemView.findViewById(R.id.nameTxt);
-            addressTxt = (TextView) itemView.findViewById(R.id.phoneTxt);
+            addressTxt = (TextView) itemView.findViewById(R.id.addressTxt);
             phoneTxt = (TextView) itemView.findViewById(R.id.phoneTxt);
             statusTxt = (TextView) itemView.findViewById(R.id.statusTxt);
             branchRow = (RelativeLayout) itemView.findViewById(R.id.branchRow);
+            openHourTxt = (TextView) itemView.findViewById(R.id.openHoursTxt);
+            workingDateTxt = (TextView) itemView.findViewById(R.id.openDayTxt);
+            noteTxt = (TextView) itemView.findViewById(R.id.noteTxt);
         }
     }
 }

@@ -8,21 +8,34 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.employeeapp.Activity.MainActivity;
+import com.example.administrator.employeeapp.Adapter.BranchRoleAdapter;
+import com.example.administrator.employeeapp.Adapter.HistoryAdapter;
 import com.example.administrator.employeeapp.Contract.MyAccountContract;
 import com.example.administrator.employeeapp.Model.Account;
+import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
+import com.example.administrator.employeeapp.Model.History;
+import com.example.administrator.employeeapp.Model.SupportedModel.BranchRole;
 import com.example.administrator.employeeapp.Presenter.MyAccountPresenter;
 import com.example.administrator.employeeapp.R;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,8 +45,10 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     private TextView emailTxt;
     private TextView nameTxt;
     private TextView phoneTxt;
+    private TextView createBranchTxt;
     private Button changeInfoBtn;
     private Button changePasswordBtn;
+    private RecyclerView roleRecyclerView;
     private AlertDialog waitingDialog;
     private AlertDialog.Builder waitingDialogBuilder;
     private AlertDialog.Builder noticeDialog;
@@ -45,6 +60,8 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private Account account;
+    private Employee employee;
+    private BranchRoleAdapter branchRoleAdapter;
 
     @Nullable
     @Override
@@ -57,20 +74,29 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
         nameTxt = (TextView) view.findViewById(R.id.nameTxt);
         emailTxt = (TextView) view.findViewById(R.id.emailTxt);
         phoneTxt = (TextView) view.findViewById(R.id.phoneTxt);
+        createBranchTxt = (TextView) view.findViewById(R.id.createBranchTxt);
         changeInfoBtn = (Button) view.findViewById(R.id.changeInfoBtn);
         changePasswordBtn = (Button) view.findViewById(R.id.changePasswordBtn);
+        roleRecyclerView = (RecyclerView) view.findViewById(R.id.roleRecyclerView);
+        roleRecyclerView.setNestedScrollingEnabled(false);
         sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);
         String accountString = sharedPreferences.getString("MyAccount", "empty");
+        String employeeString = sharedPreferences.getString("Employee", "empty");
         Gson gson = new Gson();
         account = new Account();
         if (!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
         }
+        employee = new Employee();
+        if (!employeeString.equals("empty")) {
+            employee = gson.fromJson(employeeString, Employee.class);
+        }
         nameTxt.setText(account.getName());
         emailTxt.setText(account.getEmail());
         phoneTxt.setText(account.getPhone());
+        if(employee.getRole().getCreateBranch().equals("1")) createBranchTxt.setVisibility(View.VISIBLE);
         assignDialog();
-        myAccountPresenter = new MyAccountPresenter(this, getActivity());
+        myAccountPresenter = new MyAccountPresenter(this, getActivity(), account, employee);
         changeInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +109,7 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
                 showChangePasswordDialog();
             }
         });
+        myAccountPresenter.setUpRole(account, employee);
         return view;
     }
 
@@ -174,15 +201,30 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     }
 
     @Override
-    public void showDialog(String message) {
-        noticeDialog.setMessage(message)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        // Create the AlertDialog object and return it
-        noticeDialog.show();
+    public void showDialog(String message, Boolean isSuccess){
+        LayoutInflater inflater = getLayoutInflater();
+        if(isSuccess) {
+            View layout = inflater.inflate(R.layout.custom_toast_success,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        }else{
+            View layout = inflater.inflate(R.layout.custom_toast_fail,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
+        }
     }
 
     @Override
@@ -202,5 +244,14 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     public void openMainActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void setUpRoleAdapter(ArrayList<Branch> branch){
+        if(branch != null && account!=null) branchRoleAdapter = new BranchRoleAdapter(branch, getActivity(), myAccountPresenter, account, employee);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        roleRecyclerView.setLayoutManager(layoutManager);
+        if(branchRoleAdapter != null)roleRecyclerView.setAdapter(branchRoleAdapter);
     }
 }

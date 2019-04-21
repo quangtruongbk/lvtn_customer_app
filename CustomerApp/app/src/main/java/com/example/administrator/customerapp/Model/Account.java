@@ -15,10 +15,10 @@ public class Account implements Serializable {
     private String status;
     @SerializedName("createdAt")
     @Expose
-    private Integer createdAt;
+    private String createdAt;
     @SerializedName("updatedAt")
     @Expose
-    private Integer updatedAt;
+    private String updatedAt;
     @SerializedName("name")
     @Expose
     private String name;
@@ -28,9 +28,6 @@ public class Account implements Serializable {
     @SerializedName("phone")
     @Expose
     private String phone;
-    @SerializedName("username")
-    @Expose
-    private String username;
     @SerializedName("password")
     @Expose
     private String password;
@@ -61,19 +58,19 @@ public class Account implements Serializable {
         this.status = status;
     }
 
-    public Integer getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Integer createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Integer getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Integer updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -99,14 +96,6 @@ public class Account implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {

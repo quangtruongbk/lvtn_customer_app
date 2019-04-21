@@ -145,9 +145,11 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navCreateBranch) {
+            showProgressBar();
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             fragmentTransaction.replace(R.id.frameFragment, new CreateBranchFragment());
             fragmentTransaction.addToBackStack(null);
+            hideProgressBar();
             fragmentTransaction.commit();
         } else if (id == R.id.navQRCode) {
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
