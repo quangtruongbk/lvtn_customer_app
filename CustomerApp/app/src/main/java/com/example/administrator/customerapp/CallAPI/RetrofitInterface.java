@@ -10,15 +10,13 @@ import com.example.administrator.customerapp.Model.SupportedModel.SpecificQueueR
 
 import java.util.ArrayList;
 
-import javax.xml.transform.Result;
-
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -36,15 +34,23 @@ public interface RetrofitInterface {
     @GET("branch/{branchID}/json")
     Call<ArrayList<Queue>> getQueue(@Path("branchID") String branchID);
 
-    @GET("queuerequest/queueid={queueID}/json")
-    Call<ArrayList<QueueRequest>> getQueueRequest(@Path("queueID") String queueID);
+    @GET("queuerequest/getlist?")
+    Call<ArrayList<QueueRequest>> getQueueRequest(@Query("queueid") String queueID, @Query("status") String status);
 
-    @GET("queuerequest/accountid={accountID}/json")
-    Call<SpecificQueueRequest> getSpecificQueueRequest(@Header("token") String token, @Path("accountID") String accountID);
+    @GET("/queuerequest/detail?")
+    Call<SpecificQueueRequest> getCurrrentQueueRequest(@Header("token") String token, @Query("accountid") String accountID);
 
     @FormUrlEncoded
     @POST("/queuerequest/create")
     Call<Void> createQueueRequest(@Header("token") String token, @Field("accountid")String accountID, @Field("queueid")String queueID, @Field("customername")String name, @Field("customerphone")String phone, @Field("customeremail")String email);
+
+    @FormUrlEncoded
+    @PUT("/queuerequest/edit")
+    Call<Void> editQueueRequest(@Header("token") String token, @Field("queuerequestod")String queueRequestID, @Field("customername")String name, @Field("customerphone")String phone, @Field("customeremail")String email);
+
+    @FormUrlEncoded
+    @PUT("/queuerequest/cancel")
+    Call<Void> cancelQueueRequest(@Header("token") String token, @Field("queuerequestid")String queueRequestID);
 
     @GET("history/accountid={accountID}/json")
     Call<ArrayList<History>> getHistory(@Header("token") String token, @Path("accountID") String accountID);

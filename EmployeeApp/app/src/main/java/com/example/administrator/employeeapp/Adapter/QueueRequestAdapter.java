@@ -31,6 +31,8 @@ import com.example.administrator.employeeapp.Model.QueueRequest;
 import com.example.administrator.employeeapp.R;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapter.RecyclerViewHolder> {
 
@@ -39,7 +41,9 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
     private Account account;
     private QueueRequestContract.Presenter queueRequestPresenter;
     private AlertDialog.Builder sendEmailDialogBuilder;
+    private AlertDialog.Builder editQueueRequestDialogBuilder;
     private AlertDialog sendEmailDialog;
+    private AlertDialog editQueueRequestDialog;
     private static String remainerMessage = "Hệ thống quản lý hàng đợi xin thông báo: Yêu cầu của bạn đang chuẩn bị tới lượt, xin vui lòng hãy đến ngay cơ sở để chuẩn bị. Xin cảm ơn quý khách.";
     private static String accidentMessage = "Hệ thống quản lý hàng đợi xin thông báo: Do sự cố ngoài ý muốn mà hệ thống  buộc lòng phải hủy yêu cầu của bạn. Mong quý khách thông cảm.";
 
@@ -49,6 +53,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
         this.account = account;
         this.queueRequestPresenter = presenter;
         sendEmailDialogBuilder = new AlertDialog.Builder(context);
+        editQueueRequestDialogBuilder = new AlertDialog.Builder(context);
     }
 
     @Override
@@ -78,7 +83,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.receiveCustomerBtn:
-                                //handle menu1 click
+                                queueRequestPresenter.checkInOut(account.getToken(), queueRequestList.get(position).getId(), "0");
                                 return true;
                             case R.id.callCustomerBtn:
                                 if (holder.phoneTxt.getText() == null || holder.phoneTxt.getText().equals("")) {
@@ -97,10 +102,10 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                                 showSendEmailDialog(queueRequestList.get(position));
                                 return true;
                             case R.id.editBtn:
-                                //handle menu3 click
+                                showEditQueueRequestDialog(queueRequestList.get(position).getId());
                                 return true;
                             case R.id.cancelBtn:
-                                //handle menu3 click
+                                queueRequestPresenter.cancelQueueRequest(account.getToken(), queueRequestList.get(position).getId());
                                 return true;
                             default:
                                 return false;
@@ -112,8 +117,6 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
 
             }
         });
-
-
     }
 
     @Override
@@ -198,4 +201,47 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
         sendEmailDialog = sendEmailDialogBuilder.show();
     }
 
+    public void showEditQueueRequestDialog(final String queueRequestID) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.edit_queuerequest_dialog, null);
+        editQueueRequestDialogBuilder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                editQueueRequestDialog.dismiss();
+            }
+        });
+        editQueueRequestDialogBuilder.setView(v);
+        final EditText nameTxt = (EditText) v.findViewById(R.id.nameTxt);
+        final EditText emailTxt = (EditText) v.findViewById(R.id.emailTxt);
+        final EditText phoneTxt = (EditText) v.findViewById(R.id.phoneTxt);
+        editQueueRequestDialog = editQueueRequestDialogBuilder.show();
+        Button createQueueRequestBtn = (Button) v.findViewById(R.id.createQueueRequestBtn);
+        createQueueRequestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean validFlag = true;
+                String name = nameTxt.getText().toString().trim();
+                String phone = phoneTxt.getText().toString().trim();
+                String email = emailTxt.getText().toString().trim();
+                if ((TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15) && (TextUtils.isEmpty(email))) {
+                    phoneTxt.setError("Bạn phải điền ít nhất một trong 2 số điện thoại hoặc email");
+                    emailTxt.setError("Bạn phải điền ít nhất một trong 2 số điện thoại hoặc email");
+                    validFlag = false;
+                } else {
+                    phoneTxt.setError(null);
+                    emailTxt.setError(null);
+                }
+                Pattern p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
+                Matcher m = p.matcher(name);
+                boolean b = m.find();
+                if (b || TextUtils.isEmpty(name)) {
+                    nameTxt.setError("Tên tồn tại ký tự đặc biệt hoặc bị để trống.");
+                    validFlag = false;
+                } else {
+                    nameTxt.setError(null);
+                }
+                if (validFlag == true)
+                    queueRequestPresenter.editQueueRequest(account.getToken(), queueRequestID, name, phone, email);
+            }
+        });
+    }
 }

@@ -87,6 +87,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                 Log.d("1abc", "Vi Tri: " + Integer.toString(position));
                 Bundle args = new Bundle();
                 args.putString("branchID", branchList.get(position).getId());
+                args.putString("branchName", branchList.get(position).getName());
                 QueueFragment queueFragment = new QueueFragment();
                 queueFragment.setArguments(args);
                 ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.frameFragment, queueFragment).addToBackStack(null).commit();

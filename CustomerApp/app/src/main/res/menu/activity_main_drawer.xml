@@ -13,13 +13,13 @@
             android:icon="@drawable/account"
             android:title="Tài khoản của tôi" />
         <item
+            android:id="@+id/navCurrentQueueRequest"
+            android:icon="@drawable/qrcode"
+            android:title="Yêu cầu hiện tại của tôi" />
+        <item
             android:id="@+id/navHistory"
             android:icon="@drawable/history"
             android:title="Lịch sử" />
-        <item
-            android:id="@+id/navQRCode"
-            android:icon="@drawable/qrcode"
-            android:title="Mã QR" />
         <item
             android:id="@+id/navLogout"
             android:icon="@drawable/logout"

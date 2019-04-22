@@ -41,9 +41,11 @@ public class QueueFragment extends Fragment implements QueueContract.View{
 
     private RetrofitInterface callAPIService;
     private RecyclerView queueRecyclerView;
+    private TextView pathTxt;
     private QueueAdapter queueAdapter;
     private ArrayList<Queue> queueArrayList;
     private QueueContract.Presenter queuePresenter;
+    private String branchName;
     private AlertDialog waitingDialog;
     private AlertDialog.Builder waitingDialogBuilder;
     private AlertDialog.Builder noticeDialog;
@@ -58,11 +60,15 @@ public class QueueFragment extends Fragment implements QueueContract.View{
         toolbarTitle.setText("Hàng đợi");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         queueRecyclerView = (RecyclerView) view.findViewById(R.id.queueRecyclerView);
+        pathTxt = (TextView) view.findViewById(R.id.pathTxt);
         assignDialog();
         queuePresenter = new QueuePresenter(this);
         String branchID = getArguments().getString("branchID");
+        branchName = getArguments().getString("branchName");
+        if(branchName!=null){
+            pathTxt.setText(branchName);
+        }
         if(branchID!=null) {
-            Log.d("1abc", branchID);
             queuePresenter.getQueueFromServer(branchID);
         }
         return view;
@@ -100,7 +106,7 @@ public class QueueFragment extends Fragment implements QueueContract.View{
 
     @Override
     public void setUpAdapter(ArrayList<Queue> queue){
-        if(queue != null) queueAdapter = new QueueAdapter(queue, getActivity());
+        if(queue != null) queueAdapter = new QueueAdapter(queue, getActivity(), branchName);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         queueRecyclerView.setLayoutManager(layoutManager);

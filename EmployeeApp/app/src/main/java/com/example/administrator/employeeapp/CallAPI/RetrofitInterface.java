@@ -41,8 +41,20 @@ public interface RetrofitInterface {
     @GET("branch/{branchID}/json")
     Call<ArrayList<Queue>> getQueue(@Path("branchID") String branchID);
 
-    @GET("queuerequest/queueid={queueID}/json")
-    Call<ArrayList<QueueRequest>> getQueueRequest(@Path("queueID") String queueID);
+    @GET("queuerequest/getlist?")
+    Call<ArrayList<QueueRequest>> getQueueRequest(@Query("queueid") String queueID, @Query("status") String status);
+
+    @FormUrlEncoded
+    @PUT("/queuerequest/checkinout")
+    Call<Void> checkInOut(@Header("token") String token, @Field("queuerequestid")String queueRequestID, @Field("type")String type);
+
+    @FormUrlEncoded
+    @PUT("/queuerequest/cancel")
+    Call<Void> cancelQueueRequest(@Header("token") String token, @Field("queuerequestid")String queueRequestID);
+
+    @FormUrlEncoded
+    @PUT("/queuerequest/edit")
+    Call<Void> editQueueRequest(@Header("token") String token, @Field("queuerequestod")String queueRequestID, @Field("customername")String name, @Field("customerphone")String phone, @Field("customeremail")String email);
 
     @GET("history/accountid={accountID}/json")
     Call<ArrayList<History>> getHistory(@Header("token") String token, @Path("accountID") String accountID);

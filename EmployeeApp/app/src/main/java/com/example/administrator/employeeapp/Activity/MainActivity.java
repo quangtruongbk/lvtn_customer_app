@@ -37,7 +37,6 @@ import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract.View {
-
     private FragmentManager framentManager;
     private AlertDialog waitingDialog;
     private AlertDialog.Builder waitingDialogBuilder;

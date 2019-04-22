@@ -13,16 +13,21 @@ import retrofit2.http.Header;
 
 public interface QueueRequestContract {
     interface View extends BaseView<Presenter> {
-        void showDialog(String message);
+        void showDialog(String message, Boolean isSuccess);
         void showProgressBar();
         void hideProgressBar();
         void setUpAdapter(ArrayList<QueueRequest> QueueRequest);
+        void setUpOnGoingRequestAdapter(ArrayList<QueueRequest> QueueRequest);
     }
 
     interface Presenter extends BasePresenter {
         void getQueueRequestFromServer(String queueID);
+        void getOnGoingQueueRequestFromServer(String queueID);
         void sendEmail(String token, String email, String message);
+        void checkInOut(String token, String queueRequestID, String type);
         void createQueueRequest(String token, String accountID, String queueID, String name, String phone, String email);
+        void cancelQueueRequest(String token, String queueRequestID);
+        void editQueueRequest(String token, String queueRequestID, String name, String phone, String email);
         void disconnectSocket(Emitter.Listener onQueueChange);
         void listeningSocket(Emitter.Listener onQueueChange);
     }

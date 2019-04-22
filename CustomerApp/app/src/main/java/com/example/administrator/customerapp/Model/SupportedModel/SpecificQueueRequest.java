@@ -1,5 +1,7 @@
 package com.example.administrator.customerapp.Model.SupportedModel;
 
+import android.support.annotation.Nullable;
+
 import com.example.administrator.customerapp.Model.QueueRequest;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,20 +10,18 @@ public class SpecificQueueRequest extends QueueRequest {
 
     @SerializedName("branchName")
     @Expose
+    @Nullable
     private String branchName;
 
     @SerializedName("queueName")
     @Expose
+    @Nullable
     private String queueName;
-
 
     @SerializedName("branchID")
     @Expose
+    @Nullable
     private String branchID;
-
-    @SerializedName("queueID")
-    @Expose
-    private String queueID;
 
     public String getBranchID() {
         return branchID;
@@ -29,16 +29,6 @@ public class SpecificQueueRequest extends QueueRequest {
 
     public void setBranchID(String branchID) {
         this.branchID = branchID;
-    }
-
-    @Override
-    public String getQueueID() {
-        return queueID;
-    }
-
-    @Override
-    public void setQueueID(String queueID) {
-        this.queueID = queueID;
     }
 
     public void setBranchName(String branchName) {

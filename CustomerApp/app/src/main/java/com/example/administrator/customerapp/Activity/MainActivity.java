@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.administrator.customerapp.Contract.MainActivityContract;
+import com.example.administrator.customerapp.Fragment.CurrentQueueRequestFragment;
 import com.example.administrator.customerapp.Fragment.HistoryFragment;
 import com.example.administrator.customerapp.Fragment.HomeFragment;
 import com.example.administrator.customerapp.Fragment.MyAccountFragment;
@@ -148,9 +149,9 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.frameFragment, new HistoryFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        } else if (id == R.id.navQRCode) {
+        } else if (id == R.id.navCurrentQueueRequest) {
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frameFragment, new QRCodeFragment());
+            fragmentTransaction.replace(R.id.frameFragment, new CurrentQueueRequestFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navLogout) {

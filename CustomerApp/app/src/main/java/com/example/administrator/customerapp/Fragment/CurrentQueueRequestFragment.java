@@ -4,35 +4,38 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.administrator.customerapp.Adapter.HistoryAdapter;
 import com.example.administrator.customerapp.CallAPI.APIClient;
 import com.example.administrator.customerapp.CallAPI.RetrofitInterface;
-import com.example.administrator.customerapp.Contract.HistoryContract;
+import com.example.administrator.customerapp.Contract.CurrentQueueRequestContract;
 import com.example.administrator.customerapp.Model.Account;
-import com.example.administrator.customerapp.Model.History;
-import com.example.administrator.customerapp.Model.Review;
-import com.example.administrator.customerapp.Presenter.HistoryPresenter;
+import com.example.administrator.customerapp.Model.SupportedModel.SpecificQueueRequest;
+import com.example.administrator.customerapp.Presenter.CurrentQueueRequestPresenter;
 import com.example.administrator.customerapp.R;
 import com.google.gson.Gson;
-
-import java.util.ArrayList;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class CurrentQueueRequestFragment extends Fragment implements HistoryContract.View{
+public class CurrentQueueRequestFragment extends Fragment implements CurrentQueueRequestContract.View {
 
     private RetrofitInterface callAPIService;
     private RecyclerView historyRecyclerView;
@@ -44,7 +47,11 @@ public class CurrentQueueRequestFragment extends Fragment implements HistoryCont
     private TextView statusTxt;
     private TextView branchNameTxt;
     private TextView queueNameTxt;
-    private HistoryContract.Presenter historyPresenter;
+    private Button goToQueueBtn;
+    private ImageView QRCodeImg;
+    private LinearLayout currentQueueRequestLinearLayout;
+    private TextView noCurrentRequestTxt;
+    private CurrentQueueRequestContract.Presenter currentQueueRequestPresenter;
     private AlertDialog waitingDialog;
     private AlertDialog.Builder waitingDialogBuilder;
     private AlertDialog.Builder noticeDialog;
@@ -63,7 +70,6 @@ public class CurrentQueueRequestFragment extends Fragment implements HistoryCont
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
         toolbarTitle.setText("Lịch sử");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        historyRecyclerView = (RecyclerView) view.findViewById(R.id.historyRequestRecyclerView);
         nameTxt = (TextView) view.findViewById(R.id.nameTxt);
         emailTxt = (TextView) view.findViewById(R.id.emailTxt);
         phoneTxt = (TextView) view.findViewById(R.id.phoneTxt);
@@ -71,8 +77,12 @@ public class CurrentQueueRequestFragment extends Fragment implements HistoryCont
         statusTxt = (TextView) view.findViewById(R.id.statusTxt);
         branchNameTxt = (TextView) view.findViewById(R.id.branchNameTxt);
         queueNameTxt = (TextView) view.findViewById(R.id.queueNameTxt);
+        goToQueueBtn = (Button) view.findViewById(R.id.goToQueueBtn);
+        QRCodeImg = (ImageView) view.findViewById(R.id.QRCodeImg);
+        currentQueueRequestLinearLayout = (LinearLayout) view.findViewById(R.id.currentQueueRequestLinearLayout);
+        noCurrentRequestTxt = (TextView) view.findViewById(R.id.noCurrentRequestTxt);
         assignDialog();
-        historyPresenter = new HistoryPresenter(this);
+        currentQueueRequestPresenter = new CurrentQueueRequestPresenter(this);
         sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);
         String accountString = sharedPreferences.getString("MyAccount", "empty");
         Gson gson = new Gson();
@@ -80,18 +90,18 @@ public class CurrentQueueRequestFragment extends Fragment implements HistoryCont
         if (!accountString.equals("null")) {
             account = gson.fromJson(accountString, Account.class);
         }
-        historyPresenter.getHistoryFromServer(account.getToken(), account.getId());
+        currentQueueRequestPresenter.getCurrentQueueRequest(account.getToken(), account.getId());
         return view;
     }
 
-    private void assignDialog(){
+    private void assignDialog() {
         noticeDialog = new AlertDialog.Builder(getActivity());
         waitingDialogBuilder = new AlertDialog.Builder(getActivity());
         fullHistoryDialogBuidler = new AlertDialog.Builder(getActivity());
     }
 
     @Override
-    public void showDialog(String message){
+    public void showDialog(String message) {
         noticeDialog.setMessage(message)
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -116,53 +126,35 @@ public class CurrentQueueRequestFragment extends Fragment implements HistoryCont
     }
 
     @Override
-    public void setUpAdapter(ArrayList<History> historyRequest){
-        for(int i = 0; i < historyRequest.size(); i++) Log.d("1abc", "history: " + historyRequest.get(i).getCustomerName());
-        if(historyRequest != null && account!=null) historyAdapter = new HistoryAdapter(historyRequest, getActivity(), historyPresenter, account);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        historyRecyclerView.setLayoutManager(layoutManager);
-        historyRecyclerView.setAdapter(historyAdapter);
-    }
-
-    @Override
-    public void showFullHistoryDialog(Review review, Account account, History history) {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.history_dialog, null);
-        fullHistoryDialogBuidler.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                fullHistoryDialog.dismiss();
+    public void setUpView(SpecificQueueRequest queueRequest) {
+        if(queueRequest == null || queueRequest.getId() == null){
+            currentQueueRequestLinearLayout.setVisibility(View.GONE);
+            noCurrentRequestTxt.setVisibility(View.VISIBLE);
+            return;
+        }
+        nameTxt.setText("Tên: " + queueRequest.getCustomerName());
+        emailTxt.setText("Email: " + queueRequest.getCustomerEmail());
+        phoneTxt.setText("SĐT: " + queueRequest.getCustomerPhone());
+        timeTxt.setText("Thời gian đăng ký: " + queueRequest.getCreatedAt().toString());
+        if (queueRequest.getStatus().equals("0")) statusTxt.setText("Tình trạng: Đang đợi");
+        if (queueRequest.getStatus().equals("1"))
+            statusTxt.setText("Tình trạng: Đang sử dụng dịch vụ");
+        branchNameTxt.setText("Tên cơ sở: " + queueRequest.getBranchName());
+        queueNameTxt.setText("Tên hàng đợi: " + queueRequest.getQueueName());
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(queueRequest.getId(), BarcodeFormat.QR_CODE, 300, 300);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
             }
-        });
-        fullHistoryDialogBuidler.setView(v);
-        TextView nameTxt = (TextView) v.findViewById(R.id.nameTxt);
-        TextView emailTxt = (TextView) v.findViewById(R.id.emailTxt);
-        TextView phoneTxt = (TextView) v.findViewById(R.id.phoneTxt);
-        TextView timeTxt = (TextView) v.findViewById(R.id.timeTxt);
-        TextView statusTxt = (TextView) v.findViewById(R.id.statusTxt);
-        TextView branchNameTxt = (TextView) v.findViewById(R.id.branchNameTxt);
-        TextView queueNameTxt = (TextView) v.findViewById(R.id.queueNameTxt);
-        TextView startTimeTxt = (TextView) v.findViewById(R.id.startTimeTxt);
-        TextView endTimeTxt = (TextView) v.findViewById(R.id.endTimeTxt);
-        TextView waitingScoreTxt = (TextView) v.findViewById(R.id.waitingScoreTxt);
-        TextView serviceScoreTxt = (TextView) v.findViewById(R.id.serviceScoreTxt);
-        TextView spaceScoreTxt = (TextView) v.findViewById(R.id.spaceScoreTxt);
-        TextView commentTxt = (TextView) v.findViewById(R.id.commentTxt);
-        TextView ratingBtn = (Button) v.findViewById(R.id.ratingBtn);
-        nameTxt.setText("Tên: " + history.getCustomerName());
-        phoneTxt.setText("SĐT: " + history.getCustomerPhone());
-        emailTxt.setText("Email: " + history.getCustomerEmail());
-        timeTxt.setText("Thời gian đăng ký: " + history.getCreatedAt());
-        statusTxt.setText("Trạng thái: " + history.getStatus()); //Bo sung status
-        branchNameTxt.setText("Cơ sở: " + history.getBranchName());
-        queueNameTxt.setText("Hàng đợi: " + history.getQueueName());
-        startTimeTxt.setText("Thời gian băt đầu: " + history.getStartTime());
-        endTimeTxt.setText("Thời gian kết thúc: " + history.getEndTime());
-        waitingScoreTxt.setText("Điểm thời gian chờ đợi: " + review.getWaitingScore());
-        serviceScoreTxt.setText("Điểm phục vụ: " + review.getServiceScore());
-        spaceScoreTxt.setText("Điểm không gian: " + review.getSpaceScore());
-        commentTxt.setText("Nhận xét: " + review.getComment());
-
-        fullHistoryDialog = fullHistoryDialogBuidler.show();
+            QRCodeImg.setImageBitmap(bmp);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
     }
 }

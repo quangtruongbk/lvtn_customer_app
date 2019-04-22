@@ -47,11 +47,11 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 
 public class QueueFragment extends Fragment implements QueueContract.View{
-
     private RetrofitInterface callAPIService;
     private RecyclerView queueRecyclerView;
     private QueueAdapter queueAdapter;
     private Button createQueueBtn;
+    private TextView pathTxt;
     private ArrayList<Queue> queueArrayList;
     private QueueContract.Presenter queuePresenter;
     private AlertDialog waitingDialog;
@@ -62,6 +62,7 @@ public class QueueFragment extends Fragment implements QueueContract.View{
     private SharedPreferences sharedPreferences;
     private Account account;
     private String branchID;
+    private String branchName;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,10 +73,15 @@ public class QueueFragment extends Fragment implements QueueContract.View{
         toolbarTitle.setText("Hàng đợi");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         queueRecyclerView = (RecyclerView) view.findViewById(R.id.queueRecyclerView);
+        pathTxt = (TextView) view.findViewById(R.id.pathTxt);
         createQueueBtn = (Button) view.findViewById(R.id.createQueueBtn);
         assignDialog();
         queuePresenter = new QueuePresenter(this);
         branchID =  getArguments().getString("branchID");
+        branchName = getArguments().getString("branchName");
+        if(branchName!=null){
+            pathTxt.setText(branchName);
+        }
         if(branchID!=null) {
             Log.d("1abc", branchID);
             queuePresenter.getQueueFromServer(branchID);
@@ -123,7 +129,7 @@ public class QueueFragment extends Fragment implements QueueContract.View{
 
     @Override
     public void setUpAdapter(ArrayList<Queue> queue){
-        if(queue != null) queueAdapter = new QueueAdapter(queue, getActivity(), queuePresenter, account);
+        if(queue != null) queueAdapter = new QueueAdapter(queue, getActivity(), queuePresenter, account, branchName);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         queueRecyclerView.setLayoutManager(layoutManager);

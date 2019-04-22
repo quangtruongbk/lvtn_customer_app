@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public interface QueueRequestContract {
     interface View extends BaseView<Presenter> {
-        void showDialog(String message);
+        void showDialog(String message, Boolean isSuccess);
         void showProgressBar();
         void hideProgressBar();
         void setUpAdapter(ArrayList<QueueRequest> QueueRequest);
@@ -18,6 +18,8 @@ public interface QueueRequestContract {
     interface Presenter extends BasePresenter {
         void getQueueRequestFromServer(String queueID);
         void createQueueRequest(String token, String accountID, String queueID, String name, String phone, String email);
+        void editQueueRequest(String token, String queueRequestID, String name, String phone, String email);
+        void cancelQueueRequest(String token, String queueRequestID);
         void disconnectSocket(Emitter.Listener onQueueChange);
         void listeningSocket(Emitter.Listener onQueueChange);
 

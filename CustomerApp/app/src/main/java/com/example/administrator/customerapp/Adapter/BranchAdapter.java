@@ -58,6 +58,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                 Log.d("1abc", "BranchID: " + branchList.get(position).getId());
                 Log.d("1abc", "BranchID: " + branchList.get(position).getName());
                 args.putString("branchID", branchList.get(position).getId());
+                args.putString("branchName", branchList.get(position).getName());
                 QueueFragment queueFragment = new QueueFragment();
                 queueFragment.setArguments(args);
                 ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.frameFragment, queueFragment).addToBackStack(null).commit();

@@ -1,5 +1,7 @@
 package com.example.administrator.customerapp.Model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,42 +11,53 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class QueueRequest {
-
     @SerializedName("id")
     @Expose
+    @Nullable
     private String id;
     @SerializedName("queueId")
     @Expose
+    @Nullable
     private String queueId;
     @SerializedName("createdAt")
     @Expose
+    @Nullable
     private String createdAt;
     @SerializedName("updatedAt")
     @Expose
+    @Nullable
     private String updatedAt;
     @SerializedName("customerName")
     @Expose
+    @Nullable
     private String customerName;
     @SerializedName("customerPhone")
     @Expose
+    @Nullable
     private String customerPhone;
     @SerializedName("customerEmail")
     @Expose
+    @Nullable
     private String customerEmail;
     @SerializedName("queueID")
     @Expose
+    @Nullable
     private String queueID;
     @SerializedName("accountID")
     @Expose
+    @Nullable
     private String accountID;
     @SerializedName("status")
     @Expose
+    @Nullable
     private String status;
     @SerializedName("startTime")
     @Expose
+    @Nullable
     private String startTime;
     @SerializedName("endTime")
     @Expose
+    @Nullable
     private String endTime;
 
     public String getId() {

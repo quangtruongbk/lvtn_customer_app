@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.administrator.customerapp"
+        applicationId "com.example.administrator.employeeapp"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
@@ -32,5 +32,6 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    implementation 'com.google.zxing:core:3.3.2'
 
 }

@@ -37,12 +37,14 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
     private QueueContract.Presenter queuePresenter;
     private AlertDialog changeInfoQueueDialog;
     private AlertDialog.Builder changeInfoQueueDialogBuilder;
-    public QueueAdapter(ArrayList<Queue> data, Context context, QueueContract.Presenter presenter, Account account) {
+    private String branchName;
+    public QueueAdapter(ArrayList<Queue> data, Context context, QueueContract.Presenter presenter, Account account, String branchName) {
         this.queueList = data;
         this.context = context;
         this.account = account;
         this.queuePresenter = presenter;
         changeInfoQueueDialogBuilder = new AlertDialog.Builder(context);
+        this.branchName = branchName;
     }
 
     @Override
@@ -66,6 +68,8 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
             public void onClick(View v) {
                 Bundle args = new Bundle();
                 args.putString("queueID", queueList.get(position).getId());
+                args.putString("queueName", queueList.get(position).getName());
+                args.putString("branchName", branchName);
                 QueueRequestFragment queueRequestFragment = new QueueRequestFragment();
                 queueRequestFragment.setArguments(args);
                 ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.frameFragment, queueRequestFragment).addToBackStack(null).commit();

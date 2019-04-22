@@ -13,12 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.customerapp.Adapter.QueueAdapter;
 import com.example.administrator.customerapp.Adapter.QueueRequestAdapter;
@@ -50,6 +52,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private RecyclerView queueRequestRecyclerView;
     private QueueRequestAdapter queueRequestAdapter;
     private TextView numberOfPeopleTxt;
+    private TextView pathTxt;
     private ArrayList<QueueRequest> queueRequestArrayList;
     private QueueRequestContract.Presenter queueRequestPresenter;
     private AlertDialog waitingDialog;
@@ -64,7 +67,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.1.6:3000");
+            mSocket = IO.socket("http://192.168.1.2:3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
@@ -80,13 +83,20 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         queueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.queueRequestRecyclerView);
         numberOfPeopleTxt = (TextView) view.findViewById(R.id.numberOfPeopleTxt);
+        pathTxt = (TextView) view.findViewById(R.id.pathTxt);
         createQueueRequestFab = (FloatingActionButton) view.findViewById(R.id.createQueueRequestFab);
         assignDialog();
         queueID = getArguments().getString("queueID");
+        String branchName = getArguments().getString("branchName");
+        String queueName = getArguments().getString("queueName");
         queueRequestPresenter = new QueueRequestPresenter(this, mSocket, queueID);
         if(queueID!=null) {
             Log.d("1abc", queueID);
             queueRequestPresenter.getQueueRequestFromServer(queueID);
+        }
+
+        if(branchName != null && queueName != null){
+            pathTxt.setText(branchName + " > " +queueName);
         }
         sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);
         String accountString = sharedPreferences.getString("MyAccount", "empty");
@@ -95,7 +105,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         if (!accountString.equals("null")) {
             account = gson.fromJson(accountString, Account.class);
         }
-
         createQueueRequestFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,6 +112,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             }
         });
         queueRequestPresenter.listeningSocket(onQueueChange);
+        mSocket.on("onQueueChange", onQueueChange);
         return view;
     }
 
@@ -110,6 +120,11 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void onStop() {
         super.onStop();
         queueRequestPresenter.disconnectSocket(onQueueChange);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     private void assignDialog(){
@@ -120,15 +135,29 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     }
 
     @Override
-    public void showDialog(String message){
-        noticeDialog.setMessage(message)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        // Create the AlertDialog object and return it
-        noticeDialog.show();
+    public void showDialog(String message, Boolean isSuccess) {
+        LayoutInflater inflater = getLayoutInflater();
+        if (isSuccess) {
+            View layout = inflater.inflate(R.layout.custom_toast_success,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        } else {
+            View layout = inflater.inflate(R.layout.custom_toast_fail,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        }
     }
 
     @Override
@@ -137,18 +166,22 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         waitingDialogBuilder.setView(R.layout.waiting_dialog);
         waitingDialogBuilder.setCancelable(false);
         waitingDialog = waitingDialogBuilder.show();
+        Log.d("6abc", "Show progress bar");
     }
 
     @Override
     public void hideProgressBar() {
-        waitingDialog.dismiss();
+        if(waitingDialog != null){
+            if(waitingDialog.isShowing()) waitingDialog.dismiss();
+        }
+        Log.d("6abc", "Hide progress bar");
     }
 
     @Override
     public void setUpAdapter(ArrayList<QueueRequest> queueRequest){
         if(queueRequest != null && account != null){
             numberOfPeopleTxt.setText(Integer.toString(queueRequest.size()));
-            queueRequestAdapter = new QueueRequestAdapter(queueRequest, getActivity(), account);
+            queueRequestAdapter = new QueueRequestAdapter(queueRequest, getActivity(), queueRequestPresenter, account);
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -180,16 +213,12 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                 String name = nameTxt.getText().toString().trim();
                 String phone = phoneTxt.getText().toString().trim();
                 String email = emailTxt.getText().toString().trim();
-                if (TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15) {
-                    phoneTxt.setError("Số điện thoại không đúng định dạng hoặc bị để trống");
+                if ((TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15) && (TextUtils.isEmpty(email))) {
+                    phoneTxt.setError("Bạn phải điền ít nhất một trong 2 số điện thoại hoặc email");
+                    emailTxt.setError("Bạn phải điền ít nhất một trong 2 số điện thoại hoặc email");
                     validFlag = false;
                 } else {
                     phoneTxt.setError(null);
-                }
-                if (TextUtils.isEmpty(email)) {
-                    emailTxt.setError("Email không được để trống");
-                    validFlag = false;
-                } else {
                     emailTxt.setError(null);
                 }
                 Pattern p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
@@ -212,6 +241,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("6abc", "getQueueRequestFromServer: OnQueueChange");
                     queueRequestPresenter.getQueueRequestFromServer(queueID);
                 }
             });
