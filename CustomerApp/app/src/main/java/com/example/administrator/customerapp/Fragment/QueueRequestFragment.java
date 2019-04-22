@@ -127,11 +127,20 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         super.onDestroy();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mSocket.connected()) {
+            queueRequestPresenter.listeningSocket(onQueueChange);
+            mSocket.on("onQueueChange", onQueueChange);
+        }
+    }
+
     private void assignDialog(){
         noticeDialog = new AlertDialog.Builder(getActivity());
         waitingDialogBuilder = new AlertDialog.Builder(getActivity());
         createQueueRequestDialogBuilder = new AlertDialog.Builder(getActivity());
-
+        waitingDialog = waitingDialogBuilder.create();
     }
 
     @Override
@@ -163,10 +172,14 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     @Override
     @TargetApi(21)
     public void showProgressBar() {
-        waitingDialogBuilder.setView(R.layout.waiting_dialog);
-        waitingDialogBuilder.setCancelable(false);
-        waitingDialog = waitingDialogBuilder.show();
-        Log.d("6abc", "Show progress bar");
+        if(waitingDialog != null) {
+            if(!waitingDialog.isShowing()) {
+                waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                waitingDialogBuilder.setCancelable(false);
+                waitingDialog = waitingDialogBuilder.show();
+                Log.d("6abc", "Show progress bar");
+            }
+        }
     }
 
     @Override

@@ -31,6 +31,7 @@ import com.example.administrator.employeeapp.Contract.HomeContract;
 import com.example.administrator.employeeapp.Contract.QueueContract;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Model.History;
 import com.example.administrator.employeeapp.Model.Queue;
 import com.example.administrator.employeeapp.Model.Review;
@@ -61,6 +62,7 @@ public class QueueFragment extends Fragment implements QueueContract.View{
     private AlertDialog.Builder createQueueDialogBuilder;
     private SharedPreferences sharedPreferences;
     private Account account;
+    private Employee employee;
     private String branchID;
     private String branchName;
     @Nullable
@@ -93,7 +95,12 @@ public class QueueFragment extends Fragment implements QueueContract.View{
         if (!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
         }
-
+        String employeeString = sharedPreferences.getString("Employee", "empty");
+        employee = new Employee();
+        if (!employeeString.equals("empty")) {
+            employee = gson.fromJson(employeeString, Employee.class);
+        }
+        if(!employee.getRole().checkCreateQueue(branchID)) createQueueBtn.setVisibility(View.GONE);
         createQueueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +136,7 @@ public class QueueFragment extends Fragment implements QueueContract.View{
 
     @Override
     public void setUpAdapter(ArrayList<Queue> queue){
-        if(queue != null) queueAdapter = new QueueAdapter(queue, getActivity(), queuePresenter, account, branchName);
+        if(queue != null) queueAdapter = new QueueAdapter(queue, getActivity(), queuePresenter, account, employee, branchID, branchName);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         queueRecyclerView.setLayoutManager(layoutManager);

@@ -102,7 +102,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                                 showSendEmailDialog(queueRequestList.get(position));
                                 return true;
                             case R.id.editBtn:
-                                showEditQueueRequestDialog(queueRequestList.get(position).getId());
+                                showEditQueueRequestDialog(queueRequestList.get(position));
                                 return true;
                             case R.id.cancelBtn:
                                 queueRequestPresenter.cancelQueueRequest(account.getToken(), queueRequestList.get(position).getId());
@@ -201,7 +201,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
         sendEmailDialog = sendEmailDialogBuilder.show();
     }
 
-    public void showEditQueueRequestDialog(final String queueRequestID) {
+    public void showEditQueueRequestDialog(final QueueRequest queueRequest) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.edit_queuerequest_dialog, null);
         editQueueRequestDialogBuilder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
@@ -213,6 +213,9 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
         final EditText nameTxt = (EditText) v.findViewById(R.id.nameTxt);
         final EditText emailTxt = (EditText) v.findViewById(R.id.emailTxt);
         final EditText phoneTxt = (EditText) v.findViewById(R.id.phoneTxt);
+        nameTxt.setText(queueRequest.getCustomerName());
+        emailTxt.setText(queueRequest.getCustomerEmail());
+        phoneTxt.setText(queueRequest.getCustomerPhone());
         editQueueRequestDialog = editQueueRequestDialogBuilder.show();
         Button createQueueRequestBtn = (Button) v.findViewById(R.id.createQueueRequestBtn);
         createQueueRequestBtn.setOnClickListener(new View.OnClickListener() {
@@ -240,7 +243,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                     nameTxt.setError(null);
                 }
                 if (validFlag == true)
-                    queueRequestPresenter.editQueueRequest(account.getToken(), queueRequestID, name, phone, email);
+                    queueRequestPresenter.editQueueRequest(account.getToken(), queueRequest.getId(), name, phone, email);
             }
         });
     }

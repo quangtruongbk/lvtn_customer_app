@@ -2,6 +2,7 @@ package com.example.administrator.employeeapp.Activity;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +32,7 @@ import com.example.administrator.employeeapp.Fragment.HomeFragment;
 import com.example.administrator.employeeapp.Fragment.MyAccountFragment;
 import com.example.administrator.employeeapp.Fragment.QRCodeFragment;
 import com.example.administrator.employeeapp.Model.Account;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Presenter.MainActivityPresenter;
 import com.example.administrator.employeeapp.R;
 import com.google.gson.Gson;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private MainActivityContract.Presenter mainActivityPresenter;
+    private Account account;
+    private Employee employee;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +62,16 @@ public class MainActivity extends AppCompatActivity
         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         String accountString = sharedPreferences.getString("MyAccount", "empty");
         Gson gson = new Gson();
-        Account account = new Account();
+        account = new Account();
         if(!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
         }
+        String employeeString = sharedPreferences.getString("Employee", "empty");
+        employee = new Employee();
+        if(!employeeString.equals("empty")) {
+            employee = gson.fromJson(employeeString, Employee.class);
+        }
+        Log.d("6abc", "Get Role Create Branch On Create: " + employee.getRole().getCreateBranch());
         editor = sharedPreferences.edit();
         Log.d("1abc", "Token: " + account.getId() + account.getName() + " " + account.getToken());
         mainActivityPresenter = new MainActivityPresenter(this, this);
@@ -90,6 +100,9 @@ public class MainActivity extends AppCompatActivity
                 openMenu();
             }
         });
+
+        Menu navMenu = navigationView.getMenu();
+        if(employee.getRole().getCreateBranch().equals("0")) navMenu.findItem(R.id.navCreateBranch).setVisible(false);
 
         framentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = framentManager.beginTransaction();

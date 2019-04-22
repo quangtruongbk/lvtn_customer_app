@@ -14,7 +14,7 @@
             android:title="Tài khoản của tôi" />
         <item
             android:id="@+id/navCurrentQueueRequest"
-            android:icon="@drawable/qrcode"
+            android:icon="@drawable/now"
             android:title="Yêu cầu hiện tại của tôi" />
         <item
             android:id="@+id/navHistory"

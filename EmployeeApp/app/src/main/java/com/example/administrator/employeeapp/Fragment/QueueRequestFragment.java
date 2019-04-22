@@ -34,11 +34,14 @@ import com.example.administrator.employeeapp.R;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.google.gson.Gson;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import com.github.nkzawa.socketio.client.Socket;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class QueueRequestFragment extends Fragment implements QueueRequestContract.View {
@@ -62,6 +65,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private Account account;
     private String queueID;
     private Socket mSocket;
+
     {
         try {
             mSocket = IO.socket("http://192.168.1.2:3000");
@@ -120,17 +124,16 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void onStop() {
         super.onStop();
         queueRequestPresenter.disconnectSocket(onQueueChange);
-
     }
 
-  /*  @Override
+   @Override
     public void onResume() {
         super.onResume();
         if (!mSocket.connected()) {
             queueRequestPresenter.listeningSocket(onQueueChange);
             mSocket.on("onQueueChange", onQueueChange);
         }
-    } */
+    }
 
     @Override
     public void onDestroy() {
@@ -141,6 +144,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         noticeDialog = new AlertDialog.Builder(getActivity());
         waitingDialogBuilder = new AlertDialog.Builder(getActivity());
         createQueueRequestDialogBuilder = new AlertDialog.Builder(getActivity());
+        waitingDialog = waitingDialogBuilder.create();
     }
 
     @Override
@@ -172,15 +176,20 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     @Override
     @TargetApi(21)
     public void showProgressBar() {
-        waitingDialogBuilder.setView(R.layout.waiting_dialog);
-        waitingDialogBuilder.setCancelable(false);
-        waitingDialog = waitingDialogBuilder.show();
+        if (waitingDialog != null) {
+            if (!waitingDialog.isShowing()) {
+                waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                waitingDialogBuilder.setCancelable(false);
+                waitingDialog = waitingDialogBuilder.show();
+                Log.d("6abc", "Show progress bar");
+            }
+        }
     }
 
     @Override
     public void hideProgressBar() {
-        if(waitingDialog != null){
-            if(waitingDialog.isShowing()) waitingDialog.dismiss();
+        if (waitingDialog != null) {
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
         }
     }
 

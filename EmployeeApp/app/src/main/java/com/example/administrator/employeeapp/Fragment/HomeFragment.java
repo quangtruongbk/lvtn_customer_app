@@ -21,6 +21,7 @@ import com.example.administrator.employeeapp.Adapter.BranchAdapter;
 import com.example.administrator.employeeapp.Contract.HomeContract;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Presenter.HomePresenter;
 import com.example.administrator.employeeapp.R;
 import com.google.gson.Gson;
@@ -35,6 +36,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     private ArrayList<Branch> branchArrayList;
     private HomeContract.Presenter homePresenter;
     private Account account;
+    private Employee employee;
     private AlertDialog waitingDialog;
     private AlertDialog.Builder waitingDialogBuilder;
     private AlertDialog.Builder noticeDialog;
@@ -56,6 +58,11 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         account = new Account();
         if (!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
+        }
+        String employeeString = sharedPreferences.getString("Employee", "empty");
+        employee = new Employee();
+        if (!employeeString.equals("empty")) {
+            employee = gson.fromJson(employeeString, Employee.class);
         }
 
         homePresenter = new HomePresenter(this, account);
@@ -111,7 +118,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public void setUpAdapter(ArrayList<Branch> branch){
         Log.d("1abc", "Branch: " + branch.get(0).getName());
-        if(branch != null) branchAdapter = new BranchAdapter(branch, getActivity(), homePresenter, account);
+        if(branch != null) branchAdapter = new BranchAdapter(branch, getActivity(), homePresenter, account, employee);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         branchRecyclerView.setLayoutManager(layoutManager);

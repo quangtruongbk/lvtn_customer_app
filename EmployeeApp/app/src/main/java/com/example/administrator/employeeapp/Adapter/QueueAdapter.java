@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.example.administrator.employeeapp.Contract.QueueContract;
 import com.example.administrator.employeeapp.Fragment.QueueFragment;
 import com.example.administrator.employeeapp.Fragment.QueueRequestFragment;
 import com.example.administrator.employeeapp.Model.Account;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Model.Queue;
 import com.example.administrator.employeeapp.R;
 import java.util.ArrayList;
@@ -34,17 +36,21 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
     private ArrayList<Queue> queueList = new ArrayList<Queue>();
     private Context context;
     private Account account;
+    private Employee employee;
     private QueueContract.Presenter queuePresenter;
     private AlertDialog changeInfoQueueDialog;
     private AlertDialog.Builder changeInfoQueueDialogBuilder;
     private String branchName;
-    public QueueAdapter(ArrayList<Queue> data, Context context, QueueContract.Presenter presenter, Account account, String branchName) {
+    private String branchID;
+    public QueueAdapter(ArrayList<Queue> data, Context context, QueueContract.Presenter presenter, Account account, Employee employee, String branchID, String branchName) {
         this.queueList = data;
         this.context = context;
         this.account = account;
         this.queuePresenter = presenter;
         changeInfoQueueDialogBuilder = new AlertDialog.Builder(context);
         this.branchName = branchName;
+        this.branchID = branchID;
+        this.employee = employee;
     }
 
     @Override
@@ -63,7 +69,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
             if(queueList.get(position).getStatus().toString().equals("1")) holder.statusTxt.setText("Tình trạng: Đang nhận khách");
             if(queueList.get(position).getStatus().toString().equals("-1")) holder.statusTxt.setText("Tình trạng: Đã khóa");
         }
-        holder.queueRelativeLayout.setOnClickListener(new View.OnClickListener() {
+        holder.queueLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
@@ -75,6 +81,11 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
                 ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.frameFragment, queueRequestFragment).addToBackStack(null).commit();
             }
         });
+        if(!employee.getRole().checkControlQueue(branchID)){
+            holder.wholeQueueLinearLayout.setClickable(false);
+            holder.queueLinearLayout.setClickable(false);
+            holder.wholeQueueLinearLayout.setBackgroundColor(Color.rgb(202,204,206));
+        }
         holder.moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +95,8 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
                         PopupMenu popup = new PopupMenu(context, holder.moreBtn);
                         popup.inflate(R.menu.queue_menu);
                         Menu popupMenu = popup.getMenu();
+                        if(!employee.getRole().checkEditQueue(branchID)) popupMenu.findItem(R.id.editBtn).setVisible(false);
+                        if(!employee.getRole().checkControlQueue(branchID)) popupMenu.findItem(R.id.closeOpenQueueBtn).setVisible(false);
                         if(queueList.get(position).getStatus().toString().equals("0"))
                             popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Bắt đầu nhận khách");
                         else if(queueList.get(position).getStatus().toString().equals("1"))
@@ -123,14 +136,16 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
         TextView nameTxt;
         TextView numberTxt;
         TextView statusTxt;
-        LinearLayout queueRelativeLayout;
+        LinearLayout queueLinearLayout;
+        LinearLayout wholeQueueLinearLayout;
         ImageView moreBtn;
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             nameTxt = (TextView) itemView.findViewById(R.id.nameTxt);
             numberTxt = (TextView) itemView.findViewById(R.id.numberTxt);
             statusTxt = (TextView) itemView.findViewById(R.id.statusTxt);
-            queueRelativeLayout = (LinearLayout) itemView.findViewById(R.id.queueRelativeLayout);
+            queueLinearLayout = (LinearLayout) itemView.findViewById(R.id.queueLinearLayout);
+            wholeQueueLinearLayout = (LinearLayout) itemView.findViewById(R.id.wholeQueueLinearLayout);
             moreBtn = (ImageView) itemView.findViewById(R.id.moreBtn);
         }
     }

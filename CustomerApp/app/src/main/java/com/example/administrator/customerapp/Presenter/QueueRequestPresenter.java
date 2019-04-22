@@ -55,7 +55,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
                     mView.showDialog("Không thể lấy được danh sách hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<QueueRequest>> call, Throwable t) {
                 mView.hideProgressBar();
@@ -104,7 +103,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
                 if(response.code() == 200) {
                     mView.showDialog("Chỉnh sửa thành công", true);
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể tạo yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể chỉnh sửa yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }else if(response.code() == 404){
                     mView.showDialog("Không thử thực hiện tác vụ này, có vẻ như có gì đó đã thay đổi với lượt đăng ký!", false);
                 }

@@ -2,6 +2,7 @@ package com.example.administrator.employeeapp.Adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ import com.example.administrator.employeeapp.Contract.HomeContract;
 import com.example.administrator.employeeapp.Fragment.QueueFragment;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Model.Queue;
 import com.example.administrator.employeeapp.R;
 import com.example.administrator.employeeapp.Utils.GetAddressHelper;
@@ -48,13 +51,15 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
     private MyDatabaseHelper database;
     private HomeContract.Presenter homePresenter;
     private Account account;
-    public BranchAdapter(ArrayList<Branch> data, Context context, HomeContract.Presenter presenter, Account account) {
+    private Employee employee;
+    public BranchAdapter(ArrayList<Branch> data, Context context, HomeContract.Presenter presenter, Account account, Employee employee) {
         this.branchList = data;
         this.context = context;
         this.database = new MyDatabaseHelper(context);
         changeInfoBranchDialogBuilder = new AlertDialog.Builder(context);
         homePresenter = presenter;
         this.account = account;
+        this.employee = employee;
     }
 
     @Override
@@ -81,6 +86,9 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         holder.openHourTxt.setText("Giờ hoạt động: " + branchList.get(position).getOpentime() + "-" + branchList.get(position).getClosetime());
         holder.workingDateTxt.setText("Ngày hoạt động: " + branchList.get(position).getWorkingDate());
         holder.noteTxt.setText("Ghi chú: " + branchList.get(position).getNote());
+        if(employee.getRole().checkHideBranch(branchList.get(position).getId())){
+            holder.wholeBranchRow.setVisibility(View.GONE);
+        }
         holder.branchRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +106,10 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(context, holder.moreBtn);
                 popup.inflate(R.menu.branch_menu);
+                if(!employee.getRole().checkEditBranch(branchList.get(position).getId())){
+                    Menu popupMenu = popup.getMenu();
+                    popupMenu.findItem(R.id.editBtn).setVisible(false);
+                }
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -133,8 +145,8 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         TextView workingDateTxt;
         TextView noteTxt;
         LinearLayout branchRow;
+        LinearLayout wholeBranchRow;
         ImageView moreBtn;
-
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
@@ -143,6 +155,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
             phoneTxt = (TextView) itemView.findViewById(R.id.phoneTxt);
             statusTxt = (TextView) itemView.findViewById(R.id.statusTxt);
             branchRow = (LinearLayout) itemView.findViewById(R.id.branchRow);
+            wholeBranchRow = (LinearLayout) itemView.findViewById(R.id.wholeBranchRow);
             openHourTxt = (TextView) itemView.findViewById(R.id.openHoursTxt);
             workingDateTxt = (TextView) itemView.findViewById(R.id.openDayTxt);
             noteTxt = (TextView) itemView.findViewById(R.id.noteTxt);

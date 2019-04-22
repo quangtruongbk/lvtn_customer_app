@@ -38,7 +38,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
         callAPIService.getQueueRequest(queueID, "0").enqueue(new Callback<ArrayList<QueueRequest>>() {
             @Override
             public void onResponse(Call<ArrayList<QueueRequest>> call, Response<ArrayList<QueueRequest>> response) {
-                mView.hideProgressBar();
                 if(response.code() == 200) {
                     Log.d("6abc", "2");
                     ArrayList<QueueRequest> newQueueRequest = new ArrayList<QueueRequest>();
@@ -50,10 +49,10 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
                     getOnGoingQueueRequestFromServer(queueID);
 
                 }else if(response.code() == 500){
+                    mView.hideProgressBar();
                     mView.showDialog("Không thể lấy được danh sách yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<QueueRequest>> call, Throwable t) {
                 mView.hideProgressBar();
@@ -154,7 +153,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
                 if(response.code() == 200) {
                     mView.showDialog("Chỉnh sửa thành công", true);
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể tạo yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể chỉnh sửa yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }else if(response.code() == 404){
                     mView.showDialog("Không thử thực hiện tác vụ này, có vẻ như có gì đó đã thay đổi với lượt đăng ký!", false);
                 }

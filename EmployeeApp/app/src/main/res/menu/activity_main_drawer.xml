@@ -21,6 +21,10 @@
             android:icon="@drawable/qrcode"
             android:title="Mã QR" />
         <item
+            android:id="@+id/navData"
+            android:icon="@drawable/data"
+            android:title="Dữ liệu và Thống kê" />
+        <item
             android:id="@+id/navLogout"
             android:icon="@drawable/logout"
             android:title="Đăng xuất" />
