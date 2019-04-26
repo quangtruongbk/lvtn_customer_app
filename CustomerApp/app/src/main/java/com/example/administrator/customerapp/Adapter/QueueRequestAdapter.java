@@ -59,8 +59,26 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
         holder.nameTxt.setText(queueRequestList.get(position).getCustomerName());
-        if(queueRequestList.get(position).getCustomerEmail()!=null) holder.emailTxt.setText(queueRequestList.get(position).getCustomerEmail().toString());
-        if(queueRequestList.get(position).getCustomerPhone()!=null) holder.phoneTxt.setText(queueRequestList.get(position).getCustomerPhone().toString());
+        if(queueRequestList.get(position).getCustomerEmail()!=null){
+            if(queueRequestList.get(position).getCustomerEmail().length() > 4 && !queueRequestList.get(position).getAccountID().equals(account.getId())) {
+                String temp = queueRequestList.get(position).getCustomerEmail().substring(0, 4);
+                String censor = "";
+                for(int i = 0; i < queueRequestList.get(position).getCustomerEmail().length() - 4; i++) censor=censor+"*";
+                holder.emailTxt.setText("Email: " + temp + censor);
+            }else{
+                holder.emailTxt.setText("Email: " + queueRequestList.get(position).getCustomerEmail().toString());
+            }
+        }
+        if(queueRequestList.get(position).getCustomerPhone()!=null){
+            if(queueRequestList.get(position).getCustomerPhone().length() > 4 && !queueRequestList.get(position).getAccountID().equals(account.getId())){
+                String temp = queueRequestList.get(position).getCustomerPhone().substring(queueRequestList.get(position).getCustomerPhone().length() - 4, queueRequestList.get(position).getCustomerPhone().length());
+                String censor = "";
+                for(int i = 0; i < queueRequestList.get(position).getCustomerPhone().length() - 4; i++) censor=censor+"*";
+                holder.phoneTxt.setText("SĐT: " + censor + temp);
+            }else{
+                holder.phoneTxt.setText("SĐT: " + queueRequestList.get(position).getCustomerPhone().toString());
+            }
+        }
         holder.sttTxt.setText(Integer.toString(position + 1));
         if(account.getId().equals(queueRequestList.get(position).getAccountID())){
             holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(135,206,250));

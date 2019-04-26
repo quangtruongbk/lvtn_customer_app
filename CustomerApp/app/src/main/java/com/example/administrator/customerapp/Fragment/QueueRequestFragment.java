@@ -1,7 +1,9 @@
 package com.example.administrator.customerapp.Fragment;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -64,10 +66,11 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private SharedPreferences sharedPreferences;
     private String queueID;
     private Account account;
+    private Activity mActivity;
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.1.2:3000");
+            mSocket = IO.socket("http://192.168.1.3:3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
@@ -77,7 +80,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.queue_request_fragment, container, false);
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
+        Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar2);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
         toolbarTitle.setText("Lượt yêu cầu");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
@@ -98,7 +101,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         if(branchName != null && queueName != null){
             pathTxt.setText(branchName + " > " +queueName);
         }
-        sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);
+        sharedPreferences = this.mActivity.getSharedPreferences("data", MODE_PRIVATE);
         String accountString = sharedPreferences.getString("MyAccount", "empty");
         Gson gson = new Gson();
         account = new Account();
@@ -136,10 +139,18 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            mActivity =(Activity) context;
+        }
+    }
     private void assignDialog(){
-        noticeDialog = new AlertDialog.Builder(getActivity());
-        waitingDialogBuilder = new AlertDialog.Builder(getActivity());
-        createQueueRequestDialogBuilder = new AlertDialog.Builder(getActivity());
+        noticeDialog = new AlertDialog.Builder(mActivity);
+        waitingDialogBuilder = new AlertDialog.Builder(mActivity);
+        createQueueRequestDialogBuilder = new AlertDialog.Builder(mActivity);
         waitingDialog = waitingDialogBuilder.create();
     }
 
@@ -148,20 +159,20 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         LayoutInflater inflater = getLayoutInflater();
         if (isSuccess) {
             View layout = inflater.inflate(R.layout.custom_toast_success,
-                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+                    (ViewGroup) mActivity.findViewById(R.id.custom_toast_container));
             TextView text = (TextView) layout.findViewById(R.id.toastTxt);
             text.setText(message);
-            Toast toast = new Toast(getActivity());
+            Toast toast = new Toast(mActivity);
             toast.setGravity(Gravity.BOTTOM, 0, 0);
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(layout);
             toast.show();
         } else {
             View layout = inflater.inflate(R.layout.custom_toast_fail,
-                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+                    (ViewGroup) mActivity.findViewById(R.id.custom_toast_container));
             TextView text = (TextView) layout.findViewById(R.id.toastTxt);
             text.setText(message);
-            Toast toast = new Toast(getActivity());
+            Toast toast = new Toast(mActivity);
             toast.setGravity(Gravity.BOTTOM, 0, 0);
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(layout);
@@ -194,16 +205,16 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void setUpAdapter(ArrayList<QueueRequest> queueRequest){
         if(queueRequest != null && account != null){
             numberOfPeopleTxt.setText(Integer.toString(queueRequest.size()));
-            queueRequestAdapter = new QueueRequestAdapter(queueRequest, getActivity(), queueRequestPresenter, account);
+            queueRequestAdapter = new QueueRequestAdapter(queueRequest, mActivity, queueRequestPresenter, account);
         }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         queueRequestRecyclerView.setLayoutManager(layoutManager);
         queueRequestRecyclerView.setAdapter(queueRequestAdapter);
     }
 
     public void showCreateQueueRequestDialog() {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(mActivity.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.create_queuerequest_dialog, null);
         createQueueRequestDialogBuilder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -251,7 +262,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private Emitter.Listener onQueueChange = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
+            mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Log.d("6abc", "getQueueRequestFromServer: OnQueueChange");

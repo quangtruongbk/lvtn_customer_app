@@ -47,7 +47,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
                     }
                     Log.d("6abc", "getOnGoingQueueRequestFromServer");
                     getOnGoingQueueRequestFromServer(queueID);
-
                 }else if(response.code() == 500){
                     mView.hideProgressBar();
                     mView.showDialog("Không thể lấy được danh sách yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
@@ -128,7 +127,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
                 }else if(response.code() == 500){
                     mView.showDialog("Không thể tạo yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }else if(response.code() == 409){
-                    mView.showDialog("Không thể tạo yêu cầu do bạn đang có một yêu cầu chưa được hoàn tất.", false);
+                    mView.showDialog("Không thể tạo yêu cầu do số điện thoại hoặc email đang có một yêu cầu chưa được hoàn tất.", false);
                 }
                 else if(response.code() == 403){
                     mView.showDialog("Bạn không được phép thực hiện tác vụ này!", false);

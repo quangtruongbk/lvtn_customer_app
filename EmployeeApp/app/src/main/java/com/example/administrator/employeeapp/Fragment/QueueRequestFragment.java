@@ -1,13 +1,16 @@
 package com.example.administrator.employeeapp.Fragment;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -65,10 +68,11 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private Account account;
     private String queueID;
     private Socket mSocket;
+    protected Activity mActivity;
 
     {
         try {
-            mSocket = IO.socket("http://192.168.1.2:3000");
+            mSocket = IO.socket("http://192.168.1.3:3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
@@ -136,6 +140,15 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            mActivity =(Activity) context;
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
     }
@@ -197,7 +210,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void setUpAdapter(ArrayList<QueueRequest> queueRequest) {
         if (queueRequest != null && account != null) {
             numberOfPeopleTxt.setText(Integer.toString(queueRequest.size()));
-            queueRequestAdapter = new QueueRequestAdapter(queueRequest, queueRequestPresenter, getActivity(), account);
+            queueRequestAdapter = new QueueRequestAdapter(queueRequest, queueRequestPresenter, mActivity, account);
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -266,7 +279,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private Emitter.Listener onQueueChange = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
+            mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     queueRequestPresenter.getQueueRequestFromServer(queueID);

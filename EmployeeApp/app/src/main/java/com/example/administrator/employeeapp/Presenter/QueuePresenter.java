@@ -44,14 +44,14 @@ public class QueuePresenter implements QueueContract.Presenter{
                         mView.setUpAdapter(newQueue);
                     }
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể lấy được danh sách hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể lấy được danh sách hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<Queue>> call, Throwable t) {
                 mView.hideProgressBar();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
     }
@@ -65,18 +65,18 @@ public class QueuePresenter implements QueueContract.Presenter{
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if(response.code() == 200) {
-                    mView.showDialog("Tạo hàng đợi thành công!");
+                    mView.showDialog("Tạo hàng đợi thành công!", true);
                     mView.returnQueueFragment(branchID);
 
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể tạo được hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể tạo được hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
     }
@@ -90,19 +90,19 @@ public class QueuePresenter implements QueueContract.Presenter{
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if(response.code() == 200) {
-                    if(status.equals("0")) mView.showDialog("Dừng nhận khách thành công!");
-                    else if(status.equals("1")) mView.showDialog("Hàng đợi bắt đầu đón khách!");
-                    else if(status.equals("-1")) mView.showDialog("Hàng đợi đã mở khóa!");
+                    if(status.equals("0")) mView.showDialog("Dừng nhận khách thành công!", true);
+                    else if(status.equals("1")) mView.showDialog("Hàng đợi bắt đầu đón khách!", true);
+                    else if(status.equals("-1")) mView.showDialog("Hàng đợi đã mở khóa!", true);
                     mView.returnQueueFragment(branchID);
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể đổi trạng thái hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể đổi trạng thái hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
     }
@@ -116,18 +116,18 @@ public class QueuePresenter implements QueueContract.Presenter{
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if(response.code() == 200) {
-                    mView.showDialog("Chỉnh sửa thông tin hàng đợi thành công!");
+                    mView.showDialog("Chỉnh sửa thông tin hàng đợi thành công!", true);
                     mView.returnQueueFragment(branchID);
 
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể chỉnh sửa được thông tin hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể chỉnh sửa được thông tin hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
     }

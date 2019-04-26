@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,10 +118,30 @@ public class QueueFragment extends Fragment implements QueueContract.View{
     }
 
     @Override
-    public void showDialog(String message){
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    public void showDialog(String message, Boolean isSuccess) {
+        LayoutInflater inflater = getLayoutInflater();
+        if (isSuccess) {
+            View layout = inflater.inflate(R.layout.custom_toast_success,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        } else {
+            View layout = inflater.inflate(R.layout.custom_toast_fail,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        }
     }
-
     @Override
     @TargetApi(21)
     public void showProgressBar() {
