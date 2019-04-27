@@ -92,7 +92,7 @@ public class QueuePresenter implements QueueContract.Presenter{
                 if(response.code() == 200) {
                     if(status.equals("0")) mView.showDialog("Dừng nhận khách thành công!", true);
                     else if(status.equals("1")) mView.showDialog("Hàng đợi bắt đầu đón khách!", true);
-                    else if(status.equals("-1")) mView.showDialog("Hàng đợi đã mở khóa!", true);
+                    else if(status.equals("-1")) mView.showDialog("Hàng đợi đã khóa!", true);
                     mView.returnQueueFragment(branchID);
                 }else if(response.code() == 500){
                     mView.showDialog("Không thể đổi trạng thái hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);

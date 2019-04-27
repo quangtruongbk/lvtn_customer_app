@@ -12,9 +12,9 @@ public class Employee {
     @SerializedName("accountID")
     @Expose
     private String accountID;
-    @SerializedName("role")
+    @SerializedName("roles")
     @Expose
-    private Role role;
+    private Role roles;
     @SerializedName("shift")
     @Expose
     private String shift;
@@ -42,11 +42,11 @@ public class Employee {
     }
 
     public Role getRole() {
-        return role;
+        return roles;
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.roles = role;
     }
 
     public String getShift() {
