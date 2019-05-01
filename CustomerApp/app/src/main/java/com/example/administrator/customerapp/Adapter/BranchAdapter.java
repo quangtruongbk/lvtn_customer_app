@@ -47,7 +47,17 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
             if(branchList.get(position).getStatus().toString().equals("1")) holder.statusTxt.setText("Tình trạng: Đang nhận khách");
             if(branchList.get(position).getStatus().toString().equals("-1")) holder.statusTxt.setText("Tình trạng: Đã khóa");
         }
-        holder.openHourTxt.setText("Giờ hoạt động: " + branchList.get(position).getOpentime() + "-" + branchList.get(position).getClosetime());
+        String openHourHour = branchList.get(position).getOpentime().split(":")[0];
+        String openHourMinute = branchList.get(position).getOpentime().split(":")[1];
+        String closeHourHour = branchList.get(position).getClosetime().split(":")[0];
+        String closeHourMinute = branchList.get(position).getClosetime().split(":")[1];
+
+        if (Integer.parseInt(openHourHour) < 10) openHourHour = "0" + openHourHour;
+        if (Integer.parseInt(openHourMinute) < 10) openHourMinute = "0" + openHourMinute;
+        if (Integer.parseInt(closeHourHour) < 10) closeHourHour = "0" + closeHourHour;
+        if (Integer.parseInt(closeHourMinute) < 10) closeHourMinute = "0" + closeHourMinute;
+
+        holder.openHourTxt.setText("Giờ hoạt động: " + openHourHour + ":" + openHourMinute + "-" + closeHourHour + ":" + closeHourMinute);
         holder.workingDateTxt.setText("Ngày hoạt động: " + branchList.get(position).getWorkingDate());
         holder.noteTxt.setText("Ghi chú: " + branchList.get(position).getNote());
         holder.branchRow.setOnClickListener(new View.OnClickListener() {

@@ -7,6 +7,7 @@ import com.example.administrator.employeeapp.Model.History;
 import com.example.administrator.employeeapp.Model.Queue;
 import com.example.administrator.employeeapp.Model.QueueRequest;
 import com.example.administrator.employeeapp.Model.Review;
+import com.example.administrator.employeeapp.Model.Statistic;
 
 import java.util.ArrayList;
 
@@ -61,6 +62,12 @@ public interface RetrofitInterface {
 
     @GET("employee?")
     Call<Employee> getEmployeeInfo(@Header("token") String token, @Query("accountid") String accountID);
+
+    @GET("/employee/getbranchstatistic?")
+    Call<Statistic> getBranchStatistic(@Header("token") String token, @Query("branchid") String branchID, @Query("day") Integer day);
+
+    @GET("/employee/getqueuestatistic?")
+    Call<Statistic> getQueueStatistic(@Header("token") String token, @Query("queueid") String queueID, @Query("day") Integer day);
 
     @FormUrlEncoded
     @POST("/account/verify/resend")
@@ -122,5 +129,9 @@ public interface RetrofitInterface {
                             @Field("district")String district, @Field("ward")String ward, @Field("restaddress")String restAddress,
                             @Field("phone")String phone, @Field("capacity")Integer capacity, @Field("opentime")String openHour,
                             @Field("closetime")String closeHour, @Field("workingday")String workingDay, @Field("note") String note);
+
+    @FormUrlEncoded
+    @PUT("/branch/closeopen")
+    Call<Void> changeStatusBranch(@Header("token") String token, @Field("branchid") String branchID, @Field("status") String status);
 
 }

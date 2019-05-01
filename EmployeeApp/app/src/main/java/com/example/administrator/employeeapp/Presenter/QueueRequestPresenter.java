@@ -33,6 +33,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
 
     @Override
     public void getQueueRequestFromServer(final String queueID){
+        Log.d("6abc", "getQueueRequestFromServer");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.getQueueRequest(queueID, "0").enqueue(new Callback<ArrayList<QueueRequest>>() {
@@ -54,6 +55,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
             }
             @Override
             public void onFailure(Call<ArrayList<QueueRequest>> call, Throwable t) {
+                t.printStackTrace();
                 mView.hideProgressBar();
                 Log.d("6abc", "4");
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
@@ -83,6 +85,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
             @Override
             public void onFailure(Call<ArrayList<QueueRequest>> call, Throwable t) {
                 mView.hideProgressBar();
+                t.printStackTrace();
                 Log.d("6abc", "8");
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }

@@ -72,7 +72,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
 
     {
         try {
-            mSocket = IO.socket("http://192.168.1.3:3000");
+            mSocket = IO.socket("http://192.168.1.2:3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
@@ -96,7 +96,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         assignDialog();
         queueRequestPresenter = new QueueRequestPresenter(this, mSocket, queueID);
         if (queueID != null) {
-            Log.d("1abc", queueID);
+            Log.d("6abc", "Before getQueueRequestFromServer: " + queueID);
             queueRequestPresenter.getQueueRequestFromServer(queueID);
         }
         String branchName = getArguments().getString("branchName");

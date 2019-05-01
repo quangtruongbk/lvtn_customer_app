@@ -82,4 +82,13 @@ public class Role {
         }
         return false;
     }
+
+    public Boolean checkControlBranch(String branchID){
+        Integer position = getBranchPosition(branchID);
+        if(position != -1){
+            String role = branchRole.get(position).getRole();
+            if(role.charAt(4) == '1') return true;
+        }
+        return false;
+    }
 }

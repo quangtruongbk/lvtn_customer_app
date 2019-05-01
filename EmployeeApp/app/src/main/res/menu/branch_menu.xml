@@ -10,4 +10,8 @@
         android:icon="@drawable/cancel"
         android:title="Đóng cửa" />
 
+    <item
+        android:id="@+id/lockBranchBtn"
+        android:icon="@drawable/cancel"
+        android:title="Khóa cơ sở" />
 </menu>

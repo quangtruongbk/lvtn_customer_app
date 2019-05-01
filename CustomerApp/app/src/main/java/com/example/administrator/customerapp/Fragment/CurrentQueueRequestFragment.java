@@ -127,7 +127,7 @@ public class CurrentQueueRequestFragment extends Fragment implements CurrentQueu
 
     @Override
     public void setUpView(SpecificQueueRequest queueRequest) {
-        if(queueRequest == null || queueRequest.getId() == null){
+        if (queueRequest == null || queueRequest.getId() == null) {
             currentQueueRequestLinearLayout.setVisibility(View.GONE);
             noCurrentRequestTxt.setVisibility(View.VISIBLE);
             return;

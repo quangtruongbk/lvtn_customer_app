@@ -52,6 +52,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
     private HomeContract.Presenter homePresenter;
     private Account account;
     private Employee employee;
+
     public BranchAdapter(ArrayList<Branch> data, Context context, HomeContract.Presenter presenter, Account account, Employee employee) {
         this.branchList = data;
         this.context = context;
@@ -83,10 +84,20 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
             if (branchList.get(position).getStatus().toString().equals("-1"))
                 holder.statusTxt.setText("Tình trạng: Đã khóa");
         }
-        holder.openHourTxt.setText("Giờ hoạt động: " + branchList.get(position).getOpentime() + "-" + branchList.get(position).getClosetime());
+        String openHourHour = branchList.get(position).getOpentime().split(":")[0];
+        String openHourMinute = branchList.get(position).getOpentime().split(":")[1];
+        String closeHourHour = branchList.get(position).getClosetime().split(":")[0];
+        String closeHourMinute = branchList.get(position).getClosetime().split(":")[1];
+
+        if (Integer.parseInt(openHourHour) < 10) openHourHour = "0" + openHourHour;
+        if (Integer.parseInt(openHourMinute) < 10) openHourMinute = "0" + openHourMinute;
+        if (Integer.parseInt(closeHourHour) < 10) closeHourHour = "0" + closeHourHour;
+        if (Integer.parseInt(closeHourMinute) < 10) closeHourMinute = "0" + closeHourMinute;
+
+        holder.openHourTxt.setText("Giờ hoạt động: " + openHourHour + ":" + openHourMinute + "-" + closeHourHour + ":" + closeHourMinute);
         holder.workingDateTxt.setText("Ngày hoạt động: " + branchList.get(position).getWorkingDate());
         holder.noteTxt.setText("Ghi chú: " + branchList.get(position).getNote());
-        if(employee.getRole().checkHideBranch(branchList.get(position).getId())){
+        if (employee.getRole().checkHideBranch(branchList.get(position).getId())) {
             holder.wholeBranchRow.setVisibility(View.GONE);
         }
         holder.branchRow.setOnClickListener(new View.OnClickListener() {
@@ -106,9 +117,23 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(context, holder.moreBtn);
                 popup.inflate(R.menu.branch_menu);
-                if(!employee.getRole().checkEditBranch(branchList.get(position).getId())){
-                    Menu popupMenu = popup.getMenu();
+                Menu popupMenu = popup.getMenu();
+                if (!employee.getRole().checkEditBranch(branchList.get(position).getId())) {
                     popupMenu.findItem(R.id.editBtn).setVisible(false);
+                }
+                if (!employee.getRole().checkControlBranch(branchList.get(position).getId())) {
+                    popupMenu.findItem(R.id.cancelBtn).setVisible(false);
+                    popupMenu.findItem(R.id.lockBranchBtn).setVisible(false);
+                }
+                if (branchList.get(position).getStatus().equals("-1")){
+                    popupMenu.findItem(R.id.lockBranchBtn).setVisible(false);
+                }
+                if (branchList.get(position).getStatus().equals("0")) {
+                    popupMenu.findItem(R.id.closeBranchBtn).setTitle("Mở cửa");
+                } else if (branchList.get(position).getStatus().equals("1")) {
+                    popupMenu.findItem(R.id.closeBranchBtn).setTitle("Đóng cửa");
+                } else if (branchList.get(position).getStatus().equals("-1")) {
+                    popupMenu.findItem(R.id.closeBranchBtn).setTitle("Gỡ khóa và mở cửa");
                 }
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -118,7 +143,14 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                                 showChangeInfoBranchDialog(branchList.get(position));
                                 return true;
                             case R.id.closeBranchBtn:
-                                //handle menu3 click
+                                Log.d("6abc", branchList.get(position).getStatus());
+                                if (branchList.get(position).getStatus().equals("1"))
+                                    homePresenter.closeOpenBranch(account.getToken(), branchList.get(position).getId(), "0");
+                                else if (branchList.get(position).getStatus().equals("0") || branchList.get(position).getStatus().equals("-1"))
+                                    homePresenter.closeOpenBranch(account.getToken(), branchList.get(position).getId(), "1");
+                                return true;
+                            case R.id.lockBranchBtn:
+                                homePresenter.closeOpenBranch(account.getToken(), branchList.get(position).getId(), "-1");
                                 return true;
                             default:
                                 return false;
@@ -203,7 +235,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 startWorkingDateSpinner.setAdapter(adapter);
                 endWorkingDateSpinner.setAdapter(adapter);
-                if (branch.getWorkingDate() != null) {
+                if (branch.getWorkingDate() != null && !branch.getWorkingDate().equals("")) {
                     String startWorkingDate = branch.getWorkingDate().split("-")[0];
                     String endWorkingDate = branch.getWorkingDate().split("-")[1];
                     if (startWorkingDate != null) {
@@ -239,7 +271,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                     currentCityID = database.getCityID(branch.getAddress().getCity());
                 }
 
-                Log.d("1abc", "currentCityID: " + currentCityID);
                 GetAddressHelper getAddressHelper2 = new GetAddressHelper();
                 getAddressHelper2 = database.getDistrict(currentCityID);
                 final ArrayList<String> districtName = getAddressHelper2.getDistrictName();

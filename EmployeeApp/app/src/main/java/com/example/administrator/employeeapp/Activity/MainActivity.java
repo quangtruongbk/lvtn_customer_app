@@ -2,7 +2,6 @@ package com.example.administrator.employeeapp.Activity;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,8 +25,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.administrator.employeeapp.Contract.MainActivityContract;
+import com.example.administrator.employeeapp.Fragment.BranchListForStatisticFragment;
 import com.example.administrator.employeeapp.Fragment.CreateBranchFragment;
-import com.example.administrator.employeeapp.Fragment.HistoryFragment;
 import com.example.administrator.employeeapp.Fragment.HomeFragment;
 import com.example.administrator.employeeapp.Fragment.MyAccountFragment;
 import com.example.administrator.employeeapp.Fragment.QRCodeFragment;
@@ -168,7 +167,13 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.frameFragment, new QRCodeFragment());
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        } else if (id == R.id.navLogout) {
+        } else if (id == R.id.navData) {
+            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            fragmentTransaction.replace(R.id.frameFragment, new BranchListForStatisticFragment());
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+        else if (id == R.id.navLogout) {
             mainActivityPresenter.logout();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

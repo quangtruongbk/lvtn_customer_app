@@ -33,5 +33,5 @@ dependencies {
 
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
     implementation 'com.google.zxing:core:3.3.2'
-
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

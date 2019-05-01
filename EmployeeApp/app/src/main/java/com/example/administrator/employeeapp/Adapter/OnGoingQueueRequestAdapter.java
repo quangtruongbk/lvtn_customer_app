@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,6 +66,7 @@ public class OnGoingQueueRequestAdapter extends RecyclerView.Adapter<OnGoingQueu
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.checkoutCustomerBtn:
+                                Log.d("6abc", "queueRequestList.get(position).getId()" + queueRequestList.get(position).getId());
                                 queueRequestPresenter.checkInOut(account.getToken(), queueRequestList.get(position).getId(), "1");
                                 return true;
                             default:
