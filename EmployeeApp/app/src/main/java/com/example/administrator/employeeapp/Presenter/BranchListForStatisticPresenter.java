@@ -22,7 +22,11 @@ public class BranchListForStatisticPresenter implements BranchListForStatisticCo
         this.mView = mView;
         this.account = account;
     }
-
+    /***************************************************
+     Function: getBranch
+     Creator: Quang Truong
+     Description: Get Branch list
+     *************************************************/
     @Override
     public void getBranch(){
         mView.showProgressBar();

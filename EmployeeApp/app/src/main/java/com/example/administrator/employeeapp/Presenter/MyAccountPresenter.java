@@ -37,6 +37,11 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
         this.employee = employee;
     }
 
+    /***************************************************
+     Function: changeInfo
+     Creator: Quang Truong
+     Description: Change Info of this account
+     *************************************************/
     @Override
     public void changeInfo(String token, String accountID, final String name, final String phone) {
         mView.showProgressBar();
@@ -75,6 +80,11 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: changePassword
+     Creator: Quang Truong
+     Description: Change Password of this account
+     *************************************************/
     @Override
     public void changePassword(String token, String accountID, String oldPassword, String newPassword) {
         mView.showProgressBar();
@@ -102,32 +112,37 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: setUpRole
+     Creator: Quang Truong
+     Description: Get and set up role of this account
+     *************************************************/
     @Override
-    public void setUpRole(final Account account, final Employee employee){
-            mView.showProgressBar();
-            callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-            callAPIService.getBranch().enqueue(new Callback<ArrayList<Branch>>() {
-                @Override
-                public void onResponse(Call<ArrayList<Branch>> call, Response<ArrayList<Branch>> response) {
-                    mView.hideProgressBar();
-                    if(response.code() == 200) {
-                        ArrayList<Branch> newBranch = new ArrayList<Branch>();
-                        newBranch = response.body();
-                        if(newBranch!=null) {
-                            mView.setUpRoleAdapter(newBranch);
-                        }
-                    }else if(response.code() == 500){
-                        mView.showDialog("Không thể lấy được danh sách cơ sở do lỗi hệ thống. Xin vui lòng thử lại!", false);
+    public void setUpRole(final Account account, final Employee employee) {
+        mView.showProgressBar();
+        callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+        callAPIService.getBranch().enqueue(new Callback<ArrayList<Branch>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Branch>> call, Response<ArrayList<Branch>> response) {
+                mView.hideProgressBar();
+                if (response.code() == 200) {
+                    ArrayList<Branch> newBranch = new ArrayList<Branch>();
+                    newBranch = response.body();
+                    if (newBranch != null) {
+                        mView.setUpRoleAdapter(newBranch);
                     }
+                } else if (response.code() == 500) {
+                    mView.showDialog("Không thể lấy được vai trò do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ArrayList<Branch>> call, Throwable t) {
-                    t.printStackTrace();
-                    mView.hideProgressBar();
-                    mView.showDialog("Không thể kết nối được với máy chủ!", false);
-                }
-            });
+            @Override
+            public void onFailure(Call<ArrayList<Branch>> call, Throwable t) {
+                t.printStackTrace();
+                mView.hideProgressBar();
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
+            }
+        });
     }
 
 

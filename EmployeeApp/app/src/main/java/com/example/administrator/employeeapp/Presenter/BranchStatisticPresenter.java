@@ -26,6 +26,11 @@ public class BranchStatisticPresenter implements BranchStatisticContract.Present
         this.account = account;
     }
 
+    /***************************************************
+     Function: getBranchStatistic
+     Creator: Quang Truong
+     Description: Get statistic of a branch
+     *************************************************/
     @Override
     public void getBranchStatistic(String token, String branchID, Integer day){
         mView.showProgressBar();

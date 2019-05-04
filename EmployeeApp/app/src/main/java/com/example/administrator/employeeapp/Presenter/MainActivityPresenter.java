@@ -31,6 +31,11 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
         this.context = context;
     }
 
+    /***************************************************
+     Function: logout
+     Creator: Quang Truong
+     Description: logout
+     *************************************************/
     @Override
     public void logout() {
         mView.showProgressBar();

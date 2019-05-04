@@ -22,6 +22,11 @@ public class CreateBranchPresenter implements CreateBranchContract.Presenter {
         this.account = account;
     }
 
+    /***************************************************
+     Function: createBranch
+     Creator: Quang Truong
+     Description: create new Branch
+     *************************************************/
     @Override
     public void createBranch(String token, String name, String city, String district, String ward, String restAddress, String phone,
                              Integer capacity, String openHour, String closeHour, String workingDay, String note) {

@@ -25,6 +25,11 @@ public class HistoryPresenter implements HistoryContract.Presenter{
         this.mView = mView;
     }
 
+    /***************************************************
+     Function: getHistoryFromServer
+     Creator: Quang Truong
+     Description: Get history of this account
+     *************************************************/
     @Override
     public void getHistoryFromServer(String token, String accountID){
         mView.showProgressBar();
@@ -55,6 +60,11 @@ public class HistoryPresenter implements HistoryContract.Presenter{
         });
     }
 
+    /***************************************************
+     Function: createReview
+     Creator: Quang Truong
+     Description: Create a review for a done request
+     *************************************************/
     @Override
     public void createReview(String token, String accountID, String queueRequestID, Float waitingScore, Float serviceScore, Float spaceScore, String comment){
         mView.showProgressBar();
@@ -77,6 +87,11 @@ public class HistoryPresenter implements HistoryContract.Presenter{
         });
     }
 
+    /***************************************************
+     Function: getReview
+     Creator: Quang Truong
+     Description: get review for a request
+     *************************************************/
     @Override
     public void getReview(String queueRequestID, final Account account, final History history) {
         mView.showProgressBar();

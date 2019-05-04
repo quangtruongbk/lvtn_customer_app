@@ -22,49 +22,52 @@ public class LoginPresenter implements LoginContract.Presenter {
     private RetrofitInterface callAPIService;
     private LoginContract.View mView;
     private Account account;
+
     public LoginPresenter(@NonNull LoginContract.View mView) {
         this.mView = mView;
         this.account = new Account();
     }
 
+    /***************************************************
+     Function: login
+     Creator: Quang Truong
+     Description: login
+     *************************************************/
     @Override
-    public void logIn(String email, String password){
+    public void logIn(String email, String password) {
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.logIn(email, password, "customer").enqueue(new Callback<Account>() {
             @Override
             public void onResponse(Call<Account> call, Response<Account> response) {
                 mView.hideProgressBar();
-                if(response.code() == 200) {
-                    if(response.body()!=null) account = response.body();
+                if (response.code() == 200) {
+                    if (response.body() != null) account = response.body();
                     Log.d("1abc", response.toString());
-                    if(response.body() != null) {
-                        String tempBody  = response.body().toString();
+                    if (response.body() != null) {
+                        String tempBody = response.body().toString();
                         Log.d("1abc", "Dang nhap thanh cong" + response.body().getStatus());
                     }
-                    if(response.body().getStatus().equals("1")){
+                    if (response.body().getStatus().equals("1")) {
                         mView.openMainActivity(account);
-                    }
-
-                    else if(response.body().getStatus().equals("-1")){
+                    } else if (response.body().getStatus().equals("-1")) {
                         mView.showDialog("Tài khoản của bạn đã bị khóa!", false);
-                    }
-
-                    else if(response.body().getStatus().equals("-2")) {
+                    } else if (response.body().getStatus().equals("-2")) {
                         mView.showDialog("Tài khoản chưa xác thực, hãy kiểm tra email của bạn để xác thực tài khoản!", true);
                     }
-                    if(response.errorBody()!=null)
+                    if (response.errorBody() != null)
                         Log.d("1abc", response.errorBody().toString());
 
-                }else if(response.code() == 401){
+                } else if (response.code() == 401) {
                     Log.d("1abc", "Đang nhap that bai");
                     mView.showDialog("Đăng nhập thất bại, hãy kiểm tra lại email và mật khẩu!", false);
-                }else if(response.code() == 403){
+                } else if (response.code() == 403) {
                     Log.d("1abc", "Da dang nhap roi");
                     Log.d("1abc", "Da dang nhap roi");
-                }else if(response.code() == 500){
+                } else if (response.code() == 500) {
                     mView.showDialog("Đăng nhập thất bại do lỗi hệ thống", false);
                 }
             }
+
             @Override
             public void onFailure(Call<Account> call, Throwable t) {
                 mView.hideProgressBar();
@@ -73,32 +76,37 @@ public class LoginPresenter implements LoginContract.Presenter {
         });
     }
 
-        @Override
+    /***************************************************
+     Function: resendVerifyEmail
+     Creator: Quang Truong
+     Description: Send Resend Verify Email Request
+     *************************************************/
+    @Override
     public void resendVerifyEmail() {
-            if (account == null) {
-                mView.showDialog("Gặp lỗi khi gửi lại email", false);
-            } else {
-                String accountID = account.getId();
-                String email = account.getEmail();
-                Log.d("1abc", "AccountID: " + accountID);
-                callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-                callAPIService.resendVerifyEmail(accountID, email).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        mView.hideProgressBar();
-                        if (response.code() == 200) {
-                            mView.showDialog("Gửi Email xác thực thành công. Vui lòng kiểm tra hộp thư của bạn!", false);
-                        } else if (response.code() == 500) {
-                            mView.showDialog("Gửi Email xác thực bị lỗi do lỗi hệ thống!", false);
-                        }
+        if (account == null) {
+            mView.showDialog("Gặp lỗi khi gửi lại email", false);
+        } else {
+            String accountID = account.getId();
+            String email = account.getEmail();
+            Log.d("1abc", "AccountID: " + accountID);
+            callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+            callAPIService.resendVerifyEmail(accountID, email).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    mView.hideProgressBar();
+                    if (response.code() == 200) {
+                        mView.showDialog("Gửi Email xác thực thành công. Vui lòng kiểm tra hộp thư của bạn!", false);
+                    } else if (response.code() == 500) {
+                        mView.showDialog("Gửi Email xác thực bị lỗi do lỗi hệ thống!", false);
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        mView.hideProgressBar();
-                        Log.d("1abc", "error loading from API" + call);
-                    }
-                });
-            }
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    mView.hideProgressBar();
+                    Log.d("1abc", "error loading from API" + call);
+                }
+            });
         }
+    }
 }

@@ -20,6 +20,11 @@ public class SignUpPresenter implements SignUpContract.Presenter {
         this.mView = mView;
     }
 
+    /***************************************************
+     Function: signUp
+     Creator: Quang Truong
+     Description: Create an account
+     *************************************************/
     @Override
     public void signUp(String email, String name, String phone, String password) {
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);

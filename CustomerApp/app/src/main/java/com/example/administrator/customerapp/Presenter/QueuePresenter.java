@@ -25,6 +25,11 @@ public class QueuePresenter implements QueueContract.Presenter{
         this.mView = mView;
     }
 
+    /***************************************************
+     Function: getQueueFromServer
+     Creator: Quang Truong
+     Description: Get list of an queue from branchID
+     *************************************************/
     @Override
     public void getQueueFromServer(String branchID){
         mView.showProgressBar();

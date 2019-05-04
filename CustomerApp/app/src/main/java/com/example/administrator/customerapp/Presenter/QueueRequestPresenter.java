@@ -41,6 +41,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         this.queueID = queueID;
     }
 
+    /***************************************************
+     Function: getQueueRequestFromServer
+     Creator: Quang Truong
+     Description: Get list of an queue request from QueueID
+     *************************************************/
     @Override
     public void getQueueRequestFromServer(String queueID) {
         mView.showProgressBar();
@@ -68,6 +73,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: createQueueRequest
+     Creator: Quang Truong
+     Description: Create a new QUeue Request
+     *************************************************/
     @Override
     public void createQueueRequest(String token, String accountID, final String queueID, String name, String phone, String email) {
         Log.d("6abc", "createQueueRequest");
@@ -112,6 +122,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: editQueueRequest
+     Creator: Quang Truong
+     Description: Edit a QUeue Request
+     *************************************************/
     @Override
     public void editQueueRequest(String token, String queueRequestID, String name, String phone, String email) {
         Log.d("6abc", "editQueueRequest");
@@ -138,6 +153,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: cancelQueueRequest
+     Creator: Quang Truong
+     Description: Cancel a request
+     *************************************************/
     @Override
     public void cancelQueueRequest(String token, final String queueID, String queueRequestID) {
         Log.d("6abc", "cancelQueueRequest");

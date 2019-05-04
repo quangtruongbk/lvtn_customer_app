@@ -32,6 +32,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         this.queueID = queueID;
     }
 
+    /***************************************************
+     Function: getQueueRequestFromServer
+     Creator: Quang Truong
+     Description: Get Queue Request Liast from a Queue
+     *************************************************/
     @Override
     public void getQueueRequestFromServer(final String queueID) {
         Log.d("6abc", "getQueueRequestFromServer");
@@ -65,6 +70,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: getOnGoingQueueRequestFromServer
+     Creator: Quang Truong
+     Description: Get request that are using service
+     *************************************************/
     @Override
     public void getOnGoingQueueRequestFromServer(String queueID) {
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
@@ -94,6 +104,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: sendEmail
+     Creator: Quang Truong
+     Description: Send Email to Customer
+     *************************************************/
     @Override
     public void sendEmail(String token, String email, String message) {
         mView.showProgressBar();
@@ -119,6 +134,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: createQueueRequest
+     Creator: Quang Truong
+     Description: Create new Queue Request
+     *************************************************/
     @Override
     public void createQueueRequest(String token, String accountID, String queueID, String name, String phone, String email) {
         mView.showProgressBar();
@@ -150,6 +170,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: editQueueRequest
+     Creator: Quang Truong
+     Description: Edit a Queue Request
+     *************************************************/
     @Override
     public void editQueueRequest(String token, String queueRequestID, String name, String
             phone, String email) {
@@ -176,6 +201,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: cancelQueueRequest
+     Creator: Quang Truong
+     Description: cancel a Queue Request
+     *************************************************/
     @Override
     public void cancelQueueRequest(String token,String queueID, String queueRequestID) {
         mView.showProgressBar();
@@ -203,6 +233,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: checkInOut
+     Creator: Quang Truong
+     Description: Check In or Check out of a request
+     *************************************************/
     @Override
     public void checkInOut(String token, String queueRequestID, String type) {
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
@@ -258,6 +293,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         }
     }
 
+    /***************************************************
+     Function: checkInOut
+     Creator: Quang Truong
+     Description: Check In or Check out of a request by QR COde
+     *************************************************/
     @Override
     public void checkInOutByQR(String token, String
             scanResult, ArrayList<QueueRequest> queueRequestArrayList, ArrayList<QueueRequest> ongoingQueueRequestArrayList) {

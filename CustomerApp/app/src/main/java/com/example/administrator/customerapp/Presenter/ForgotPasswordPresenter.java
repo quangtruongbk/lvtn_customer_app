@@ -22,6 +22,11 @@ public class ForgotPasswordPresenter implements ForgotPasswordContract.Presenter
         this.account = new Account();
     }
 
+    /***************************************************
+     Function: forgotPassword
+     Creator: Quang Truong
+     Description: Reset Password
+     *************************************************/
     @Override
     public void forgotPassword(String email){
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);

@@ -23,6 +23,11 @@ public class HomePresenter implements HomeContract.Presenter {
         this.mView = mView;
     }
 
+    /***************************************************
+     Function: getBranchFromServer
+     Creator: Quang Truong
+     Description: get branch list
+     *************************************************/
     @Override
     public void getBranchFromServer() {
         mView.showProgressBar();
@@ -51,6 +56,11 @@ public class HomePresenter implements HomeContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: getFilterList
+     Creator: Quang Truong
+     Description: get filter list for filter branch
+     *************************************************/
     @Override
     public void getFilterList() {
         mView.showProgressBar();
@@ -79,6 +89,11 @@ public class HomePresenter implements HomeContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: filterBranch
+     Creator: Quang Truong
+     Description: Filter branch by location
+     *************************************************/
     @Override
     public void filterBranch(String city, String district) {
         mView.showProgressBar();

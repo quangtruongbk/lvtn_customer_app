@@ -24,6 +24,11 @@ public class QueueStatisticPresenter implements QueueStatisticContract.Presenter
         this.account = account;
     }
 
+    /***************************************************
+     Function: getQueueStatistic
+     Creator: Quang Truong
+     Description: Get Statistic of a queue
+     *************************************************/
     @Override
     public void getQueueStatistic(String token, String queueID, Integer day) {
         mView.showProgressBar();

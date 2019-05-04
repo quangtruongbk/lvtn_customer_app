@@ -25,6 +25,11 @@ public class HomePresenter implements HomeContract.Presenter {
         this.account = account;
     }
 
+    /***************************************************
+     Function: getBranchFromServer
+     Creator: Quang Truong
+     Description: Get Branch List from server
+     *************************************************/
     @Override
     public void getBranchFromServer() {
         mView.showProgressBar();
@@ -53,6 +58,11 @@ public class HomePresenter implements HomeContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: changeInfoBranch
+     Creator: Quang Truong
+     Description: Change Information of a branch
+     *************************************************/
     @Override
     public void changeInfoBranch(String token, String branchID, String name, String city, String district, String ward, String restAddress, String phone,
                                  Integer capacity, String openHour, String closeHour, String workingDay, String note) {
@@ -78,6 +88,11 @@ public class HomePresenter implements HomeContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: closeOpenBranch
+     Creator: Quang Truong
+     Description: Close or Open a branch
+     *************************************************/
     @Override
     public void closeOpenBranch(String token, String branchID, String newStatus) {
         mView.showProgressBar();

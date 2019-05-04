@@ -21,7 +21,11 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
     public CurrentQueueRequestPresenter(@NonNull CurrentQueueRequestContract.View mView) {
         this.mView = mView;
     }
-
+    /***************************************************
+     Function: getCurrentQueueRequest
+     Creator: Quang Truong
+     Description: Get a request of account that still waiting
+     *************************************************/
     @Override
     public void getCurrentQueueRequest(final String token, final String accountID, final String email, final String phone){
         mView.showProgressBar();
@@ -47,6 +51,11 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
         });
     }
 
+    /***************************************************
+     Function: getRequestFromEmailPhone
+     Creator: Quang Truong
+     Description: Get a request from email and phone
+     *************************************************/
     @Override
     public void getRequestFromEmailPhone(String token, String accountID, String email, String phone){
         mView.showProgressBar();
@@ -71,6 +80,11 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
         });
     }
 
+    /***************************************************
+     Function: editQueueRequest
+     Creator: Quang Truong
+     Description: Change Info of a request
+     *************************************************/
     @Override
     public void editQueueRequest(final String token, final String accountID, String queueRequestID, String name, final String phone, final String email) {
         mView.showProgressBar();
@@ -97,6 +111,11 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
         });
     }
 
+    /***************************************************
+     Function: cancelQueueRequest
+     Creator: Quang Truong
+     Description: Cancel a request
+     *************************************************/
     @Override
     public void cancelQueueRequest(final String token, final String accountID, String queueID, String queueRequestID) {
         mView.showProgressBar();

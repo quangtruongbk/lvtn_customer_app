@@ -33,6 +33,11 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
         this.context = context;
     }
 
+    /***************************************************
+     Function: changeInfo
+     Creator: Quang Truong
+     Description: Change Info of this account
+     *************************************************/
     @Override
     public void changeInfo(String token, String accountID, final String name, final String phone) {
         mView.showProgressBar();
@@ -72,6 +77,11 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
         });
     }
 
+    /***************************************************
+     Function: changePassword
+     Creator: Quang Truong
+     Description: Change Password of this account
+     *************************************************/
     @Override
     public void changePassword(String token, String accountID, String oldPassword, String newPassword) {
         mView.showProgressBar();

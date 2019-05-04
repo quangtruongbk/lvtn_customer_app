@@ -1,19 +1,13 @@
 package com.example.administrator.employeeapp.Fragment;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,34 +21,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.administrator.employeeapp.Adapter.HistoryAdapter;
-import com.example.administrator.employeeapp.CallAPI.APIClient;
-import com.example.administrator.employeeapp.CallAPI.RetrofitInterface;
 import com.example.administrator.employeeapp.Contract.CreateBranchContract;
-import com.example.administrator.employeeapp.Contract.HistoryContract;
 import com.example.administrator.employeeapp.Model.Account;
-import com.example.administrator.employeeapp.Model.History;
-import com.example.administrator.employeeapp.Model.Review;
 import com.example.administrator.employeeapp.Presenter.CreateBranchPresenter;
-import com.example.administrator.employeeapp.Presenter.HistoryPresenter;
 import com.example.administrator.employeeapp.R;
-import com.example.administrator.employeeapp.Utils.DatabaseHelper;
 import com.example.administrator.employeeapp.Utils.GetAddressHelper;
 import com.example.administrator.employeeapp.Utils.MyDatabaseHelper;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static android.content.Context.MODE_PRIVATE;
 
