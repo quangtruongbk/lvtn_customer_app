@@ -25,8 +25,9 @@ public interface QueueRequestContract {
         void getOnGoingQueueRequestFromServer(String queueID);
         void sendEmail(String token, String email, String message);
         void checkInOut(String token, String queueRequestID, String type);
+        void checkInOutByQR(String token, String scanResult, ArrayList<QueueRequest> queueRequestArrayList, ArrayList<QueueRequest> ongoingQueueRequestArrayList);
         void createQueueRequest(String token, String accountID, String queueID, String name, String phone, String email);
-        void cancelQueueRequest(String token, String queueRequestID);
+        void cancelQueueRequest(String token, String queueID, String queueRequestID);
         void editQueueRequest(String token, String queueRequestID, String name, String phone, String email);
         void disconnectSocket(Emitter.Listener onQueueChange);
         void listeningSocket(Emitter.Listener onQueueChange);

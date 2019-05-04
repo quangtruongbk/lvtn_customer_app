@@ -29,7 +29,6 @@ import com.example.administrator.employeeapp.Fragment.BranchListForStatisticFrag
 import com.example.administrator.employeeapp.Fragment.CreateBranchFragment;
 import com.example.administrator.employeeapp.Fragment.HomeFragment;
 import com.example.administrator.employeeapp.Fragment.MyAccountFragment;
-import com.example.administrator.employeeapp.Fragment.QRCodeFragment;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Presenter.MainActivityPresenter;
@@ -161,11 +160,6 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.frameFragment, new CreateBranchFragment());
             fragmentTransaction.addToBackStack(null);
             hideProgressBar();
-            fragmentTransaction.commit();
-        } else if (id == R.id.navQRCode) {
-            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frameFragment, new QRCodeFragment());
-            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.navData) {
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);

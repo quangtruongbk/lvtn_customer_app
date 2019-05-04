@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,10 +30,13 @@ import com.example.administrator.customerapp.Fragment.CurrentQueueRequestFragmen
 import com.example.administrator.customerapp.Fragment.HistoryFragment;
 import com.example.administrator.customerapp.Fragment.HomeFragment;
 import com.example.administrator.customerapp.Fragment.MyAccountFragment;
-import com.example.administrator.customerapp.Fragment.QRCodeFragment;
 import com.example.administrator.customerapp.Model.Account;
 import com.example.administrator.customerapp.Presenter.MainActivityPresenter;
 import com.example.administrator.customerapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity
@@ -198,5 +202,4 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
         finish();
     }
-
 }

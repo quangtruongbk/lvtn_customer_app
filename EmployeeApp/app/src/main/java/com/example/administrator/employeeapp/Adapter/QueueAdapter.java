@@ -42,6 +42,8 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
     private AlertDialog.Builder changeInfoQueueDialogBuilder;
     private String branchName;
     private String branchID;
+    private LayoutInflater systemService;
+
     public QueueAdapter(ArrayList<Queue> data, Context context, QueueContract.Presenter presenter, Account account, Employee employee, String branchID, String branchName) {
         this.queueList = data;
         this.context = context;
@@ -63,10 +65,10 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
         holder.nameTxt.setText(queueList.get(position).getName());
-        holder.numberTxt.setText("Số lượng (Chưa có): " );
         if(queueList.get(position).getStatus().toString() != null) {
             if(queueList.get(position).getStatus().toString().equals("0")) holder.statusTxt.setText("Tình trạng: Ngừng nhận khách");
             if(queueList.get(position).getStatus().toString().equals("1")) holder.statusTxt.setText("Tình trạng: Đang nhận khách");
+            if(queueList.get(position).getStatus().toString().equals("2")) holder.statusTxt.setText("Tình trạng: Đang nhận khách (Đang vắng)");
             if(queueList.get(position).getStatus().toString().equals("-1")) holder.statusTxt.setText("Tình trạng: Đã khóa");
         }
         holder.queueLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +136,6 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView nameTxt;
-        TextView numberTxt;
         TextView statusTxt;
         LinearLayout queueLinearLayout;
         LinearLayout wholeQueueLinearLayout;
@@ -142,7 +143,6 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             nameTxt = (TextView) itemView.findViewById(R.id.nameTxt);
-            numberTxt = (TextView) itemView.findViewById(R.id.numberTxt);
             statusTxt = (TextView) itemView.findViewById(R.id.statusTxt);
             queueLinearLayout = (LinearLayout) itemView.findViewById(R.id.queueLinearLayout);
             wholeQueueLinearLayout = (LinearLayout) itemView.findViewById(R.id.wholeQueueLinearLayout);
@@ -151,7 +151,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
     }
 
     public void showChangeInfoQueueDialog(final Queue queue) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = systemService;
         View v = inflater.inflate(R.layout.activity_changeinfo_queue, null);
         changeInfoQueueDialogBuilder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

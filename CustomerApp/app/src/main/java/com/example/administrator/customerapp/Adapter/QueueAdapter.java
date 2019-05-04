@@ -37,10 +37,10 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, final int position) {
         holder.nameTxt.setText(queueList.get(position).getName());
-        holder.numberTxt.setText("Số lượng (Chưa có): " );
         if(queueList.get(position).getStatus().toString() != null) {
             if(queueList.get(position).getStatus().toString().equals("0")) holder.statusTxt.setText("Tình trạng: Ngừng nhận khách");
             if(queueList.get(position).getStatus().toString().equals("1")) holder.statusTxt.setText("Tình trạng: Đang nhận khách");
+            if(queueList.get(position).getStatus().toString().equals("2")) holder.statusTxt.setText("Tình trạng: Đang nhận khách (Đang vắng)");
             if(queueList.get(position).getStatus().toString().equals("-1")) holder.statusTxt.setText("Tình trạng: Đã khóa");
         }
         holder.queueRelativeLayout.setOnClickListener(new View.OnClickListener() {
@@ -64,13 +64,11 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView nameTxt;
-        TextView numberTxt;
         TextView statusTxt;
         RelativeLayout queueRelativeLayout;
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             nameTxt = (TextView) itemView.findViewById(R.id.nameTxt);
-            numberTxt = (TextView) itemView.findViewById(R.id.numberTxt);
             statusTxt = (TextView) itemView.findViewById(R.id.statusTxt);
             queueRelativeLayout = (RelativeLayout) itemView.findViewById(R.id.queueRelativeLayout);
         }

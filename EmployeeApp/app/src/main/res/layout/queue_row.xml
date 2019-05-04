@@ -34,18 +34,10 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/numberTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nameTxt"
-            android:text="Số lượng:"
-            android:textSize="16dp" />
-
-        <TextView
             android:id="@+id/statusTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/numberTxt"
+            android:layout_below="@+id/nameTxt"
             android:text="Tình trạng:"
             android:textSize="16dp" />
     </LinearLayout>
@@ -54,10 +46,11 @@
         android:layout_width="0px"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
+        android:gravity="right"
         android:orientation="vertical">
         <ImageView
             android:id="@+id/moreBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="15dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:src="@drawable/more"/>

@@ -1,5 +1,7 @@
 package com.example.administrator.employeeapp.Model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -46,6 +48,10 @@ public class QueueRequest {
     @SerializedName("endTime")
     @Expose
     private String endTime;
+    @SerializedName("expiredDate")
+    @Expose
+    @Nullable
+    private long expiredDate;
 
     public String getId() {
         return id;
@@ -137,5 +143,18 @@ public class QueueRequest {
 
     public String getAccountID() {
         return accountID;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Nullable
+    public long getExpiredDate() {
+        return expiredDate;
+    }
+
+    public void setExpiredDate(@Nullable long expiredDate) {
+        this.expiredDate = expiredDate;
     }
 }

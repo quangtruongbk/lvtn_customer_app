@@ -21,15 +21,20 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
-public class QueueRequestPresenter implements QueueRequestContract.Presenter{
+public class QueueRequestPresenter implements QueueRequestContract.Presenter {
     private RetrofitInterface callAPIService;
     private QueueRequestContract.View mView;
     private Socket mSocket;
     private String queueID;
+
     public QueueRequestPresenter(@NonNull QueueRequestContract.View mView, Socket mSocket, String queueID) {
         this.mView = mView;
         this.mSocket = mSocket;
@@ -37,24 +42,24 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
     }
 
     @Override
-    public void getQueueRequestFromServer(String queueID){
-        Log.d("6abc", "getQueueRequestFromServer");
+    public void getQueueRequestFromServer(String queueID) {
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.getQueueRequest(queueID, "0").enqueue(new Callback<ArrayList<QueueRequest>>() {
             @Override
             public void onResponse(Call<ArrayList<QueueRequest>> call, Response<ArrayList<QueueRequest>> response) {
                 mView.hideProgressBar();
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     ArrayList<QueueRequest> newQueueRequest = new ArrayList<QueueRequest>();
                     newQueueRequest = response.body();
-                    if(newQueueRequest!=null) {
+                    if (newQueueRequest != null) {
                         mView.setUpAdapter(newQueueRequest);
                     }
-                }else if(response.code() == 500){
+                } else if (response.code() == 500) {
                     mView.showDialog("Không thể lấy được danh sách hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<QueueRequest>> call, Throwable t) {
                 mView.hideProgressBar();
@@ -64,7 +69,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
     }
 
     @Override
-    public void createQueueRequest(String token, String accountID, String queueID, String name, String phone, String email){
+    public void createQueueRequest(String token, String accountID, final String queueID, String name, String phone, String email) {
         Log.d("6abc", "createQueueRequest");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
@@ -72,19 +77,35 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
-                if(response.code() == 200) {
+                Log.d("6abc", "code: " + response.code());
+                Log.d("6abc", "body: " + response.message());
+                if (response.code() == 200) {
                     mView.showDialog("Tạo yêu cầu thành công", true);
-                }else if(response.code() == 500){
+                    FirebaseMessaging.getInstance().subscribeToTopic(queueID)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (!task.isSuccessful()) {
+                                        mView.showDialog("Lỗi ở Firebase Cloud Messasge", false);
+                                    }
+                                }
+                            });
+                } else if (response.code() == 500) {
                     mView.showDialog("Không thể tạo yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
-                }else if(response.code() == 409){
-                    mView.showDialog("Không thể tạo yêu cầu do bạn đang có một yêu cầu chưa được hoàn tất.", false);
-                }
-                else if(response.code() == 403){
+                } else if (response.code() == 409) {
+                    mView.showDialog("Không thể tạo yêu cầu do bạn đang có một yêu cầu chưa được hoàn tất. Hãy kiểm tra tại: Yêu cầu hiện tại của tôi.", false);
+                } else if (response.code() == 503) {
+                    mView.showDialog("Rất tiếc, hàng đợi đã đầy.", false);
+                } else if (response.code() == 533) {
+                    mView.showDialog("Rất tiếc, hàng đợi đã ngừng nhận khách.", false);
+                } else if (response.code() == 403) {
                     mView.showDialog("Bạn không được phép thực hiện tác vụ này!", false);
                 }
             }
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                t.printStackTrace();
                 mView.hideProgressBar();
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
@@ -92,7 +113,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
     }
 
     @Override
-    public void editQueueRequest(String token, String queueRequestID, String name, String phone, String email){
+    public void editQueueRequest(String token, String queueRequestID, String name, String phone, String email) {
         Log.d("6abc", "editQueueRequest");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
@@ -100,14 +121,15 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     mView.showDialog("Chỉnh sửa thành công", true);
-                }else if(response.code() == 500){
+                } else if (response.code() == 500) {
                     mView.showDialog("Không thể chỉnh sửa yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
-                }else if(response.code() == 404){
+                } else if (response.code() == 404) {
                     mView.showDialog("Không thử thực hiện tác vụ này, có vẻ như có gì đó đã thay đổi với lượt đăng ký!", false);
                 }
             }
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
@@ -117,25 +139,35 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
     }
 
     @Override
-    public void cancelQueueRequest(String token, String queueRequestID){
+    public void cancelQueueRequest(String token, final String queueID, String queueRequestID) {
         Log.d("6abc", "cancelQueueRequest");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.cancelQueueRequest(token, queueRequestID).enqueue(new Callback<Void>() {
+        callAPIService.cancelQueueRequest(token, queueID, queueRequestID).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     mView.showDialog("Hủy yêu cầu thành công", true);
-                }else if(response.code() == 500){
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic(queueID)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (!task.isSuccessful()) {
+                                        mView.showDialog("Lỗi ở Firebase Cloud Messasge", false);
+                                    }
+                                }
+                            });
+
+                } else if (response.code() == 500) {
                     mView.showDialog("Không thể hủy yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
-                }else if(response.code() == 404){
-                    mView.showDialog("Không thể huy yêu cầu do thông tin về yêu cầu đã thay đổi.", false);
-                }
-                else if(response.code() == 403){
+                } else if (response.code() == 404) {
+                    mView.showDialog("Không thể hủy yêu cầu do thông tin về yêu cầu đã thay đổi.", false);
+                } else if (response.code() == 403) {
                     mView.showDialog("Bạn không được phép thực hiện tác vụ này!", false);
                 }
             }
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
@@ -145,7 +177,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
     }
 
     @Override
-    public void disconnectSocket(Emitter.Listener onQueueChange){
+    public void disconnectSocket(Emitter.Listener onQueueChange) {
         mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -164,7 +196,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter{
     }
 
     @Override
-    public void listeningSocket(Emitter.Listener onQueueChange){
+    public void listeningSocket(Emitter.Listener onQueueChange) {
         mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {

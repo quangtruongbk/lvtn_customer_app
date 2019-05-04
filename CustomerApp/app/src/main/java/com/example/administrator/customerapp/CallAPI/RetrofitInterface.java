@@ -6,6 +6,7 @@ import com.example.administrator.customerapp.Model.History;
 import com.example.administrator.customerapp.Model.Queue;
 import com.example.administrator.customerapp.Model.QueueRequest;
 import com.example.administrator.customerapp.Model.Review;
+import com.example.administrator.customerapp.Model.SupportedModel.Address;
 import com.example.administrator.customerapp.Model.SupportedModel.SpecificQueueRequest;
 
 import java.util.ArrayList;
@@ -23,13 +24,19 @@ import retrofit2.http.Query;
 public interface RetrofitInterface {
     @FormUrlEncoded
     @POST("/login")
-    Call<Account> logIn(@Field("email") String email, @Field("password") String password, @Field("type") String type );
+    Call<Account> logIn(@Field("email") String email, @Field("password") String password, @Field("type") String type);
 
     @GET("account/logout")
     Call<Void> logout();
 
     @GET("branch/json")
     Call<ArrayList<Branch>> getBranch();
+
+    @GET("branch/filterlist")
+    Call<ArrayList<Address>> getFilterList();
+
+    @GET("branch/filter")
+    Call<ArrayList<Branch>> filter(@Query("city") String city, @Query("district") String district, @Query("type") String type);
 
     @GET("branch/{branchID}/json")
     Call<ArrayList<Queue>> getQueue(@Path("branchID") String branchID);
@@ -40,17 +47,21 @@ public interface RetrofitInterface {
     @GET("/queuerequest/detail?")
     Call<SpecificQueueRequest> getCurrrentQueueRequest(@Header("token") String token, @Query("accountid") String accountID);
 
+
+    @GET("/queuerequest/fromemailphone?")
+    Call<ArrayList<SpecificQueueRequest>> getRequestFromEmailPhone(@Header("token") String token,@Query("accountid") String accountID, @Query("customeremail") String email, @Query("customerphone") String phone);
+
     @FormUrlEncoded
     @POST("/queuerequest/create")
-    Call<Void> createQueueRequest(@Header("token") String token, @Field("accountid")String accountID, @Field("queueid")String queueID, @Field("customername")String name, @Field("customerphone")String phone, @Field("customeremail")String email);
+    Call<Void> createQueueRequest(@Header("token") String token, @Field("accountid") String accountID, @Field("queueid") String queueID, @Field("customername") String name, @Field("customerphone") String phone, @Field("customeremail") String email);
 
     @FormUrlEncoded
     @PUT("/queuerequest/edit")
-    Call<Void> editQueueRequest(@Header("token") String token, @Field("queuerequestid")String queueRequestID, @Field("customername")String name, @Field("customerphone")String phone, @Field("customeremail")String email);
+    Call<Void> editQueueRequest(@Header("token") String token, @Field("queuerequestid") String queueRequestID, @Field("customername") String name, @Field("customerphone") String phone, @Field("customeremail") String email);
 
     @FormUrlEncoded
     @PUT("/queuerequest/cancel")
-    Call<Void> cancelQueueRequest(@Header("token") String token, @Field("queuerequestid")String queueRequestID);
+    Call<Void> cancelQueueRequest(@Header("token") String token, @Field("queueid") String queueID,@Field("queuerequestid") String queueRequestID);
 
     @GET("history/accountid={accountID}/json")
     Call<ArrayList<History>> getHistory(@Header("token") String token, @Path("accountID") String accountID);
@@ -61,15 +72,15 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("/account/register")
-    Call<Void> signUp(@Field("email")String email, @Field("name")String name, @Field("phone")String phone, @Field("password")String password);
+    Call<Void> signUp(@Field("email") String email, @Field("name") String name, @Field("phone") String phone, @Field("password") String password);
 
     @FormUrlEncoded
     @POST("/account/changeinfo")
-    Call<Void> changeInfo(@Header("token") String token, @Field("accountid") String accountID, @Field("name")String name, @Field("phone")String phone);
+    Call<Void> changeInfo(@Header("token") String token, @Field("accountid") String accountID, @Field("name") String name, @Field("phone") String phone);
 
     @FormUrlEncoded
     @POST("/account/changepassword")
-    Call<Void> changePassword(@Header("token") String token, @Field("accountid") String accountID, @Field("oldpassword")String oldPassword, @Field("newpassword")String newPassword);
+    Call<Void> changePassword(@Header("token") String token, @Field("accountid") String accountID, @Field("oldpassword") String oldPassword, @Field("newpassword") String newPassword);
 
     @FormUrlEncoded
     @POST("/account/resetpassword")
@@ -77,7 +88,7 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("/review/create")
-    Call<Void> createReview(@Header("token") String token, @Field("accountid")String accountID, @Field("queuerequestid")String queueRequestID, @Field("waitingscore")Float waitingScore, @Field("servicescore")Float serviceScore, @Field("spacescore") Float spaceScore, @Field("comment") String comment);
+    Call<Void> createReview(@Header("token") String token, @Field("accountid") String accountID, @Field("queuerequestid") String queueRequestID, @Field("waitingscore") Float waitingScore, @Field("servicescore") Float serviceScore, @Field("spacescore") Float spaceScore, @Field("comment") String comment);
 
     @GET("/review?")
     Call<Review> getReview(@Query("queuerequestid") String queueRequestID);

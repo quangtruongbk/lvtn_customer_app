@@ -98,7 +98,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/queueRequestRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"></android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
 
@@ -115,5 +116,17 @@
         app:fabSize="normal"
         app:layout_anchor="@+id/linearLayout"
         app:layout_anchorGravity="bottom|right|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/qrFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/qrscanner"
+        app:backgroundTint="@color/colorLightPink"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/linearLayout"
+        app:layout_anchorGravity="bottom|left|end" />
 
 </android.support.design.widget.CoordinatorLayout>

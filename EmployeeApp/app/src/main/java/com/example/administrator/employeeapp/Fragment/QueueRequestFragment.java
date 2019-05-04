@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -44,6 +45,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -64,15 +67,15 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private AlertDialog createQueueRequestDialog;
     private AlertDialog.Builder createQueueRequestDialogBuilder;
     private FloatingActionButton createQueueRequestFab;
+    private FloatingActionButton qrFab;
     private SharedPreferences sharedPreferences;
     private Account account;
     private String queueID;
     private Socket mSocket;
     protected Activity mActivity;
-
     {
         try {
-            mSocket = IO.socket("http://192.168.1.2:3000");
+            mSocket = IO.socket("http://192.168.1.9:3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
@@ -90,6 +93,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         queueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.queueRequestRecyclerView);
         ongoingQueueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.onGoingQueueRequestRecyclerView);
         createQueueRequestFab = (FloatingActionButton) view.findViewById(R.id.createQueueRequestFab);
+        qrFab = (FloatingActionButton) view.findViewById(R.id.qrFab);
         numberOfPeopleTxt = (TextView) view.findViewById(R.id.numberOfPeopleTxt);
         pathTxt = (TextView) view.findViewById(R.id.pathTxt);
         queueID = getArguments().getString("queueID");
@@ -119,9 +123,27 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             }
         });
 
+        qrFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator.forSupportFragment(QueueRequestFragment.this).initiateScan();
+            }
+        });
         queueRequestPresenter.listeningSocket(onQueueChange);
         mSocket.on("onQueueChange", onQueueChange);
+
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        String qrcode = result.getContents();
+        if(qrcode!=null){
+            Log.d("6abc", "QR Code: " + qrcode);
+            queueRequestPresenter.checkInOutByQR(account.getToken(), qrcode, queueRequestArrayList, ongoingQueueRequestArrayList);
+        }
+        else showDialog("Không quét được QR Code", false);
     }
 
     @Override
@@ -208,6 +230,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
 
     @Override
     public void setUpAdapter(ArrayList<QueueRequest> queueRequest) {
+        queueRequestArrayList = queueRequest;
         if (queueRequest != null && account != null) {
             numberOfPeopleTxt.setText(Integer.toString(queueRequest.size()));
             queueRequestAdapter = new QueueRequestAdapter(queueRequest, queueRequestPresenter, mActivity, account);
@@ -221,6 +244,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
 
     @Override
     public void setUpOnGoingRequestAdapter(ArrayList<QueueRequest> queueRequest) {
+        ongoingQueueRequestArrayList = queueRequest;
         if (queueRequest != null && account != null) {
             Log.d("6abc", "onGoingQueueRequestRecyclerView " + queueRequest.size());
             ongoingQueueRequestAdapter = new OnGoingQueueRequestAdapter(queueRequest, queueRequestPresenter, getActivity(), account);
@@ -270,8 +294,10 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                 } else {
                     nameTxt.setError(null);
                 }
-                if (validFlag == true)
+                if (validFlag == true){
                     queueRequestPresenter.createQueueRequest(account.getToken(), account.getId(), queueID, name, phone, email);
+                    if(createQueueRequestDialog.isShowing()) createQueueRequestDialog.dismiss();
+                }
             }
         });
     }
@@ -288,4 +314,5 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             });
         }
     };
+
 }

@@ -3,6 +3,8 @@ package com.example.administrator.customerapp.Model.SupportedModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class Address {
 
     @SerializedName("city")
@@ -48,6 +50,21 @@ public class Address {
 
     public void setRest(String rest) {
         this.rest = rest;
+    }
+
+    public ArrayList<String> getDistrictFromCityFilter(ArrayList<Address> address, String city){
+        for(int i = 0; i < address.size(); i++){
+            if(address.get(i).getCity().equals(city)) {
+                String[] temp = address.get(i).getDistrict().split(",");
+                temp[0] = "Chọn quận/huyện";
+                ArrayList<String> district = new ArrayList<>();
+                for(int j = 0; j < temp.length; j++){
+                    district.add(temp[j]);
+                }
+                return district;
+            }
+        }
+        return null;
     }
 
 }

@@ -59,6 +59,10 @@ public class QueueRequest {
     @Expose
     @Nullable
     private String endTime;
+    @SerializedName("expiredDate")
+    @Expose
+    @Nullable
+    private long expiredDate;
 
     public String getId() {
         return id;
@@ -150,5 +154,18 @@ public class QueueRequest {
 
     public String getAccountID() {
         return accountID;
+    }
+
+    public void setStatus(@Nullable String status) {
+        this.status = status;
+    }
+
+    @Nullable
+    public long getExpiredDate() {
+        return expiredDate;
+    }
+
+    public void setExpiredDate(@Nullable long expiredDate) {
+        this.expiredDate = expiredDate;
     }
 }

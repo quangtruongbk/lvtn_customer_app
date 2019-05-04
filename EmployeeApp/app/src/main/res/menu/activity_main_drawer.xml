@@ -17,10 +17,6 @@
             android:icon="@drawable/branch"
             android:title="Tạo cơ sở" />
         <item
-            android:id="@+id/navQRCode"
-            android:icon="@drawable/qrcode"
-            android:title="Mã QR" />
-        <item
             android:id="@+id/navData"
             android:icon="@drawable/data"
             android:title="Dữ liệu và Thống kê" />

@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,7 +107,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                                 showEditQueueRequestDialog(queueRequestList.get(position));
                                 return true;
                             case R.id.cancelBtn:
-                                queueRequestPresenter.cancelQueueRequest(account.getToken(), queueRequestList.get(position).getId());
+                                queueRequestPresenter.cancelQueueRequest(account.getToken(), queueRequestList.get(position).getQueueID(), queueRequestList.get(position).getId());
                                 return true;
                             default:
                                 return false;
@@ -114,9 +116,29 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                 });
                 //displaying the popup
                 popup.show();
-
             }
         });
+
+        long distance;
+        distance = queueRequestList.get(position).getExpiredDate() - System.currentTimeMillis();
+        Log.d("6abc", "distance truoc if: " + distance);
+        if(distance > 0) {
+            Log.d("6abc", "distance: " + distance);
+            new CountDownTimer(distance, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                    holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: "+((millisUntilFinished - millisUntilFinished%60)/60/1000 + 1));
+                }
+
+                public void onFinish() {
+                    holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: 0");
+                }
+
+            }.start();
+        }else{
+            holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: 0");
+        }
+
     }
 
     @Override
@@ -129,6 +151,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
         TextView emailTxt;
         TextView phoneTxt;
         TextView sttTxt;
+        TextView timeCountDownTxt;
         LinearLayout queueRequestLinearLayout;
         LinearLayout moreLinearLayout;
 
@@ -138,6 +161,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
             sttTxt = (TextView) itemView.findViewById(R.id.STTTxt);
             emailTxt = (TextView) itemView.findViewById(R.id.emailTxt);
             phoneTxt = (TextView) itemView.findViewById(R.id.phoneTxt);
+            timeCountDownTxt = (TextView) itemView.findViewById(R.id.timeCountDownTxt);
             queueRequestLinearLayout = (LinearLayout) itemView.findViewById(R.id.queueRequestLinearLayout);
             moreLinearLayout = (LinearLayout) itemView.findViewById(R.id.moreLayout);
         }
@@ -195,6 +219,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                 }
                 if (valueFlag == true) {
                     queueRequestPresenter.sendEmail(account.getToken(), email, message);
+                    if(sendEmailDialog.isShowing()) sendEmailDialog.dismiss();
                 }
             }
         });
@@ -242,9 +267,13 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                 } else {
                     nameTxt.setError(null);
                 }
-                if (validFlag == true)
+                if (validFlag == true) {
                     queueRequestPresenter.editQueueRequest(account.getToken(), queueRequest.getId(), name, phone, email);
+                if(editQueueRequestDialog.isShowing()) editQueueRequestDialog.dismiss();
+                }
             }
         });
     }
+
+
 }

@@ -8,6 +8,7 @@ import com.example.administrator.employeeapp.Model.Queue;
 import com.example.administrator.employeeapp.Model.QueueRequest;
 import com.example.administrator.employeeapp.Model.Review;
 import com.example.administrator.employeeapp.Model.Statistic;
+import com.example.administrator.employeeapp.Model.SupportedModel.Address;
 
 import java.util.ArrayList;
 
@@ -51,7 +52,7 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @PUT("/queuerequest/cancel")
-    Call<Void> cancelQueueRequest(@Header("token") String token, @Field("queuerequestid")String queueRequestID);
+    Call<Void> cancelQueueRequest(@Header("token") String token, @Field("queueid")String queueID, @Field("queuerequestid")String queueRequestID);
 
     @FormUrlEncoded
     @PUT("/queuerequest/edit")

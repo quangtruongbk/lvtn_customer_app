@@ -157,7 +157,6 @@ public class HistoryFragment extends Fragment implements HistoryContract.View{
         serviceScoreTxt.setText("Điểm phục vụ: " + review.getServiceScore());
         spaceScoreTxt.setText("Điểm không gian: " + review.getSpaceScore());
         commentTxt.setText("Nhận xét: " + review.getComment());
-
         fullHistoryDialog = fullHistoryDialogBuidler.show();
     }
 }

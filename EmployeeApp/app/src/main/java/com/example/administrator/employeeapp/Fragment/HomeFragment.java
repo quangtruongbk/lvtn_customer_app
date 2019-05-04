@@ -2,6 +2,7 @@ package com.example.administrator.employeeapp.Fragment;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,11 +10,17 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +29,13 @@ import com.example.administrator.employeeapp.Contract.HomeContract;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
 import com.example.administrator.employeeapp.Model.Employee;
+import com.example.administrator.employeeapp.Model.Queue;
+import com.example.administrator.employeeapp.Model.SupportedModel.Address;
 import com.example.administrator.employeeapp.Presenter.HomePresenter;
 import com.example.administrator.employeeapp.R;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -70,15 +80,15 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         return view;
     }
 
-    private void assignDialog(){
+    private void assignDialog() {
         noticeDialog = new AlertDialog.Builder(getActivity());
         waitingDialogBuilder = new AlertDialog.Builder(getActivity());
     }
 
     @Override
-    public void showDialog(String message, Boolean isSuccess){
+    public void showDialog(String message, Boolean isSuccess) {
         LayoutInflater inflater = getLayoutInflater();
-        if(isSuccess) {
+        if (isSuccess) {
             View layout = inflater.inflate(R.layout.custom_toast_success,
                     (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
             TextView text = (TextView) layout.findViewById(R.id.toastTxt);
@@ -88,7 +98,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(layout);
             toast.show();
-        }else{
+        } else {
             View layout = inflater.inflate(R.layout.custom_toast_fail,
                     (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
             TextView text = (TextView) layout.findViewById(R.id.toastTxt);
@@ -116,13 +126,15 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     }
 
     @Override
-    public void setUpAdapter(ArrayList<Branch> branch){
+    public void setUpAdapter(ArrayList<Branch> branch) {
         Log.d("1abc", "Branch: " + branch.get(0).getName());
-        if(branch != null) branchAdapter = new BranchAdapter(branch, getActivity(), homePresenter, account, employee);
+        if (branch != null)
+            branchAdapter = new BranchAdapter(branch, getActivity(), homePresenter, account, employee);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         branchRecyclerView.setLayoutManager(layoutManager);
         branchRecyclerView.setAdapter(branchAdapter);
     }
+
 
 }

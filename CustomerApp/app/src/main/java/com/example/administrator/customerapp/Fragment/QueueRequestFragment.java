@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +57,8 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private QueueRequestAdapter queueRequestAdapter;
     private TextView numberOfPeopleTxt;
     private TextView pathTxt;
+    private TextView timeCountDownTxt;
+    private LinearLayout timeCountDownLinear;
     private ArrayList<QueueRequest> queueRequestArrayList;
     private QueueRequestContract.Presenter queueRequestPresenter;
     private AlertDialog waitingDialog;
@@ -70,7 +74,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.1.3:3000");
+            mSocket = IO.socket("http://192.168.1.9:3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
@@ -87,6 +91,8 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         queueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.queueRequestRecyclerView);
         numberOfPeopleTxt = (TextView) view.findViewById(R.id.numberOfPeopleTxt);
         pathTxt = (TextView) view.findViewById(R.id.pathTxt);
+        timeCountDownTxt = (TextView) view.findViewById(R.id.timeCountDownTxt);
+        timeCountDownLinear = (LinearLayout) view.findViewById(R.id.timeCountDownLinear);
         createQueueRequestFab = (FloatingActionButton) view.findViewById(R.id.createQueueRequestFab);
         assignDialog();
         queueID = getArguments().getString("queueID");
@@ -116,6 +122,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         });
         queueRequestPresenter.listeningSocket(onQueueChange);
         mSocket.on("onQueueChange", onQueueChange);
+
         return view;
     }
 
@@ -206,6 +213,33 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         if(queueRequest != null && account != null){
             numberOfPeopleTxt.setText(Integer.toString(queueRequest.size()));
             queueRequestAdapter = new QueueRequestAdapter(queueRequest, mActivity, queueRequestPresenter, account);
+            for(int i = 0;i < queueRequest.size(); i++){
+                Log.d("6abc", "queueRequest.get(i).getAccountID(): " + queueRequest.get(i).getAccountID());
+                Log.d("6abc", "account.getId(): " + account.getId());
+
+                if(queueRequest.get(i).getAccountID().equals(account.getId())){
+                    timeCountDownLinear.setVisibility(View.VISIBLE);
+                    long distance;
+                    distance = queueRequest.get(i).getExpiredDate() - System.currentTimeMillis();
+                    Log.d("6abc", "distance truoc if: " + distance);
+                    if(distance > 0) {
+                        Log.d("6abc", "distance: " + distance);
+                        new CountDownTimer(distance, 1000) {
+
+                            public void onTick(long millisUntilFinished) {
+                                timeCountDownTxt.setText(""+((millisUntilFinished - millisUntilFinished%60)/60/1000 + 1));
+                            }
+
+                            public void onFinish() {
+                                timeCountDownTxt.setText("0");
+                            }
+
+                        }.start();
+                    }else{
+                        timeCountDownTxt.setText("0");
+                    }
+                }
+            }
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -223,8 +257,8 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         });
         createQueueRequestDialogBuilder.setView(v);
         final EditText nameTxt = (EditText) v.findViewById(R.id.nameTxt);
-        final EditText emailTxt = (EditText) v.findViewById(R.id.emailTxt);
-        final EditText phoneTxt = (EditText) v.findViewById(R.id.phoneTxt);
+        final TextView emailTxt = (TextView) v.findViewById(R.id.emailTxt);
+        final TextView phoneTxt = (TextView) v.findViewById(R.id.phoneTxt);
         nameTxt.setText(account.getName());
         emailTxt.setText(account.getEmail());
         phoneTxt.setText(account.getPhone());
@@ -254,7 +288,10 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                 } else {
                     nameTxt.setError(null);
                 }
-                if(validFlag == true) queueRequestPresenter.createQueueRequest(account.getToken(), account.getId(), queueID, name, phone, email);
+                if(validFlag == true){
+                    queueRequestPresenter.createQueueRequest(account.getToken(), account.getId(), queueID, name, phone, email);
+                    if(createQueueRequestDialog.isShowing()) createQueueRequestDialog.dismiss();
+                }
             }
         });
     }
