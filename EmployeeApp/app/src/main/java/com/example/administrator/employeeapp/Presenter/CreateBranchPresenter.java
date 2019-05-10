@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.example.administrator.employeeapp.CallAPI.APIClient;
 import com.example.administrator.employeeapp.CallAPI.RetrofitInterface;
 import com.example.administrator.employeeapp.Contract.CreateBranchContract;
-import com.example.administrator.employeeapp.Contract.SignUpContract;
 import com.example.administrator.employeeapp.Model.Account;
 
 import retrofit2.Call;

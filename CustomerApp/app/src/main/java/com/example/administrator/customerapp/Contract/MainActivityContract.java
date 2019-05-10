@@ -6,7 +6,7 @@ import com.example.administrator.customerapp.BaseView;
 public interface MainActivityContract {
 
     interface View extends BaseView<Presenter> {
-        void showDialog(String message);
+        void showDialog(String message, Boolean isSuccess);
         void openLoginActivity();
     }
 

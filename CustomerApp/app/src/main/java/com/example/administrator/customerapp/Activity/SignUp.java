@@ -9,12 +9,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.customerapp.Contract.LoginContract;
 import com.example.administrator.customerapp.Contract.SignUpContract;
@@ -128,15 +133,29 @@ public class SignUp extends AppCompatActivity implements SignUpContract.View {
     }
 
     @Override
-    public void showDialog(String message){
-            noticeDialog.setMessage(message)
-                    .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            noticeDialog.show();
+    public void showDialog(String message, Boolean isSuccess) {
+        LayoutInflater inflater = getLayoutInflater();
+        if (isSuccess) {
+            View layout = inflater.inflate(R.layout.custom_toast_success,
+                    (ViewGroup) this.findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(this);
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        } else {
+            View layout = inflater.inflate(R.layout.custom_toast_fail,
+                    (ViewGroup) this.findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(this);
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        }
     }
 
     @Override

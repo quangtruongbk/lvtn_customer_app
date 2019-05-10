@@ -45,14 +45,14 @@ public class QueuePresenter implements QueueContract.Presenter{
                         mView.setUpAdapter(newQueue);
                     }
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể lấy được danh sách hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể lấy được danh sách hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<Queue>> call, Throwable t) {
                 mView.hideProgressBar();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
     }

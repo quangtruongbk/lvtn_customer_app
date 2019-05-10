@@ -37,7 +37,7 @@ public interface RetrofitInterface {
     @GET("account/logout")
     Call<Void> logout();
 
-    @GET("branch/json")
+    @GET("/branch/json")
     Call<ArrayList<Branch>> getBranch();
 
     @GET("branch/{branchID}/json")
@@ -88,7 +88,7 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("/account/resetpassword")
-    Call<Void> forgotPassword(@Field("email") String email);
+    Call<Void> forgotPassword(@Field("email") String email, @Field("type") String type);
 
     @FormUrlEncoded
     @POST("/review/create")

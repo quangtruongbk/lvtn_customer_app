@@ -30,7 +30,7 @@ public class ForgotPasswordPresenter implements ForgotPasswordContract.Presenter
     @Override
     public void forgotPassword(String email){
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.forgotPassword(email).enqueue(new Callback<Void>() {
+        callAPIService.forgotPassword(email, "employee").enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();

@@ -3,6 +3,7 @@ package com.example.administrator.customerapp.Presenter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.administrator.customerapp.CallAPI.APIClient;
 import com.example.administrator.customerapp.CallAPI.RetrofitInterface;
@@ -48,13 +49,14 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
         callAPIService.changeInfo(token, accountID, name, phone).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("6abc", "Change info" + response.code());
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    mView.showDialog("Cập nhật thông tin tài khoản thành công!");
+                    mView.showDialog("Cập nhật thông tin tài khoản thành công!", true);
                     String accountString = sharedPreferences.getString("MyAccount", "empty");
                     Gson gson = new Gson();
                     Account account = new Account();
-                    if(!accountString.equals("null")) {
+                    if(!accountString.equals("empty")) {
                         account = gson.fromJson(accountString, Account.class);
                         account.setName(name);
                         account.setPhone(phone);
@@ -64,15 +66,16 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
                     }
                     mView.openMainActivity();
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể cập nhật được thông tin tài khoản do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể cập nhật được thông tin tài khoản do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("6abc", "Change info onfailure");
                 mView.hideProgressBar();
                 t.printStackTrace();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
     }
@@ -85,25 +88,26 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
     @Override
     public void changePassword(String token, String accountID, String oldPassword, String newPassword) {
         mView.showProgressBar();
+        Log.d("6abc","accountID : " + accountID);
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.changePassword(token, accountID, oldPassword, newPassword).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
+                Log.d("6abc", "changePassword: " + response.code());
                 if (response.code() == 200) {
-                    mView.showDialog("Cập nhật mật khẩu thành công!");
+                    mView.showDialog("Cập nhật mật khẩu thành công!", true);
                     mView.openMainActivity();
-                }
-                if (response.code() == 406) {
-                    mView.showDialog("Xác thực mật khẩu cũ không trùng khớp, xin vui lòng thử lại!");
+                } else if (response.code() == 406) {
+                    mView.showDialog("Xác thực mật khẩu cũ không trùng khớp, xin vui lòng thử lại!", false);
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể cập nhật được mật khẩu do lỗi hệ thống. Xin vui lòng thử lại!");
+                    mView.showDialog("Không thể cập nhật được mật khẩu do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
-                mView.showDialog("Không thể kết nối được với máy chủ!");
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
     }

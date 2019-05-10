@@ -10,11 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.customerapp.Activity.MainActivity;
 import com.example.administrator.customerapp.Contract.MyAccountContract;
@@ -63,7 +65,7 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
         String accountString = sharedPreferences.getString("MyAccount", "empty");
         Gson gson = new Gson();
         account = new Account();
-        if (!accountString.equals("null")) {
+        if (!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
         }
         nameTxt.setText(account.getName());
@@ -174,15 +176,29 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     }
 
     @Override
-    public void showDialog(String message) {
-        noticeDialog.setMessage(message)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        // Create the AlertDialog object and return it
-        noticeDialog.show();
+    public void showDialog(String message, Boolean isSuccess) {
+        LayoutInflater inflater = getLayoutInflater();
+        if (isSuccess) {
+            View layout = inflater.inflate(R.layout.custom_toast_success,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        } else {
+            View layout = inflater.inflate(R.layout.custom_toast_fail,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        }
     }
 
     @Override

@@ -1,17 +1,12 @@
 package com.example.administrator.employeeapp.Presenter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
-import com.example.administrator.employeeapp.Activity.Login;
-import com.example.administrator.employeeapp.Activity.MainActivity;
 import com.example.administrator.employeeapp.CallAPI.APIClient;
 import com.example.administrator.employeeapp.CallAPI.RetrofitInterface;
 import com.example.administrator.employeeapp.Contract.MainActivityContract;
-import com.example.administrator.employeeapp.Contract.SignUpContract;
-import com.example.administrator.employeeapp.Model.Account;
 
 import retrofit2.Call;
 import retrofit2.Callback;

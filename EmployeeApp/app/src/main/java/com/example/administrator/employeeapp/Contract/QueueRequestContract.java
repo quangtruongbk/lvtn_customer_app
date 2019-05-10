@@ -22,7 +22,7 @@ public interface QueueRequestContract {
 
     interface Presenter extends BasePresenter {
         void getQueueRequestFromServer(String queueID);
-        void getOnGoingQueueRequestFromServer(String queueID);
+        void getOnGoingUsingQueueRequestFromServer(String queueID);
         void sendEmail(String token, String email, String message);
         void checkInOut(String token, String queueRequestID, String type);
         void checkInOutByQR(String token, String scanResult, ArrayList<QueueRequest> queueRequestArrayList, ArrayList<QueueRequest> ongoingQueueRequestArrayList);

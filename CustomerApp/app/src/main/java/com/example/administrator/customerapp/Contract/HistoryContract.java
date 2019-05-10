@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public interface HistoryContract {
     interface View extends BaseView<Presenter> {
-        void showDialog(String message);
+        void showDialog(String message, Boolean isSuccess);
         void showProgressBar();
         void hideProgressBar();
         void setUpAdapter(ArrayList<History> historyList);

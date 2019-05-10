@@ -33,19 +33,19 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if(response.code() == 200) {
-                    mView.showDialog("Đăng ký thành công! Xin vui lòng kiểm tra hộp thư để xác thực tài khoản!");
+                    mView.showDialog("Đăng ký thành công! Xin vui lòng kiểm tra hộp thư để xác thực tài khoản!", true);
                     mView.openLoginActivity();
                 }else if(response.code() == 409){
-                    mView.showDialog("Email đã được sử dụng, xin vui lòng sử dụng một Email khác!");
+                    mView.showDialog("Email đã được sử dụng, xin vui lòng sử dụng một Email khác!", false);
                 }else if(response.code() == 500){
-                    mView.showDialog("Đăng ký thất bại do lỗi hệ thống");
+                    mView.showDialog("Đăng ký thất bại do lỗi hệ thống", false);
                 }
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 t.printStackTrace();
                 mView.hideProgressBar();
-                mView.showDialog("Kết nối với máy chủ thất bại");
+                mView.showDialog("Kết nối với máy chủ thất bại", false);
             }
         });
 

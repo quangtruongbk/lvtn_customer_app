@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,19 +22,15 @@ import android.widget.Toast;
 
 import com.example.administrator.employeeapp.Activity.MainActivity;
 import com.example.administrator.employeeapp.Adapter.BranchRoleAdapter;
-import com.example.administrator.employeeapp.Adapter.HistoryAdapter;
 import com.example.administrator.employeeapp.Contract.MyAccountContract;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
 import com.example.administrator.employeeapp.Model.Employee;
-import com.example.administrator.employeeapp.Model.History;
-import com.example.administrator.employeeapp.Model.SupportedModel.BranchRole;
 import com.example.administrator.employeeapp.Presenter.MyAccountPresenter;
 import com.example.administrator.employeeapp.R;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

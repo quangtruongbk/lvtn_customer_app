@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.customerapp.Activity.GetIP;
 import com.example.administrator.customerapp.Adapter.QueueAdapter;
 import com.example.administrator.customerapp.Adapter.QueueRequestAdapter;
 import com.example.administrator.customerapp.CallAPI.APIClient;
@@ -74,7 +75,8 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.1.9:3000");
+          //  mSocket = IO.socket("http://192.168.1.9:3000");
+            mSocket = IO.socket(GetIP.IP+":3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
@@ -111,7 +113,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         String accountString = sharedPreferences.getString("MyAccount", "empty");
         Gson gson = new Gson();
         account = new Account();
-        if (!accountString.equals("null")) {
+        if (!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
         }
         createQueueRequestFab.setOnClickListener(new View.OnClickListener() {

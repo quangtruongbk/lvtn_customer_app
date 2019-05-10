@@ -30,23 +30,23 @@ public class ForgotPasswordPresenter implements ForgotPasswordContract.Presenter
     @Override
     public void forgotPassword(String email){
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.forgotPassword(email).enqueue(new Callback<Void>() {
+        callAPIService.forgotPassword(email, "customer").enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if(response.code() == 200) {
-                    mView.showDialog("Email reset lại mật khẩu đã được gửi tới email của bạn, hãy kiểm tra và xác nhận!");
+                    mView.showDialog("Email reset lại mật khẩu đã được gửi tới email của bạn, hãy kiểm tra và xác nhận!", true);
                     mView.openLogin();
                 }else if(response.code() == 404){
-                    mView.showDialog("Email không tồn tại, hãy thử lại");
+                    mView.showDialog("Email không tồn tại, hãy thử lại", false);
                 }else if(response.code() == 500){
-                    mView.showDialog("Reset lại mật khẩu thất bại do lỗi hệ thống.");
+                    mView.showDialog("Reset lại mật khẩu thất bại do lỗi hệ thống.", false);
                 }
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 mView.hideProgressBar();
-                mView.showDialog("Kết nối với máy chủ thất bại");
+                mView.showDialog("Kết nối với máy chủ thất bại", false);
             }
         });
     }

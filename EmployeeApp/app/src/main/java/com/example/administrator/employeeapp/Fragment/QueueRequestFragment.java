@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.employeeapp.Activity.GetIP;
 import com.example.administrator.employeeapp.Adapter.OnGoingQueueRequestAdapter;
 import com.example.administrator.employeeapp.Adapter.QueueRequestAdapter;
 import com.example.administrator.employeeapp.CallAPI.APIClient;
@@ -75,7 +76,8 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     protected Activity mActivity;
     {
         try {
-            mSocket = IO.socket("http://192.168.1.9:3000");
+         //   mSocket = IO.socket("http://192.168.1.6:3000");
+            mSocket = IO.socket(GetIP.IP+":3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }

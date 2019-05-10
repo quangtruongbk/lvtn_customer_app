@@ -20,6 +20,6 @@ public interface QueueStatisticContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getQueueStatistic(String token, String branchID, Integer day);
+        void getQueueStatistic(String token, String queueID, Integer day);
     }
 }

@@ -7,7 +7,7 @@ import com.example.administrator.customerapp.Model.Account;
 public interface ForgotPasswordContract {
 
     interface View extends BaseView<Presenter> {
-        void showDialog(String message);
+        void showDialog(String messag0e, Boolean isSuccess);
         void openLogin();
     }
 

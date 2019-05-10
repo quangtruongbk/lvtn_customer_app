@@ -105,7 +105,7 @@ public class CurrentQueueRequestFragment extends Fragment implements CurrentQueu
         String accountString = sharedPreferences.getString("MyAccount", "empty");
         Gson gson = new Gson();
         account = new Account();
-        if (!accountString.equals("null")) {
+        if (!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
         }
         currentQueueRequestPresenter.getCurrentQueueRequest(account.getToken(), account.getId(), account.getEmail(), account.getPhone());

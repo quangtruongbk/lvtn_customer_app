@@ -53,7 +53,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                         mView.setUpAdapter(newQueueRequest);
                     }
                     Log.d("6abc", "getOnGoingQueueRequestFromServer");
-                    getOnGoingQueueRequestFromServer(queueID);
+                    getOnGoingUsingQueueRequestFromServer(queueID);
                 } else if (response.code() == 500) {
                     mView.hideProgressBar();
                     mView.showDialog("Không thể lấy được danh sách yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
@@ -76,7 +76,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
      Description: Get request that are using service
      *************************************************/
     @Override
-    public void getOnGoingQueueRequestFromServer(String queueID) {
+    public void getOnGoingUsingQueueRequestFromServer(String queueID) {
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.getQueueRequest(queueID, "1").enqueue(new Callback<ArrayList<QueueRequest>>() {
             @Override

@@ -22,6 +22,5 @@ public interface QueueRequestContract {
         void cancelQueueRequest(String token, String queueID, String queueRequestID);
         void disconnectSocket(Emitter.Listener onQueueChange);
         void listeningSocket(Emitter.Listener onQueueChange);
-
     }
 }

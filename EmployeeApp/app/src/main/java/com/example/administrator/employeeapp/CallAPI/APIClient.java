@@ -1,12 +1,14 @@
 package com.example.administrator.employeeapp.CallAPI;
 
+import com.example.administrator.employeeapp.Activity.GetIP;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIClient {
-    public static final String BASE_URL = "http://192.168.1.9:1337/";
-
+  //  public static final String BASE_URL = "http://192.168.1.6:1337/";
+  private static final String BASE_URL = GetIP.IP + ":1337/";
     private static Retrofit retrofit = null;
 
     public static Retrofit getClient() {

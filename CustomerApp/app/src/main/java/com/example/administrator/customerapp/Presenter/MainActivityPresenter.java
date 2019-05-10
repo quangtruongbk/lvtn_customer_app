@@ -51,14 +51,14 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                     editor.commit();
                     mView.openLoginActivity();
                 }else if(response.code() == 500){
-                    mView.showDialog("Đăng xuất thất bại do lỗi hệ thống");
+                    mView.showDialog("Đăng xuất thất bại do lỗi hệ thống", false);
                 }
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 t.printStackTrace();
                 mView.hideProgressBar();
-                mView.showDialog("Kết nối với máy chủ thất bại");
+                mView.showDialog("Kết nối với máy chủ thất bại", false);
             }
         });
     }
