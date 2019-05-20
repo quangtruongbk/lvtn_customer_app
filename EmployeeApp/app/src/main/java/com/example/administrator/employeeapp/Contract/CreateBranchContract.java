@@ -7,7 +7,8 @@ import com.example.administrator.employeeapp.Model.Account;
 public interface CreateBranchContract {
 
     interface View extends BaseView<Presenter> {
-        void showDialog(String message);
+        void showDialog(String message, Boolean isSuccess);
+        void openMainActivity();
     }
 
     interface Presenter extends BasePresenter {

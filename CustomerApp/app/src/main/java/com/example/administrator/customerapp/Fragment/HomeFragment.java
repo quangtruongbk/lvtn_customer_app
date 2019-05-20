@@ -132,8 +132,13 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void setUpAdapter(ArrayList<Branch> branch) {
-        Log.d("1abc", "Branch: " + branch.get(0).getName());
-        if (branch != null) branchAdapter = new BranchAdapter(branch, getActivity());
+        if (branch != null) {
+            ArrayList<Branch> temp = new ArrayList<>();
+            for (int i = 0; i < branch.size(); i++) {
+                if (!branch.get(i).getStatus().equals("-1")) temp.add(branch.get(i));
+            }
+            branchAdapter = new BranchAdapter(temp, getActivity());
+        }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         branchRecyclerView.setLayoutManager(layoutManager);
@@ -182,15 +187,14 @@ public class HomeFragment extends Fragment implements HomeContract.View {
             public void onClick(View v) {
                 pathTxt.setVisibility(View.VISIBLE);
                 cancelFilterTxt.setVisibility(View.VISIBLE);
-                if(districtSpinner.getSelectedItemPosition() == 0){
+                if (districtSpinner.getSelectedItemPosition() == 0) {
                     homePresenter.filterBranch(citySpinner.getSelectedItem().toString(), "");
                     pathTxt.setText("Các cơ sở thuộc: " + citySpinner.getSelectedItem().toString());
-                }
-                else{
+                } else {
                     homePresenter.filterBranch(citySpinner.getSelectedItem().toString(), districtSpinner.getSelectedItem().toString());
                     pathTxt.setText("Các cơ sở thuộc: " + citySpinner.getSelectedItem().toString() + ", " + districtSpinner.getSelectedItem().toString());
                 }
-                if(filterDialog.isShowing()) filterDialog.dismiss();
+                if (filterDialog.isShowing()) filterDialog.dismiss();
             }
         });
         filterDialog = filterDialogBuilder.show();

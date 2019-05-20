@@ -13,7 +13,8 @@ public interface QueueRequestContract {
         void showProgressBar();
         void hideProgressBar();
         void setUpAdapter(ArrayList<QueueRequest> QueueRequest);
-    }
+        void hideCountDown();
+        }
 
     interface Presenter extends BasePresenter {
         void getQueueRequestFromServer(String queueID);

@@ -77,8 +77,9 @@ public class QueuePresenter implements QueueContract.Presenter {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
                     mView.showDialog("Tạo hàng đợi thành công!", true);
-                    mView.returnQueueFragment(branchID);
-
+                   // mView.returnQueueFragment(branchID);
+                    getQueueFromServer(branchID);
+                    mView.closeDialog();
                 } else if (response.code() == 500) {
                     mView.showDialog("Không thể tạo được hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
@@ -110,10 +111,14 @@ public class QueuePresenter implements QueueContract.Presenter {
                     else if (status.equals("1"))
                         mView.showDialog("Hàng đợi bắt đầu đón khách!", true);
                     else if (status.equals("-1")) mView.showDialog("Hàng đợi đã khóa!", true);
-                    mView.returnQueueFragment(branchID);
+                //    mView.returnQueueFragment(branchID);
+                    getQueueFromServer(branchID);
                 } else if (response.code() == 500) {
                     mView.showDialog("Không thể đổi trạng thái hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                } else if (response.code() == 409) {
+                    mView.showDialog("Không thể khóa hàng đợi do có lượt đăng ký còn đang chờ hoặc đang sử dụng dịch vụ!", false);
                 }
+
             }
 
             @Override
@@ -139,8 +144,8 @@ public class QueuePresenter implements QueueContract.Presenter {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
                     mView.showDialog("Chỉnh sửa thông tin hàng đợi thành công!", true);
-                    mView.returnQueueFragment(branchID);
-
+                  //  mView.returnQueueFragment(branchID);
+                    getQueueFromServer(branchID);
                 } else if (response.code() == 500) {
                     mView.showDialog("Không thể chỉnh sửa được thông tin hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }

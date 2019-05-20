@@ -84,7 +84,7 @@ public class CurrentQueueRequestFragment extends Fragment implements CurrentQueu
         View view = inflater.inflate(R.layout.current_queue_request_fragment, container, false);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText("Yêu cầu hiện tại");
+        toolbarTitle.setText("Lượt đăng ký hiện tại");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         nameTxt = (TextView) view.findViewById(R.id.nameTxt);
         emailTxt = (TextView) view.findViewById(R.id.emailTxt);

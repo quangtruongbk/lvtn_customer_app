@@ -56,7 +56,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                     getOnGoingUsingQueueRequestFromServer(queueID);
                 } else if (response.code() == 500) {
                     mView.hideProgressBar();
-                    mView.showDialog("Không thể lấy được danh sách yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể lấy được danh sách lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
@@ -90,7 +90,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                     }
                     Log.d("6abc", "6");
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể lấy được danh sách yêu cầu đang sử dụng dịch vụ do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể lấy được danh sách lượt đăng ký đang sử dụng dịch vụ do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
 
@@ -148,11 +148,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    mView.showDialog("Tạo yêu cầu thành công", true);
+                    mView.showDialog("Tạo lượt đăng ký thành công", true);
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể tạo yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể tạo lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 } else if (response.code() == 409) {
-                    mView.showDialog("Không thể tạo yêu cầu do số điện thoại hoặc email đang có một yêu cầu chưa được hoàn tất.", false);
+                    mView.showDialog("Không thể tạo lượt đăng ký do số điện thoại hoặc email đang có một lượt đăng ký còn chờ.", false);
                 } else if (response.code() == 503) {
                     mView.showDialog("Rất tiếc, hàng đợi đã đầy.", false);
                 } else if (response.code() == 533) {
@@ -187,9 +187,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                 if (response.code() == 200) {
                     mView.showDialog("Chỉnh sửa thành công", true);
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể chỉnh sửa yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể chỉnh sửa lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 } else if (response.code() == 404) {
                     mView.showDialog("Không thử thực hiện tác vụ này, có vẻ như có gì đó đã thay đổi với lượt đăng ký!", false);
+                } else if (response.code() == 409) {
+                    mView.showDialog("Thay đổi thất bại do email hoặc số điện thoại đã tồn tại một lượt đăng ký còn chờ!", false);
                 }
             }
 
@@ -215,9 +217,9 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    mView.showDialog("Hủy yêu cầu thành công", true);
+                    mView.showDialog("Hủy lượt đăng ký thành công", true);
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể hủy yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể hủy lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 } else if (response.code() == 404) {
                     mView.showDialog("Không thể thực hiện tác vụ này, có vẻ như có gì đó đã thay đổi với lượt đăng ký!", false);
                 } else if (response.code() == 403) {
@@ -317,7 +319,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                 }
             }
         }
-        mView.showDialog("QR code này không thuộc về yêu cầu nào", false);
+        mView.showDialog("QR code này không thuộc về lượt đăng ký nào", false);
     }
 
     @Override

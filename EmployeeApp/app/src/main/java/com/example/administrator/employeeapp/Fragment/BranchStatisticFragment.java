@@ -144,7 +144,7 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
         lineChart = view.findViewById(R.id.chart);
         lineChart.setTouchEnabled(true);
         lineChart.setPinchZoom(true);
-        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
+        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view, day);
         mv.setChartView(lineChart);
         lineChart.setMarker(mv);
         pieChart = (PieChart) view.findViewById(R.id.piechart);
@@ -333,7 +333,7 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
 
         lineChart.setData(data);
         lineChart.animateY(1000);
-        lineChart.getDescription().setText("Line Comparison Chart");
+        lineChart.getDescription().setText("Tổng lượt đăng ký, hoàn thành, hủy qua các khoảng thời gian");
 
         Legend legend = lineChart.getLegend();
         legend.setStackSpace(5);

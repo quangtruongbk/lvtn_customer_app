@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,10 +18,21 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.example.administrator.customerapp.Model.Account;
+import com.example.administrator.customerapp.Model.QueueRequest;
 import com.example.administrator.customerapp.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +44,7 @@ public class FirebaseMessageService extends FirebaseMessagingService {
 
     private static final int NOTIFICATION_MAX_CHARACTERS = 30;
     private NotificationManager mNotificationManager;
+
     /**
      * Called when message is received.
      *
@@ -40,52 +53,78 @@ public class FirebaseMessageService extends FirebaseMessagingService {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // There are two types of messages data messages and notification messages. Data messages
-        // are handled
-        // here in onMessageReceived whether the app is in the foreground or background. Data
-        // messages are the type
-        // traditionally used with FCM. Notification messages are only received here in
-        // onMessageReceived when the app
-        // is in the foreground. When the app is in the background an automatically generated
-        // notification is displayed.
-        // When the user taps on the notification they are returned to the app. Messages
-        // containing both notification
-        // and data payloads are treated as notification messages. The Firebase console always
-        // sends notification
-        // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options\
-
-        // The Squawk server always sends just *data* messages, meaning that onMessageReceived when
-        // the app is both in the foreground AND the background
-
-        Log.d("6abc", "From: " + remoteMessage.getFrom());
-
-        // Check if message contains a data payload.
-
         Map<String, String> data = remoteMessage.getData();
-        Log.d("6abc", "Message: " + data.get("message"));
-        Log.d("6abc", "Message: " + data.get("title"));
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        // Create the pending intent to launch the activity
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        SharedPreferences sharedPreferences;
+        sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        String accountString = sharedPreferences.getString("MyAccount", "empty");
+        Gson gson = new Gson();
+        Account account = new Account();
+        if (!accountString.equals("empty")) {
+            account = gson.fromJson(accountString, Account.class);
+        }
+        if (data.get("type").equals("cancel")) {
+            String requestListString = data.get("request");
+            if (requestListString != null && !requestListString.equals("") && account != null) {
+                String[] parts = requestListString.split(",");
+                for (int i = 0; i < parts.length; i++) {
+                    if (parts[i].equals(account.getId())) {
+                        if (i <= 4) {
+                            Intent intent = new Intent(this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                                    PendingIntent.FLAG_ONE_SHOT);
+                            createNotificationChannel();
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "6abc")
+                                    .setSmallIcon(R.drawable.queue)
+                                    .setContentTitle("Có ai đó rời khỏi hàng đợi")
+                                    .setContentText("Còn " + i + " người nữa là tới lượt bạn. Có vẻ như bạn đã sắp tới lượt rồi đó. Hãy chú ý theo dõi nhé!")
+                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        createNotificationChannel();
+                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "6abc")
-                .setSmallIcon(R.drawable.queue)
-                .setContentTitle(data.get("message"))
-                .setContentText(data.get("title"))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-        notificationManager.notify(0, builder.build());
-
-        if (data.size() > 0) {
-            Log.d("6abc", "Message data payload: " + data);
-            sendNotification(data);
-
+                            notificationManager.notify(0, builder.build());
+                        }
+                        break;
+                    }
+                }
+            }
+        } else if (data.get("type").equals("checkIn")) {
+            String requestListString = data.get("request");
+            if (requestListString != null && !requestListString.equals("") && account != null) {
+                String[] parts = requestListString.split(",");
+                for (int i = 0; i < parts.length; i++) {
+                    if (parts[i].equals(account.getId())) {
+                        if (i <= 4) {
+                            Intent intent = new Intent(this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                                    PendingIntent.FLAG_ONE_SHOT);
+                            createNotificationChannel();
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "6abc")
+                                    .setSmallIcon(R.drawable.queue)
+                                    .setContentTitle("Gần tới lượt")
+                                    .setContentText("Còn " + i + " người nữa là tới lượt bạn. Có vẻ như bạn đã sắp tới lượt rồi đó. Hãy chú ý theo dõi nhé!")
+                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                            notificationManager.notify(0, builder.build());
+                        }
+                        break;
+                    }
+                }
+            }
+        }else if (data.get("type").equals("notbusyqueue")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                    PendingIntent.FLAG_ONE_SHOT);
+            createNotificationChannel();
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "6abc")
+                    .setSmallIcon(R.drawable.queue)
+                    .setContentTitle("Hàng đợi đã vắng")
+                    .setContentText("Hàng đợi đã vắng. Ngay lúc này, bạn đã có thể sử dụng dịch vụ!")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(0, builder.build());
         }
     }
 
@@ -98,11 +137,5 @@ public class FirebaseMessageService extends FirebaseMessagingService {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void sendNotification(Map<String, String> data) {
-
-
     }
 }

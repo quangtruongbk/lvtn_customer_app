@@ -137,7 +137,4 @@ public class BranchStatisticAdapter extends RecyclerView.Adapter<BranchStatistic
         dayDialogBuilder.setView(v);
         dayDialog = dayDialogBuilder.show();
     }
-
-
-
 }

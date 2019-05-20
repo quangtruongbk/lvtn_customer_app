@@ -16,4 +16,6 @@
     <color name="colorLightGrey">#E8EAEC</color>
     <color name="colorGreen">#0b6623</color>
     <color name="colorBackgroundBlue">#5192EA</color>
+    <color name="colorGrey">#FFCBCCCC</color>
+
 </resources>

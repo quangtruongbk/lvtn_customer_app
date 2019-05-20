@@ -33,12 +33,14 @@ public class HistoryPresenter implements HistoryContract.Presenter {
      *************************************************/
     @Override
     public void getHistoryFromServer(String token, String accountID) {
+        Log.d("1abc", "getHistoryFromServer");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.getHistory(token, accountID).enqueue(new Callback<ArrayList<History>>() {
             @Override
             public void onResponse(Call<ArrayList<History>> call, Response<ArrayList<History>> response) {
                 mView.hideProgressBar();
+                Log.d("1abc", "history responce: " + response.code());
                 if (response.code() == 200) {
                     ArrayList<History> newHistory = new ArrayList<History>();
                     newHistory = response.body();
@@ -56,6 +58,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
 
             @Override
             public void onFailure(Call<ArrayList<History>> call, Throwable t) {
+                t.printStackTrace();
                 mView.hideProgressBar();
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
@@ -68,7 +71,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
      Description: Create a review for a done request
      *************************************************/
     @Override
-    public void createReview(String token, String accountID, String queueRequestID, Float waitingScore, Float serviceScore, Float spaceScore, String comment) {
+    public void createReview(final String token, final String accountID, String queueRequestID, Float waitingScore, Float serviceScore, Float spaceScore, String comment) {
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.createReview(token, accountID, queueRequestID, waitingScore, serviceScore, spaceScore, comment).enqueue(new Callback<Void>() {
@@ -77,6 +80,7 @@ public class HistoryPresenter implements HistoryContract.Presenter {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
                     mView.showDialog("Tạo đánh giá thành công!", true);
+                    getHistoryFromServer(token, accountID);
                 } else if (response.code() == 500) {
                     mView.showDialog("Không thể lấy được lịch sử do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }

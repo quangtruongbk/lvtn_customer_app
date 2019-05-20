@@ -57,12 +57,9 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                 } else if (response.code() == 401) {
                     mView.hideProgressBar();
-                    Log.d("1abc", "Đang nhap that bai");
                     mView.showDialog("Đăng nhập thất bại, hãy kiểm tra lại email và mật khẩu!", false);
                 } else if (response.code() == 403) {
                     mView.hideProgressBar();
-                    Log.d("1abc", "Da dang nhap roi");
-                    Log.d("1abc", "Da dang nhap roi");
                 } else if (response.code() == 500) {
                     mView.hideProgressBar();
                     mView.showDialog("Đăng nhập thất bại do lỗi hệ thống", false);

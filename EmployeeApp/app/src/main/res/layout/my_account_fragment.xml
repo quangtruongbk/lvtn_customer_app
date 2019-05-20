@@ -163,9 +163,10 @@
                         android:id="@+id/shiftTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        android:drawablePadding="15dp"
+                        android:layout_marginTop="10dp"
                         android:padding="8dp"
                         android:textColor="@color/colorOrange"
                         android:textSize="20dp" />
@@ -187,12 +188,11 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
+                        android:padding="8dp"
                         android:text="Tạo cơ sở mới"
                         android:textColor="@color/colorLightOrange"
                         android:textSize="20dp"
                         android:visibility="gone" />
-
-
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/roleRecyclerView"

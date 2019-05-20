@@ -213,9 +213,14 @@ public class QueueFragment extends Fragment implements QueueContract.View{
     public void returnQueueFragment(String branchID){
         Bundle args = new Bundle();
         args.putString("branchID", branchID);
+        args.putString("branchName", branchName);
         QueueFragment queueFragment = new QueueFragment();
         queueFragment.setArguments(args);
         this.getFragmentManager().beginTransaction().replace(R.id.frameFragment, queueFragment).addToBackStack(null).commit();
     }
 
+    @Override
+    public void closeDialog(){
+        if(createQueueDialog.isShowing()) createQueueDialog.dismiss();
+    }
 }

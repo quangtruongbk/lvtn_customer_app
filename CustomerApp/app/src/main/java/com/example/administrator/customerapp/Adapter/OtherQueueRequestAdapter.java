@@ -54,13 +54,13 @@ public class OtherQueueRequestAdapter extends RecyclerView.Adapter<OtherQueueReq
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
         holder.nameTxt.setText(queueRequestList.get(position).getCustomerName());
-        holder.queueNameTxt.setText(queueRequestList.get(position).getQueueName());
-        holder.branchNameTxt.setText(queueRequestList.get(position).getBranchName());
+        holder.queueNameTxt.setText("Hàng đợi: " + queueRequestList.get(position).getQueueName());
+        holder.branchNameTxt.setText("Cơ sở: " + queueRequestList.get(position).getBranchName());
         if (queueRequestList.get(position).getCustomerEmail() != null) {
-            holder.phoneTxt.setText(queueRequestList.get(position).getCustomerEmail());
+            holder.emailTxt.setText("Email: " + queueRequestList.get(position).getCustomerEmail());
         }
         if (queueRequestList.get(position).getCustomerPhone() != null) {
-            holder.phoneTxt.setText(queueRequestList.get(position).getCustomerPhone());
+            holder.phoneTxt.setText("Số điện thoại: " + queueRequestList.get(position).getCustomerPhone());
         }
         holder.moreLinearLayout.setVisibility(View.VISIBLE);
         holder.moreLinearLayout.setOnClickListener(new View.OnClickListener() {

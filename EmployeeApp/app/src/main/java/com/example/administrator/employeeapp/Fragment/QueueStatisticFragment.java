@@ -117,7 +117,7 @@ public class QueueStatisticFragment extends Fragment implements QueueStatisticCo
         lineChart = view.findViewById(R.id.chart);
         lineChart.setTouchEnabled(true);
         lineChart.setPinchZoom(true);
-        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
+        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view, day);
         mv.setChartView(lineChart);
         lineChart.setMarker(mv);
         pieChart = (PieChart) view.findViewById(R.id.piechart);

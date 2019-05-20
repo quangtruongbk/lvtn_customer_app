@@ -88,7 +88,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         View view = inflater.inflate(R.layout.queue_request_fragment, container, false);
         Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar2);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText("Lượt yêu cầu");
+        toolbarTitle.setText("Lượt đăng ký");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         queueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.queueRequestRecyclerView);
         numberOfPeopleTxt = (TextView) view.findViewById(R.id.numberOfPeopleTxt);
@@ -216,9 +216,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             numberOfPeopleTxt.setText(Integer.toString(queueRequest.size()));
             queueRequestAdapter = new QueueRequestAdapter(queueRequest, mActivity, queueRequestPresenter, account);
             for(int i = 0;i < queueRequest.size(); i++){
-                Log.d("6abc", "queueRequest.get(i).getAccountID(): " + queueRequest.get(i).getAccountID());
-                Log.d("6abc", "account.getId(): " + account.getId());
-
                 if(queueRequest.get(i).getAccountID().equals(account.getId())){
                     timeCountDownLinear.setVisibility(View.VISIBLE);
                     long distance;
@@ -249,6 +246,10 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         queueRequestRecyclerView.setAdapter(queueRequestAdapter);
     }
 
+    @Override
+    public void hideCountDown(){
+        timeCountDownLinear.setVisibility(View.INVISIBLE);
+    }
     public void showCreateQueueRequestDialog() {
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(mActivity.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.create_queuerequest_dialog, null);
@@ -304,7 +305,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d("6abc", "getQueueRequestFromServer: OnQueueChange");
                     queueRequestPresenter.getQueueRequestFromServer(queueID);
                 }
             });

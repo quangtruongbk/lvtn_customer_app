@@ -48,7 +48,7 @@ public class BranchListForStatisticFragment extends Fragment implements BranchLi
         View view = inflater.inflate(R.layout.list_branch_for_statistic_fragment, container, false);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText("Danh sách hàng đợi");
+        toolbarTitle.setText("Thống kê và dữ liệu");
         branchRecyclerView = (RecyclerView) view.findViewById(R.id.branchRecyclerView);
         assignDialog();
         sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);

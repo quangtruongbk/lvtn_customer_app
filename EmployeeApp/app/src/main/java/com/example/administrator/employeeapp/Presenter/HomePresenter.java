@@ -106,7 +106,7 @@ public class HomePresenter implements HomeContract.Presenter {
                         mView.showDialog("Đóng cửa cơ sở thành công!", true);
                         getBranchFromServer();
                     } else if (response.code() == 409) {
-                        mView.showDialog("Đóng cửa cơ sở thất bại do còn một vài yêu cầu còn chờ hoặc đang sử dụng dịch vụ.", false);
+                        mView.showDialog("Đóng cửa cơ sở thất bại do còn một vài hàng đợi còn nhận khách hoặc còn một vài lượt đăng ký còn chờ hoặc đang sử dụng dịch vụ.", false);
                     } else if (response.code() == 404) {
                         mView.showDialog("Không thể thực hiện tác vụ này, có vẻ như đã có gì thay đổi với cơ sở này. Xin vui lòng kiểm tra lại.", false);
                     } else if (response.code() == 500) {
@@ -129,8 +129,6 @@ public class HomePresenter implements HomeContract.Presenter {
                     if (response.code() == 200) {
                         mView.showDialog("Mở cửa cơ sở thành công!", true);
                         getBranchFromServer();
-                    } else if (response.code() == 409) {
-                        mView.showDialog("Mở cửa cơ sở thất bại do còn một vài yêu cầu còn chờ hoặc đang sử dụng dịch vụ.", false);
                     } else if (response.code() == 404) {
                         mView.showDialog("Không thể thực hiện tác vụ này, có vẻ như đã có gì thay đổi với cơ sở này. Xin vui lòng kiểm tra lại.", false);
                     } else if (response.code() == 500) {
@@ -154,7 +152,7 @@ public class HomePresenter implements HomeContract.Presenter {
                         mView.showDialog("Khóa cơ sở thành công!", true);
                         getBranchFromServer();
                     } else if (response.code() == 409) {
-                        mView.showDialog("Khóa cơ sở thất bại do còn một vài yêu cầu còn chờ hoặc đang sử dụng dịch vụ.", false);
+                        mView.showDialog("Khóa cửa cơ sở thất bại do còn một vài hàng đợi còn nhận khách hoặc còn một vài lượt đăng ký còn chờ hoặc đang sử dụng dịch vụ.", false);
                     } else if (response.code() == 404) {
                         mView.showDialog("Không thể thực hiện tác vụ này, có vẻ như đã có gì thay đổi với cơ sở này. Xin vui lòng kiểm tra lại.", false);
                     } else if (response.code() == 500) {

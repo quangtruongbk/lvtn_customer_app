@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.example.administrator.customerapp.Fragment.QueueRequestFragment;
 import com.example.administrator.customerapp.Model.Account;
 import com.example.administrator.customerapp.Model.Queue;
 import com.example.administrator.customerapp.Model.QueueRequest;
+import com.example.administrator.customerapp.Presenter.QueueRequestPresenter;
 import com.example.administrator.customerapp.R;
 
 import java.util.ArrayList;
@@ -80,7 +82,9 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
             }
         }
         holder.sttTxt.setText(Integer.toString(position + 1));
+        Log.d("6abc", "position" + position + "acountID: " + queueRequestList.get(position).getAccountID() + " name: " + queueRequestList.get(position).getCustomerName());
         if(account.getId().equals(queueRequestList.get(position).getAccountID())){
+            Log.d("6abc", "position" + position +  "Same Request acountID: " + queueRequestList.get(position).getAccountID() + " name: " + queueRequestList.get(position).getCustomerName());
             holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(135,206,250));
             holder.moreLinearLayout.setVisibility(View.VISIBLE);
             holder.moreLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -96,19 +100,20 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                                     showEditQueueRequestDialog(queueRequestList.get(position));
                                     return true;
                                 case R.id.cancelBtn:
-                                    queueRequestPresenter.cancelQueueRequest(account.getToken(), queueRequestList.get(position).getQueueID(), queueRequestList.get(position).getId());
+                                    cancelDialog(queueRequestList.get(position));
                                     return true;
                                 default:
                                     return false;
                             }
                         }
                     });
-                    //displaying the popup
                     popup.show();
 
                 }
             });
-
+        }else{
+            holder.queueRequestLinearLayout.setBackgroundColor(Color.WHITE);
+            holder.moreLinearLayout.setVisibility(View.GONE);
         }
     }
 
@@ -180,5 +185,25 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                     queueRequestPresenter.editQueueRequest(account.getToken(), queueRequest.getId(), name, phone, email);
             }
         });
+    }
+
+    public void cancelDialog(final QueueRequest request){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog dialog;
+        builder.setMessage("Bạn có chắc chắn muốn hủy lượt đăng ký này?")
+                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        queueRequestPresenter.cancelQueueRequest(account.getToken(), request.getQueueID(), request.getId());
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        // Create the AlertDialog object and return it
+        dialog = builder.create();
+        dialog.show();
     }
 }

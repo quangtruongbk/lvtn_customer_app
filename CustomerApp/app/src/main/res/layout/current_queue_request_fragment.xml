@@ -10,8 +10,6 @@
     android:clickable="true"
     android:focusable="true"
     android:paddingBottom="10dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
     android:paddingTop="10dp"
     android:orientation="vertical">
 
@@ -21,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
-        android:text="Hiện không có yêu cầu nào"
+        android:text="Hiện không có lượt đăng ký nào"
         android:textAlignment="center"
         android:textColor="@color/colorOrange"
         android:textSize="25dp"
@@ -41,6 +39,8 @@
                 android:id="@+id/currentQueueRequestLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -124,6 +124,7 @@
                 android:id="@+id/otherRequestLinear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -131,16 +132,20 @@
                     android:id="@+id/otherRequestTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="10dp"
                     android:layout_alignParentTop="true"
-                    android:text="Các yêu cầu có trùng email hoặc số điện thoại này nhưng không phải từ tài khoản này:"
-                    android:textColor="@color/colorOrange"
+                    android:background="@color/colorLightYellow"
+                    android:text="Các lượt đăng ký có trùng email hoặc số điện thoại với tài khoản này nhưng không phải từ tài khoản này:"
+                    android:textColor="@color/colorWhite"
                     android:textSize="20dp"
                     android:textStyle="italic" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/otherRequestRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    ></android.support.v7.widget.RecyclerView>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

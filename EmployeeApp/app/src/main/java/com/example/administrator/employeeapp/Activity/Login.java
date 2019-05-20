@@ -146,7 +146,6 @@ public class Login extends AppCompatActivity implements LoginContract.View{
         editor.putString("MyAccount", accountJSON);
         String employeeJSON = gson.toJson(employee);
         editor.putString("Employee", employeeJSON);
-        Log.d("4abc", employeeJSON);
         editor.commit();
         Intent intent = new Intent(Login.this, MainActivity.class);
         startActivity(intent);

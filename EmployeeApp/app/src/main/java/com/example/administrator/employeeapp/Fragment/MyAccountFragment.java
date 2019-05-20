@@ -40,6 +40,7 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     private TextView emailTxt;
     private TextView nameTxt;
     private TextView phoneTxt;
+    private TextView shiftTxt;
     private TextView createBranchTxt;
     private Button changeInfoBtn;
     private Button changePasswordBtn;
@@ -70,6 +71,7 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
         emailTxt = (TextView) view.findViewById(R.id.emailTxt);
         phoneTxt = (TextView) view.findViewById(R.id.phoneTxt);
         createBranchTxt = (TextView) view.findViewById(R.id.createBranchTxt);
+        shiftTxt = (TextView) view.findViewById(R.id.shiftTxt);
         changeInfoBtn = (Button) view.findViewById(R.id.changeInfoBtn);
         changePasswordBtn = (Button) view.findViewById(R.id.changePasswordBtn);
         roleRecyclerView = (RecyclerView) view.findViewById(R.id.roleRecyclerView);
@@ -89,7 +91,9 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
         nameTxt.setText(account.getName());
         emailTxt.setText(account.getEmail());
         phoneTxt.setText(account.getPhone());
-        if(employee.getRole().getCreateBranch().equals("1")) createBranchTxt.setVisibility(View.VISIBLE);
+        shiftTxt.setText(employee.getShift());
+        if (employee.getRole().getCreateBranch().equals("1"))
+            createBranchTxt.setVisibility(View.VISIBLE);
         assignDialog();
         myAccountPresenter = new MyAccountPresenter(this, getActivity(), account, employee);
         changeInfoBtn.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +140,15 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
                 Boolean validFlag = true;
                 String name = nameTxt.getText().toString().trim();
                 String phone = phoneTxt.getText().toString().trim();
-                if (TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15) {
+
+                Pattern phoneP = Pattern.compile("[0-9]{8,15}$");
+                Matcher phoneM;
+                boolean phoneB = true;
+                if(phone != null && !phone.equals("")){
+                    phoneM = phoneP.matcher(phone);
+                    phoneB = phoneM.find();
+                }
+                if (TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15 || !phoneB) {
                     phoneTxt.setError("Số điện thoại không đúng định dạng hoặc bị để trống");
                     validFlag = false;
                 } else {
@@ -145,13 +157,14 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
                 Pattern p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
                 Matcher m = p.matcher(name);
                 boolean b = m.find();
-                if (b||TextUtils.isEmpty(name)) {
+                if (b || TextUtils.isEmpty(name)) {
                     nameTxt.setError("Tên tồn tại ký tự đặc biệt hoặc bị để trống.");
                     validFlag = false;
                 } else {
                     nameTxt.setError(null);
                 }
-                if(validFlag == true) myAccountPresenter.changeInfo(account.getToken(), account.getId(), name, phone);
+                if (validFlag == true)
+                    myAccountPresenter.changeInfo(account.getToken(), account.getId(), name, phone);
             }
         });
 
@@ -189,16 +202,17 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
                 } else {
                     confirmNewPasswordTxt.setError(null);
                 }
-                if(validFlag == true) myAccountPresenter.changePassword(account.getToken(), account.getId(), oldPasswordTxt.getText().toString(), newPasswordTxt.getText().toString());
+                if (validFlag == true)
+                    myAccountPresenter.changePassword(account.getToken(), account.getId(), oldPasswordTxt.getText().toString(), newPasswordTxt.getText().toString());
             }
         });
         changePasswordDialog = changePasswordDialogBuilder.show();
     }
 
     @Override
-    public void showDialog(String message, Boolean isSuccess){
+    public void showDialog(String message, Boolean isSuccess) {
         LayoutInflater inflater = getLayoutInflater();
-        if(isSuccess) {
+        if (isSuccess) {
             View layout = inflater.inflate(R.layout.custom_toast_success,
                     (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
             TextView text = (TextView) layout.findViewById(R.id.toastTxt);
@@ -208,7 +222,7 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(layout);
             toast.show();
-        }else{
+        } else {
             View layout = inflater.inflate(R.layout.custom_toast_fail,
                     (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
             TextView text = (TextView) layout.findViewById(R.id.toastTxt);
@@ -242,11 +256,12 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     }
 
     @Override
-    public void setUpRoleAdapter(ArrayList<Branch> branch){
-        if(branch != null && account!=null) branchRoleAdapter = new BranchRoleAdapter(branch, getActivity(), myAccountPresenter, account, employee);
+    public void setUpRoleAdapter(ArrayList<Branch> branch) {
+        if (branch != null && account != null)
+            branchRoleAdapter = new BranchRoleAdapter(branch, getActivity(), myAccountPresenter, account, employee);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         roleRecyclerView.setLayoutManager(layoutManager);
-        if(branchRoleAdapter != null)roleRecyclerView.setAdapter(branchRoleAdapter);
+        if (branchRoleAdapter != null) roleRecyclerView.setAdapter(branchRoleAdapter);
     }
 }

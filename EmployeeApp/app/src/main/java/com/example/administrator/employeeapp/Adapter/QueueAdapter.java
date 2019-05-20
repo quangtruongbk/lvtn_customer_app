@@ -103,8 +103,15 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
                             popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Bắt đầu nhận khách");
                         else if(queueList.get(position).getStatus().toString().equals("1"))
                             popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Dừng nhận khách");
-                        else if(queueList.get(position).getStatus().toString().equals("-1"))
-                            popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Mở khóa");
+                        else if(queueList.get(position).getStatus().toString().equals("-1")) {
+                            popupMenu.findItem(R.id.closeOpenQueueBtn).setVisible(false);
+                            popupMenu.findItem(R.id.notBusyQueueBtn).setVisible(false);
+                            popupMenu.findItem(R.id.lockQueueBtn).setTitle("Mở khóa");
+                        }
+                        else if(queueList.get(position).getStatus().toString().equals("2")) {
+                            popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Dừng nhận khách");
+                            popupMenu.findItem(R.id.notBusyQueueBtn).setTitle("Hàng đợi đã đông và phải đợi");
+                        }
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
@@ -114,9 +121,18 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
                                         return true;
                                     case R.id.closeOpenQueueBtn:
                                         if(queueList.get(position).getStatus().toString().equals("0")) queuePresenter.changeQueueStatus(account.getToken(),queueList.get(position).getBranchID().toString(), queueList.get(position).getId().toString(), "1");
-                                        else if(queueList.get(position).getStatus().toString().equals("1")) queuePresenter.changeQueueStatus(account.getToken(), queueList.get(position).getBranchID().toString(), queueList.get(position).getId().toString(), "0");
+                                        else if(queueList.get(position).getStatus().toString().equals("1")  || queueList.get(position).getStatus().toString().equals("2")) queuePresenter.changeQueueStatus(account.getToken(), queueList.get(position).getBranchID().toString(), queueList.get(position).getId().toString(), "0");
                                         else if(queueList.get(position).getStatus().toString().equals("-1")) queuePresenter.changeQueueStatus(account.getToken(), queueList.get(position).getBranchID().toString(), queueList.get(position).getId().toString(), "0");
                                         return true;
+                                    case R.id.notBusyQueueBtn:
+                                        if(!queueList.get(position).getStatus().toString().equals("2")) queuePresenter.changeQueueStatus(account.getToken(),queueList.get(position).getBranchID().toString(), queueList.get(position).getId().toString(), "2");
+                                        else queuePresenter.changeQueueStatus(account.getToken(),queueList.get(position).getBranchID().toString(), queueList.get(position).getId().toString(), "1");
+                                        return true;
+                                    case R.id.lockQueueBtn:
+                                        if(!queueList.get(position).getStatus().toString().equals("-1")) queuePresenter.changeQueueStatus(account.getToken(),queueList.get(position).getBranchID().toString(), queueList.get(position).getId().toString(), "-1");
+                                        else queuePresenter.changeQueueStatus(account.getToken(),queueList.get(position).getBranchID().toString(), queueList.get(position).getId().toString(), "1");
+                                        return true;
+
                                     default:
                                         return false;
                                 }
@@ -151,7 +167,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
     }
 
     public void showChangeInfoQueueDialog(final Queue queue) {
-        LayoutInflater inflater = systemService;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.activity_changeinfo_queue, null);
         changeInfoQueueDialogBuilder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

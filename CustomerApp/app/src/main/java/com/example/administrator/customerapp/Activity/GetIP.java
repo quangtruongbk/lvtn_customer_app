@@ -41,7 +41,7 @@ public class GetIP extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 GetIP.IP = "http://" + IPTxt.getText().toString().trim();
-                Intent intent = new Intent(GetIP.this, MainActivity.class);
+                Intent intent = new Intent(GetIP.this, Login.class);
                 startActivity(intent);
             }
         });

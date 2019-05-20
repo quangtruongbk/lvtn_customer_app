@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.example.administrator.employeeapp.Activity.MainActivity;
 import com.example.administrator.employeeapp.Contract.CreateBranchContract;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Presenter.CreateBranchPresenter;
@@ -154,7 +158,6 @@ public class CreateBranchFragment extends Fragment implements CreateBranchContra
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         GetAddressHelper getAddressHelper2 = new GetAddressHelper();
                         getAddressHelper2 = database.getDistrict(finalCityID.get(position));
-                        Log.d("1abc", "finalCityID.get(position): " + finalCityID.get(position));
                         final ArrayList<String> districtName = getAddressHelper2.getDistrictName();
                         final ArrayList<String> districtID = getAddressHelper2.getDistrictID();
                         ArrayAdapter<String> districtAdapter = new ArrayAdapter<String>(
@@ -232,15 +235,36 @@ public class CreateBranchFragment extends Fragment implements CreateBranchContra
     }
 
     @Override
-    public void showDialog(String message) {
-        noticeDialog.setMessage(message)
-                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        // Create the AlertDialog object and return it
-        noticeDialog.show();
+    public void openMainActivity() {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showDialog(String message, Boolean isSuccess) {
+        LayoutInflater inflater = getLayoutInflater();
+        if (isSuccess) {
+            View layout = inflater.inflate(R.layout.custom_toast_success,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        } else {
+            View layout = inflater.inflate(R.layout.custom_toast_fail,
+                    (ViewGroup) getActivity().findViewById(R.id.custom_toast_container));
+            TextView text = (TextView) layout.findViewById(R.id.toastTxt);
+            text.setText(message);
+            Toast toast = new Toast(getActivity());
+            toast.setGravity(Gravity.BOTTOM, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+
+        }
     }
 
     @Override

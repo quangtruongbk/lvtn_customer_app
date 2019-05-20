@@ -45,7 +45,9 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         if(branchList.get(position).getStatus().toString() != null) {
             if(branchList.get(position).getStatus().toString().equals("0")) holder.statusTxt.setText("Tình trạng: Đóng cửa");
             if(branchList.get(position).getStatus().toString().equals("1")) holder.statusTxt.setText("Tình trạng: Đang nhận khách");
-            if(branchList.get(position).getStatus().toString().equals("-1")) holder.statusTxt.setText("Tình trạng: Đã khóa");
+            if(branchList.get(position).getStatus().toString().equals("-1")){
+                holder.statusTxt.setText("Tình trạng: Đã khóa");
+            }
         }
         String openHourHour = branchList.get(position).getOpentime().split(":")[0];
         String openHourMinute = branchList.get(position).getOpentime().split(":")[1];

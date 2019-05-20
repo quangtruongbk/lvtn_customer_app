@@ -32,6 +32,7 @@ import com.example.administrator.customerapp.Model.Queue;
 import com.example.administrator.customerapp.Presenter.QueuePresenter;
 import com.example.administrator.customerapp.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -121,7 +122,13 @@ public class QueueFragment extends Fragment implements QueueContract.View{
 
     @Override
     public void setUpAdapter(ArrayList<Queue> queue){
-        if(queue != null) queueAdapter = new QueueAdapter(queue, getActivity(), branchName);
+        if(queue != null){
+            ArrayList<Queue> temp = new ArrayList<>();
+            for(int i = 0; i <queue.size();i++){
+                if(!queue.get(i).getStatus().equals("-1")) temp.add(queue.get(i));
+            }
+            queueAdapter = new QueueAdapter(temp, getActivity(), branchName);
+        }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         queueRecyclerView.setLayoutManager(layoutManager);

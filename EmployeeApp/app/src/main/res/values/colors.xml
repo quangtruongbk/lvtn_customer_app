@@ -10,8 +10,10 @@
     <color name="colorOrange">#FF601C</color>
     <color name="colorBlue">#87cefa</color>
     <color name="colorLightBrown">#D19F7E</color>
+    <color name="colorLightRed">#FA8072</color>
     <color name="colorLightYellow">#FFBF00</color>
     <color name="colorLightPink">#FD5DA8</color>
+    <color name="colorLightLightPink">#FFE6EE</color>
     <color name="colorLightPurple">#800080</color>
     <color name="colorLightGrey">#E8EAEC</color>
     <color name="colorGreen">#0b6623</color>

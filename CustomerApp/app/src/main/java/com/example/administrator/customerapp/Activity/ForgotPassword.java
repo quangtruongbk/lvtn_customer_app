@@ -26,7 +26,6 @@ import com.example.administrator.customerapp.R;
 
 
 public class ForgotPassword extends AppCompatActivity implements ForgotPasswordContract.View{
-
     private EditText emailTxt;
     private Button forgotPasswordBtn;
     private ForgotPasswordContract.Presenter forgotPasswordPresenter;

@@ -50,6 +50,7 @@
                 android:layout_marginRight="20dp"
                 android:backgroundTint="@color/colorOrange"
                 android:drawablePadding="15dp"
+                android:inputType="textCapWords"
                 android:padding="8dp"
                 android:textColor="@color/colorOrange"
                 android:textColorHint="@color/colorOrange" />

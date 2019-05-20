@@ -90,7 +90,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         View view = inflater.inflate(R.layout.queue_request_fragment, container, false);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar2);
         TextView toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText("Lượt yêu cầu");
+        toolbarTitle.setText("Lượt đăng ký");
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         queueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.queueRequestRecyclerView);
         ongoingQueueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.onGoingQueueRequestRecyclerView);
@@ -284,8 +284,29 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                     emailTxt.setError("Bạn phải điền ít nhất một trong 2 số điện thoại hoặc email");
                     validFlag = false;
                 } else {
-                    phoneTxt.setError(null);
-                    emailTxt.setError(null);
+                    if(!TextUtils.isEmpty(email) || !email.equals("")) {
+                        Pattern emailP = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+                        Matcher emailM = emailP.matcher(email);
+                        boolean emailB = emailM.find();
+                        if (!emailB) {
+                            emailTxt.setError("Email không đúng định dạng");
+                            validFlag = false;
+                        } else {
+                            emailTxt.setError(null);
+                        }
+                    }
+
+                    if(!TextUtils.isEmpty(phone) || !phone.equals("")) {
+                        Pattern phoneP = Pattern.compile("[0-9]{8,15}$");
+                        Matcher phoneM = phoneP.matcher(phone);
+                        boolean phoneB = phoneM.find();
+                        if (!phoneB) {
+                            phoneTxt.setError("Số điện thoại không đúng định dạng hoặc bị để trống");
+                            validFlag = false;
+                        } else {
+                            phoneTxt.setError(null);
+                        }
+                    }
                 }
                 Pattern p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
                 Matcher m = p.matcher(name);
@@ -296,6 +317,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                 } else {
                     nameTxt.setError(null);
                 }
+
                 if (validFlag == true){
                     queueRequestPresenter.createQueueRequest(account.getToken(), account.getId(), queueID, name, phone, email);
                     if(createQueueRequestDialog.isShowing()) createQueueRequestDialog.dismiss();

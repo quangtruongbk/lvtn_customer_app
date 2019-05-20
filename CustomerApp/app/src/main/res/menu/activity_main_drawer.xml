@@ -15,7 +15,7 @@
         <item
             android:id="@+id/navCurrentQueueRequest"
             android:icon="@drawable/now"
-            android:title="Yêu cầu hiện tại của tôi" />
+            android:title="Đăng ký hiện tại của tôi" />
         <item
             android:id="@+id/navHistory"
             android:icon="@drawable/history"

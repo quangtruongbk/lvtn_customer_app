@@ -10,4 +10,14 @@
         android:icon="@drawable/cancel"
         android:title="Dừng nhận khách" />
 
+    <item
+        android:id="@+id/notBusyQueueBtn"
+        android:icon="@drawable/cancel"
+        android:title="Hàng đợi vắng" />
+
+    <item
+        android:id="@+id/lockQueueBtn"
+        android:icon="@drawable/cancel"
+        android:title="Khóa hàng đợi" />
+
 </menu>

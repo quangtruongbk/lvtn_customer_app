@@ -46,8 +46,8 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
     private AlertDialog.Builder editQueueRequestDialogBuilder;
     private AlertDialog sendEmailDialog;
     private AlertDialog editQueueRequestDialog;
-    private static String remainerMessage = "Hệ thống quản lý hàng đợi xin thông báo: Yêu cầu của bạn đang chuẩn bị tới lượt, xin vui lòng hãy đến ngay cơ sở để chuẩn bị. Xin cảm ơn quý khách.";
-    private static String accidentMessage = "Hệ thống quản lý hàng đợi xin thông báo: Do sự cố ngoài ý muốn mà hệ thống  buộc lòng phải hủy yêu cầu của bạn. Mong quý khách thông cảm.";
+    private static String remainerMessage = "Hệ thống quản lý hàng đợi xin thông báo: Lượt đăng ký của bạn đang chuẩn bị tới lượt, xin vui lòng hãy đến ngay cơ sở để chuẩn bị. Xin cảm ơn quý khách.";
+    private static String accidentMessage = "Hệ thống quản lý hàng đợi xin thông báo: Do sự cố ngoài ý muốn mà hệ thống  buộc lòng phải hủy lượt đăng ký của bạn. Mong quý khách thông cảm.";
 
     public QueueRequestAdapter(ArrayList<QueueRequest> data, QueueRequestContract.Presenter presenter, Context context, Account account) {
         this.queueRequestList = data;
@@ -107,7 +107,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                                 showEditQueueRequestDialog(queueRequestList.get(position));
                                 return true;
                             case R.id.cancelBtn:
-                                queueRequestPresenter.cancelQueueRequest(account.getToken(), queueRequestList.get(position).getQueueID(), queueRequestList.get(position).getId());
+                                cancelDialog(queueRequestList.get(position));
                                 return true;
                             default:
                                 return false;
@@ -122,21 +122,23 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
         long distance;
         distance = queueRequestList.get(position).getExpiredDate() - System.currentTimeMillis();
         Log.d("6abc", "distance truoc if: " + distance);
-        if(distance > 0) {
+        if (distance > 0) {
             Log.d("6abc", "distance: " + distance);
             new CountDownTimer(distance, 1000) {
 
                 public void onTick(long millisUntilFinished) {
-                    holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: "+((millisUntilFinished - millisUntilFinished%60)/60/1000 + 1));
+                    holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: " + ((millisUntilFinished - millisUntilFinished % 60) / 60 / 1000 + 1));
                 }
 
                 public void onFinish() {
                     holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: 0");
+                    holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(255, 204, 203));
                 }
 
             }.start();
-        }else{
+        } else {
             holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: 0");
+            holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(255, 204, 203));
         }
 
     }
@@ -219,7 +221,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                 }
                 if (valueFlag == true) {
                     queueRequestPresenter.sendEmail(account.getToken(), email, message);
-                    if(sendEmailDialog.isShowing()) sendEmailDialog.dismiss();
+                    if (sendEmailDialog.isShowing()) sendEmailDialog.dismiss();
                 }
             }
         });
@@ -255,8 +257,29 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                     emailTxt.setError("Bạn phải điền ít nhất một trong 2 số điện thoại hoặc email");
                     validFlag = false;
                 } else {
-                    phoneTxt.setError(null);
-                    emailTxt.setError(null);
+                    if(!TextUtils.isEmpty(email) || !email.equals("")) {
+                        Pattern emailP = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+                        Matcher emailM = emailP.matcher(email);
+                        boolean emailB = emailM.find();
+                        if (!emailB) {
+                            emailTxt.setError("Email không đúng định dạng");
+                            validFlag = false;
+                        } else {
+                            emailTxt.setError(null);
+                        }
+                    }
+
+                    if(!TextUtils.isEmpty(phone) || !phone.equals("")) {
+                        Pattern phoneP = Pattern.compile("[0-9]{8,15}$");
+                        Matcher phoneM = phoneP.matcher(phone);
+                        boolean phoneB = phoneM.find();
+                        if (!phoneB) {
+                            phoneTxt.setError("Số điện thoại không đúng định dạng hoặc bị để trống");
+                            validFlag = false;
+                        } else {
+                            phoneTxt.setError(null);
+                        }
+                    }
                 }
                 Pattern p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
                 Matcher m = p.matcher(name);
@@ -269,11 +292,29 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                 }
                 if (validFlag == true) {
                     queueRequestPresenter.editQueueRequest(account.getToken(), queueRequest.getId(), name, phone, email);
-                if(editQueueRequestDialog.isShowing()) editQueueRequestDialog.dismiss();
+                    if (editQueueRequestDialog.isShowing()) editQueueRequestDialog.dismiss();
                 }
             }
         });
     }
 
-
+    public void cancelDialog(final QueueRequest request) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog dialog;
+        builder.setMessage("Bạn có chắc chắn muốn hủy lượt đăng ký này?")
+                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        queueRequestPresenter.cancelQueueRequest(account.getToken(), request.getQueueID(), request.getId());
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        // Create the AlertDialog object and return it
+        dialog = builder.create();
+        dialog.show();
+    }
 }

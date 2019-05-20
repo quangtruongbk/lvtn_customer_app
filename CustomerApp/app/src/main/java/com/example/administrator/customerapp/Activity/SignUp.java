@@ -65,18 +65,19 @@ public class SignUp extends AppCompatActivity implements SignUpContract.View {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!validateForm()) return;
+                if (!validateForm()) return;
                 showProgressBar();
                 signUpPresenter.signUp(emailTxt.getText().toString().trim(), nameTxt.getText().toString().trim(), phoneTxt.getText().toString().trim(), passwordTxt.getText().toString());
             }
         });
     }
 
-    private void assignDialog(){
+    private void assignDialog() {
         noticeDialog = new AlertDialog.Builder(this);
         progressBar = findViewById(R.id.progressBar);
         waitingDialogBuilder = new AlertDialog.Builder(this);
     }
+
     private boolean validateForm() {
         //Bo sung phone validate, chieu dai cua password
         Boolean validFlag = true;
@@ -85,8 +86,13 @@ public class SignUp extends AppCompatActivity implements SignUpContract.View {
         String phone = phoneTxt.getText().toString().trim();
         String password = passwordTxt.getText().toString();
         String confirPassWord = confirmPasswordTxt.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            emailTxt.setError("Không được để trống Email.");
+
+        Pattern emailP = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher emailM = emailP.matcher(email);
+        boolean emailB = emailM.find();
+
+        if (TextUtils.isEmpty(email) || email.equals("") || !emailB) {
+            emailTxt.setError("Email bị để trống hoặc không dúng định dạng.");
             validFlag = false;
         } else {
             emailTxt.setError(null);
@@ -99,8 +105,12 @@ public class SignUp extends AppCompatActivity implements SignUpContract.View {
             passwordTxt.setError(null);
         }
 
-        if (TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15) {
-            phoneTxt.setError("Số điện thoại không đúng định dạng hoặc bị để trống");
+        Pattern phoneP = Pattern.compile("[0-9]{8,15}$");
+        Matcher phoneM = phoneP.matcher(phone);
+        boolean phoneB = phoneM.find();
+
+        if (TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15 || !phoneB) {
+            phoneTxt.setError("Số điện thoại bị để trống hoặc không đúng định dạng");
             validFlag = false;
         } else {
             phoneTxt.setError(null);
@@ -112,7 +122,6 @@ public class SignUp extends AppCompatActivity implements SignUpContract.View {
             confirmPasswordTxt.setError(null);
         }
 
-        Log.d("1abc", "1");
         Pattern p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(name);
         boolean b = m.find();

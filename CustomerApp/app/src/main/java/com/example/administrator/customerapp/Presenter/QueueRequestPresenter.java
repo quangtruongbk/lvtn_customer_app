@@ -3,6 +3,7 @@ package com.example.administrator.customerapp.Presenter;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.administrator.customerapp.Activity.FirebaseMessageService;
 import com.example.administrator.customerapp.CallAPI.APIClient;
 import com.example.administrator.customerapp.CallAPI.RetrofitInterface;
 import com.example.administrator.customerapp.Contract.QueueContract;
@@ -87,10 +88,9 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
-                Log.d("6abc", "code: " + response.code());
-                Log.d("6abc", "body: " + response.message());
                 if (response.code() == 200) {
-                    mView.showDialog("Tạo yêu cầu thành công", true);
+                    //Log.d("6abc", "Create Request:P " + response.body());
+                    mView.showDialog("Tạo lượt đăng ký thành công", true);
                     FirebaseMessaging.getInstance().subscribeToTopic(queueID)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -101,9 +101,9 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                                 }
                             });
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể tạo yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể tạo lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 } else if (response.code() == 409) {
-                    mView.showDialog("Không thể tạo yêu cầu do bạn đang có một yêu cầu chưa được hoàn tất. Hãy kiểm tra tại: Yêu cầu hiện tại của tôi.", false);
+                    mView.showDialog("Không thể tạo lượt đăng ký do bạn đang có một lượt đăng ký còn chờ. Hãy kiểm tra tại: Đăng ký hiện tại của tôi.", false);
                 } else if (response.code() == 503) {
                     mView.showDialog("Rất tiếc, hàng đợi đã đầy.", false);
                 } else if (response.code() == 533) {
@@ -139,9 +139,12 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                 if (response.code() == 200) {
                     mView.showDialog("Chỉnh sửa thành công", true);
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể chỉnh sửa yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể chỉnh sửa lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 } else if (response.code() == 404) {
                     mView.showDialog("Không thử thực hiện tác vụ này, có vẻ như có gì đó đã thay đổi với lượt đăng ký!", false);
+                }
+                else if (response.code() == 409) {
+                    mView.showDialog("Thay đổi thất bại do email hoặc số điện thoại đã tồn tại một lượt đăng ký còn chờ!", false);
                 }
             }
 
@@ -160,7 +163,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
      *************************************************/
     @Override
     public void cancelQueueRequest(String token, final String queueID, String queueRequestID) {
-        Log.d("6abc", "cancelQueueRequest");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.cancelQueueRequest(token, queueID, queueRequestID).enqueue(new Callback<Void>() {
@@ -168,7 +170,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    mView.showDialog("Hủy yêu cầu thành công", true);
+                    mView.showDialog("Hủy lượt đăng ký thành công", true);
                     FirebaseMessaging.getInstance().unsubscribeFromTopic(queueID)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -178,11 +180,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                                     }
                                 }
                             });
-
+                    mView.hideCountDown();
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể hủy yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể hủy lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 } else if (response.code() == 404) {
-                    mView.showDialog("Không thể hủy yêu cầu do thông tin về yêu cầu đã thay đổi.", false);
+                    mView.showDialog("Không thể hủy lượt đăng ký do thông tin về lượt đăng ký đã thay đổi.", false);
                 } else if (response.code() == 403) {
                     mView.showDialog("Bạn không được phép thực hiện tác vụ này!", false);
                 }

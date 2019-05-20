@@ -40,7 +40,7 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
                     newSpecificQueueRequest = response.body();
                     mView.setUpView(newSpecificQueueRequest);
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể lấy được yêu cầu hiện tại do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể lấy được lượt đăng ký hiện tại do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
             @Override
@@ -69,7 +69,7 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
                     newSpecificQueueRequest = response.body();
                     mView.setUpAdapter(newSpecificQueueRequest);
                 }else if(response.code() == 500){
-                    mView.showDialog("Không thể lấy được yêu cầu hiện tại do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể lấy được lượt đăng ký hiện tại do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
             }
             @Override
@@ -97,7 +97,7 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
                     mView.showDialog("Chỉnh sửa thành công", true);
                     mView.resetFragment();
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể chỉnh sửa yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể chỉnh sửa lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 } else if (response.code() == 404) {
                     mView.showDialog("Không thử thực hiện tác vụ này, có vẻ như có gì đó đã thay đổi với lượt đăng ký!", false);
                 }
@@ -125,12 +125,12 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    mView.showDialog("Hủy yêu cầu thành công", true);
+                    mView.showDialog("Hủy lượt đăng ký thành công", true);
                     mView.resetFragment();
                 } else if (response.code() == 500) {
-                    mView.showDialog("Không thể hủy yêu cầu do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.showDialog("Không thể hủy lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 } else if (response.code() == 404) {
-                    mView.showDialog("Không thể hủy yêu cầu do thông tin về yêu cầu đã thay đổi.", false);
+                    mView.showDialog("Không thể hủy lượt đăng ký do thông tin về lượt đăng ký đã thay đổi.", false);
                 } else if (response.code() == 403) {
                     mView.showDialog("Bạn không được phép thực hiện tác vụ này!", false);
                 }

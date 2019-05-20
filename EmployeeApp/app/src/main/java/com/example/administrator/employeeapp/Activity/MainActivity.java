@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity
         //Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-//set content view AFTER ABOVE sequence (to avoid crash)
         this.setContentView(R.layout.activity_main);
 
         //Get Account Infomation
@@ -69,9 +68,7 @@ public class MainActivity extends AppCompatActivity
         if(!employeeString.equals("empty")) {
             employee = gson.fromJson(employeeString, Employee.class);
         }
-        Log.d("6abc", "Get Role Create Branch On Create: " + employee.getRole().getCreateBranch());
         editor = sharedPreferences.edit();
-        Log.d("1abc", "Token: " + account.getId() + account.getName() + " " + account.getToken());
         mainActivityPresenter = new MainActivityPresenter(this, this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

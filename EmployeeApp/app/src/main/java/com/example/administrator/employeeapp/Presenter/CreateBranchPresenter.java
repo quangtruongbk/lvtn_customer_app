@@ -35,16 +35,17 @@ public class CreateBranchPresenter implements CreateBranchContract.Presenter {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    mView.showDialog("Tạo cơ sở mới thành công!");
+                    mView.showDialog("Tạo cơ sở mới thành công!", true);
+                    mView.openMainActivity();
                 } else if (response.code() == 500) {
-                    mView.showDialog("Tạo cơ sở mới thất bại do lỗi hệ thống");
+                    mView.showDialog("Tạo cơ sở mới thất bại do lỗi hệ thống", false);
                 }
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 t.printStackTrace();
                 mView.hideProgressBar();
-                mView.showDialog("Kết nối với máy chủ thất bại");
+                mView.showDialog("Kết nối với máy chủ thất bại", false);
             }
         });
     }

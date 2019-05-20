@@ -43,8 +43,9 @@ public class Role {
         if(position != -1){
             String role = branchRole.get(position).getRole();
             if(role.equals("00000")) return true;
+            else return false;
         }
-        return false;
+        return true;
     }
 
     public Boolean checkCreateQueue(String branchID){

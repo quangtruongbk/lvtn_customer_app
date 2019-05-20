@@ -116,7 +116,14 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
                 Boolean validFlag = true;
                 String name = nameTxt.getText().toString().trim();
                 String phone = phoneTxt.getText().toString().trim();
-                if (TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15) {
+                Pattern phoneP = Pattern.compile("[0-9]{8,15}$");
+                Matcher phoneM;
+                boolean phoneB = true;
+                if(phone != null && !phone.equals("")){
+                    phoneM = phoneP.matcher(phone);
+                    phoneB = phoneM.find();
+                }
+                if (TextUtils.isEmpty(phone) || phone.length() < 8 || phone.length() > 15 || !phoneB) {
                     phoneTxt.setError("Số điện thoại không đúng định dạng hoặc bị để trống");
                     validFlag = false;
                 } else {

@@ -122,7 +122,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                     popupMenu.findItem(R.id.editBtn).setVisible(false);
                 }
                 if (!employee.getRole().checkControlBranch(branchList.get(position).getId())) {
-                    popupMenu.findItem(R.id.cancelBtn).setVisible(false);
+                    popupMenu.findItem(R.id.closeBranchBtn).setVisible(false);
                     popupMenu.findItem(R.id.lockBranchBtn).setVisible(false);
                 }
                 if (branchList.get(position).getStatus().equals("-1")){

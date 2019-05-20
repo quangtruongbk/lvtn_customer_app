@@ -3,6 +3,7 @@ package com.example.administrator.customerapp.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -67,30 +68,41 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
         if (historyList.get(position).getCustomerPhone() != null)
             holder.phoneTxt.setText("Số điện thoại: " + historyList.get(position).getCustomerPhone().toString());
         if (historyList.get(position).getStatus() != null) {
-            if (historyList.get(position).getStatus().equals("0"))
+            if (historyList.get(position).getStatus().equals("0")){
+                holder.historyRelativeLayout.setBackgroundColor(Color.WHITE);
                 holder.statusTxt.setText("Trạng thái: Đang chờ");
-            else if (historyList.get(position).getStatus().equals("-1"))
+            }
+            else if (historyList.get(position).getStatus().equals("-1")) {
                 holder.statusTxt.setText("Trạng thái: Đã hủy");
-            else if (historyList.get(position).getStatus().equals("1"))
+                holder.historyRelativeLayout.setBackgroundColor(Color.rgb(202,204,206));
+                holder.startTimeTxt.setVisibility(View.GONE);
+                holder.endTimeTxt.setVisibility(View.GONE);
+                holder.ratingBtn.setVisibility(View.GONE);
+            }
+            else if (historyList.get(position).getStatus().equals("1")){
                 holder.statusTxt.setText("Trạng thái: Đang sử dụng");
+                holder.historyRelativeLayout.setBackgroundColor(Color.WHITE);
+            }
             else if (historyList.get(position).getStatus().equals("2")) {
+                holder.historyRelativeLayout.setBackgroundColor(Color.WHITE);
                 holder.statusTxt.setText("Trạng thái: Đã xong");
                 holder.ratingBtn.setVisibility(View.VISIBLE);
-        //        holder.startTimeTxt.setVisibility(View.VISIBLE);
-        //        holder.endTimeTxt.setVisibility(View.VISIBLE);
+                holder.startTimeTxt.setVisibility(View.VISIBLE);
+                holder.endTimeTxt.setVisibility(View.VISIBLE);
+                if (historyList.get(position).getStartTime() != null) holder.startTimeTxt.setText("Thời gian bắt đầu: " + historyList.get(position).getStartTime());
+                if (historyList.get(position).getEndTime() != null) holder.endTimeTxt.setText("Thời gian kết thúc: " + historyList.get(position).getEndTime());
             } else if (historyList.get(position).getStatus().equals("3")) {
+                holder.historyRelativeLayout.setBackgroundColor(Color.WHITE);
                 holder.statusTxt.setText("Trạng thái: Đã xong (Đã đánh giá)");
-         //       holder.startTimeTxt.setVisibility(View.VISIBLE);
-         //       holder.endTimeTxt.setVisibility(View.VISIBLE);
+                holder.startTimeTxt.setVisibility(View.VISIBLE);
+                holder.endTimeTxt.setVisibility(View.VISIBLE);
+                holder.ratingBtn.setVisibility(View.GONE);
+                if (historyList.get(position).getStartTime() != null) holder.startTimeTxt.setText("Thời gian bắt đầu: " + historyList.get(position).getStartTime());
+                if (historyList.get(position).getEndTime() != null) holder.endTimeTxt.setText("Thời gian kết thúc: " + historyList.get(position).getEndTime());
             }
         }
         if (historyList.get(position).getCreatedAt() != null)
             holder.timeTxt.setText("Thời gian đăng ký: " + historyList.get(position).getCreatedAt());
-    /*    if (historyList.get(position).getStartTime() != null && !historyList.get(position).getStartTime().equals("-1"))
-            holder.startTimeTxt.setText("Thời gian vào: " + historyList.get(position).getStartTime());
-        if (historyList.get(position).getEndTime() != null && !historyList.get(position).getEndTime().equals("-1"))
-            holder.endTimeTxt.setText("Thời gian ra: " + historyList.get(position).getEndTime());
-        if (historyList.get(position).getBranchName() != null) */
             holder.branchNameTxt.setText("Cơ sở: " + historyList.get(position).getBranchName());
         if (historyList.get(position).getQueueName() != null)
             holder.queueNameTxt.setText("Hàng đợi: " + historyList.get(position).getQueueName());
@@ -237,7 +249,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Recycler
         statusTxt.setText("Trạng thái: " + history.getStatus()); //Bo sung status
         branchNameTxt.setText("Cơ sở: " + history.getBranchName());
         queueNameTxt.setText("Hàng đợi: " + history.getQueueName());
-        startTimeTxt.setText("Thời gian băt đầu: " + history.getStartTime());
+        startTimeTxt.setText("Thời gian bắt đầu: " + history.getStartTime());
         endTimeTxt.setText("Thời gian kết thúc: " + history.getEndTime());
         waitingScoreTxt.setVisibility(View.GONE);
         serviceScoreTxt.setVisibility(View.GONE);

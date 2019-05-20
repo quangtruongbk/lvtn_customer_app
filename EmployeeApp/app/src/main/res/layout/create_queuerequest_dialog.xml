@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tạo yêu cầu"
+            android:text="Tạo lượt đăng ký vào hàng đợi"
             android:textColor="#ffffff"
             android:textSize="20dp" />
     </android.support.v7.widget.Toolbar>

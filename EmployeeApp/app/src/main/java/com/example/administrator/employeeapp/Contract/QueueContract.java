@@ -14,6 +14,7 @@ public interface QueueContract {
         void setUpAdapter(ArrayList<Queue> Queue);
         void showCreateQueueDialog();
         void returnQueueFragment(String branchID);
+        void closeDialog();
     }
 
     interface Presenter extends BasePresenter {
