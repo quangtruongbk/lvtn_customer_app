@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,12 +85,11 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         Log.d("6abc", "createQueueRequest");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
-        callAPIService.createQueueRequest(token, accountID, queueID, name, phone, email).enqueue(new Callback<Void>() {
+        callAPIService.createQueueRequest(token, accountID, queueID, name, phone, email).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
-                    //Log.d("6abc", "Create Request:P " + response.body());
                     mView.showDialog("Tạo lượt đăng ký thành công", true);
                     FirebaseMessaging.getInstance().subscribeToTopic(queueID)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -114,7 +114,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
                 mView.hideProgressBar();
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
@@ -168,7 +168,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         callAPIService.cancelQueueRequest(token, queueID, queueRequestID).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                mView.hideProgressBar();
                 if (response.code() == 200) {
                     mView.showDialog("Hủy lượt đăng ký thành công", true);
                     FirebaseMessaging.getInstance().unsubscribeFromTopic(queueID)
@@ -180,13 +179,16 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                                     }
                                 }
                             });
-                    mView.hideCountDown();
+                    mView.refreshFragment();
                 } else if (response.code() == 500) {
                     mView.showDialog("Không thể hủy lượt đăng ký do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                    mView.hideProgressBar();
                 } else if (response.code() == 404) {
                     mView.showDialog("Không thể hủy lượt đăng ký do thông tin về lượt đăng ký đã thay đổi.", false);
+                    mView.hideProgressBar();
                 } else if (response.code() == 403) {
                     mView.showDialog("Bạn không được phép thực hiện tác vụ này!", false);
+                    mView.hideProgressBar();
                 }
             }
 

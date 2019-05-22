@@ -11,6 +11,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -51,7 +52,7 @@ import java.util.regex.Pattern;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class QueueRequestFragment extends Fragment implements QueueRequestContract.View{
+public class QueueRequestFragment extends Fragment implements QueueRequestContract.View {
 
     private RetrofitInterface callAPIService;
     private RecyclerView queueRequestRecyclerView;
@@ -70,17 +71,22 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private FloatingActionButton createQueueRequestFab;
     private SharedPreferences sharedPreferences;
     private String queueID;
+    private String branchName;
+    private String queueName;
     private Account account;
     private Activity mActivity;
+    private CountDownTimer countDownTimer;
     private Socket mSocket;
+
     {
         try {
-          //  mSocket = IO.socket("http://192.168.1.9:3000");
-            mSocket = IO.socket(GetIP.IP+":3000");
+            //  mSocket = IO.socket("http://192.168.1.9:3000");
+            mSocket = IO.socket(GetIP.IP + ":3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,16 +104,16 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         createQueueRequestFab = (FloatingActionButton) view.findViewById(R.id.createQueueRequestFab);
         assignDialog();
         queueID = getArguments().getString("queueID");
-        String branchName = getArguments().getString("branchName");
-        String queueName = getArguments().getString("queueName");
+        branchName = getArguments().getString("branchName");
+        queueName = getArguments().getString("queueName");
         queueRequestPresenter = new QueueRequestPresenter(this, mSocket, queueID);
-        if(queueID!=null) {
+        if (queueID != null) {
             Log.d("1abc", queueID);
             queueRequestPresenter.getQueueRequestFromServer(queueID);
         }
 
-        if(branchName != null && queueName != null){
-            pathTxt.setText(branchName + " > " +queueName);
+        if (branchName != null && queueName != null) {
+            pathTxt.setText(branchName + " > " + queueName);
         }
         sharedPreferences = this.mActivity.getSharedPreferences("data", MODE_PRIVATE);
         String accountString = sharedPreferences.getString("MyAccount", "empty");
@@ -152,11 +158,12 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof Activity){
-            mActivity =(Activity) context;
+        if (context instanceof Activity) {
+            mActivity = (Activity) context;
         }
     }
-    private void assignDialog(){
+
+    private void assignDialog() {
         noticeDialog = new AlertDialog.Builder(mActivity);
         waitingDialogBuilder = new AlertDialog.Builder(mActivity);
         createQueueRequestDialogBuilder = new AlertDialog.Builder(mActivity);
@@ -190,43 +197,47 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     }
 
     @Override
-    @TargetApi(21)
     public void showProgressBar() {
-        if(waitingDialog != null) {
-            if(!waitingDialog.isShowing()) {
-                waitingDialogBuilder.setView(R.layout.waiting_dialog);
+        if (waitingDialog != null) {
+            if (!waitingDialog.isShowing()) {
+               /* waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                waitingDialogBuilder.setCancelable(false);
+                waitingDialog = waitingDialogBuilder.show(); */
+                LayoutInflater inflater = mActivity.getLayoutInflater();
+                waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null));
                 waitingDialogBuilder.setCancelable(false);
                 waitingDialog = waitingDialogBuilder.show();
-                Log.d("6abc", "Show progress bar");
             }
         }
     }
 
     @Override
     public void hideProgressBar() {
-        if(waitingDialog != null){
-            if(waitingDialog.isShowing()) waitingDialog.dismiss();
+        if (waitingDialog != null) {
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
         }
         Log.d("6abc", "Hide progress bar");
     }
 
     @Override
-    public void setUpAdapter(ArrayList<QueueRequest> queueRequest){
-        if(queueRequest != null && account != null){
+    public void setUpAdapter(ArrayList<QueueRequest> queueRequest) {
+        if (queueRequest != null && account != null) {
             numberOfPeopleTxt.setText(Integer.toString(queueRequest.size()));
             queueRequestAdapter = new QueueRequestAdapter(queueRequest, mActivity, queueRequestPresenter, account);
-            for(int i = 0;i < queueRequest.size(); i++){
-                if(queueRequest.get(i).getAccountID().equals(account.getId())){
+            for (int i = 0; i < queueRequest.size(); i++) {
+                if (queueRequest.get(i).getAccountID().equals(account.getId())) {
+                    Log.d("6abc", "equals: " + account.getId());
                     timeCountDownLinear.setVisibility(View.VISIBLE);
-                    long distance;
+                    long distance = 0;
                     distance = queueRequest.get(i).getExpiredDate() - System.currentTimeMillis();
                     Log.d("6abc", "distance truoc if: " + distance);
-                    if(distance > 0) {
-                        Log.d("6abc", "distance: " + distance);
-                        new CountDownTimer(distance, 1000) {
+                    if (distance > 0) {
+                        Log.d("6abc", "distance: " + distance / 1000 / 60);
+                        countDownTimer = new CountDownTimer(distance, 1000) {
 
                             public void onTick(long millisUntilFinished) {
-                                timeCountDownTxt.setText(""+((millisUntilFinished - millisUntilFinished%60)/60/1000 + 1));
+                                Log.d("6abc", "millisUntilFinished: " + millisUntilFinished);
+                                timeCountDownTxt.setText("" + ((millisUntilFinished - millisUntilFinished % 60) / 60 / 1000));
                             }
 
                             public void onFinish() {
@@ -234,7 +245,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                             }
 
                         }.start();
-                    }else{
+                    } else {
                         timeCountDownTxt.setText("0");
                     }
                 }
@@ -247,9 +258,15 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     }
 
     @Override
-    public void hideCountDown(){
+    public void hideCountDown() {
+        if (countDownTimer != null){
+            countDownTimer.cancel();
+            countDownTimer = null;
+            Log.d("6abc", "cancel");
+        }
         timeCountDownLinear.setVisibility(View.INVISIBLE);
     }
+
     public void showCreateQueueRequestDialog() {
         LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(mActivity.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.create_queuerequest_dialog, null);
@@ -285,15 +302,15 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                 Pattern p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
                 Matcher m = p.matcher(name);
                 boolean b = m.find();
-                if (b||TextUtils.isEmpty(name)) {
+                if (b || TextUtils.isEmpty(name)) {
                     nameTxt.setError("Tên tồn tại ký tự đặc biệt hoặc bị để trống.");
                     validFlag = false;
                 } else {
                     nameTxt.setError(null);
                 }
-                if(validFlag == true){
+                if (validFlag == true) {
                     queueRequestPresenter.createQueueRequest(account.getToken(), account.getId(), queueID, name, phone, email);
-                    if(createQueueRequestDialog.isShowing()) createQueueRequestDialog.dismiss();
+                    if (createQueueRequestDialog.isShowing()) createQueueRequestDialog.dismiss();
                 }
             }
         });
@@ -311,4 +328,15 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         }
     };
 
+    @Override
+    public void refreshFragment(){
+        Bundle args = new Bundle();
+        args.putString("queueName", queueName);
+        args.putString("queueID", queueID);
+        args.putString("branchName", branchName);
+        QueueRequestFragment queueRequestFragment = new QueueRequestFragment();
+        queueRequestFragment.setArguments(args);
+        this.getFragmentManager().beginTransaction().replace(R.id.frameFragment, queueRequestFragment).addToBackStack(null).commit();
+
+    }
 }

@@ -118,6 +118,10 @@ public class HistoryFragment extends Fragment implements HistoryContract.View{
     public void showProgressBar() {
         waitingDialogBuilder.setView(R.layout.waiting_dialog);
         waitingDialogBuilder.setCancelable(false);
+     /*   // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+        waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null)); */
+        waitingDialogBuilder.setCancelable(false);
         waitingDialog = waitingDialogBuilder.show();
     }
 

@@ -127,7 +127,7 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
             new CountDownTimer(distance, 1000) {
 
                 public void onTick(long millisUntilFinished) {
-                    holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: " + ((millisUntilFinished - millisUntilFinished % 60) / 60 / 1000 + 1));
+                    holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: " + ((millisUntilFinished - millisUntilFinished % 60) / 60 / 1000));
                 }
 
                 public void onFinish() {

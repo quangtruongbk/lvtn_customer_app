@@ -14,6 +14,7 @@ public interface QueueRequestContract {
         void hideProgressBar();
         void setUpAdapter(ArrayList<QueueRequest> QueueRequest);
         void hideCountDown();
+        void refreshFragment();
         }
 
     interface Presenter extends BasePresenter {

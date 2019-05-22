@@ -11,7 +11,9 @@ import com.example.administrator.customerapp.Model.SupportedModel.SpecificQueueR
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -53,7 +55,7 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("queuerequest/create")
-    Call<Void> createQueueRequest(@Header("token") String token, @Field("accountid") String accountID, @Field("queueid") String queueID, @Field("customername") String name, @Field("customerphone") String phone, @Field("customeremail") String email);
+    Call<ResponseBody> createQueueRequest(@Header("token") String token, @Field("accountid") String accountID, @Field("queueid") String queueID, @Field("customername") String name, @Field("customerphone") String phone, @Field("customeremail") String email);
 
     @FormUrlEncoded
     @PUT("queuerequest/edit")
