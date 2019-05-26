@@ -88,6 +88,9 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
             holder.queueLinearLayout.setClickable(false);
             holder.wholeQueueLinearLayout.setBackgroundColor(Color.rgb(202,204,206));
         }
+        if(!employee.getRole().checkEditQueue(branchID) && !employee.getRole().checkControlQueue(branchID)){
+            holder.moreBtn.setVisibility(View.GONE);
+        }
         holder.moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,19 +101,23 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
                         popup.inflate(R.menu.queue_menu);
                         Menu popupMenu = popup.getMenu();
                         if(!employee.getRole().checkEditQueue(branchID)) popupMenu.findItem(R.id.editBtn).setVisible(false);
-                        if(!employee.getRole().checkControlQueue(branchID)) popupMenu.findItem(R.id.closeOpenQueueBtn).setVisible(false);
-                        if(queueList.get(position).getStatus().toString().equals("0"))
-                            popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Bắt đầu nhận khách");
-                        else if(queueList.get(position).getStatus().toString().equals("1"))
-                            popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Dừng nhận khách");
-                        else if(queueList.get(position).getStatus().toString().equals("-1")) {
+                        if(!employee.getRole().checkControlQueue(branchID)){
                             popupMenu.findItem(R.id.closeOpenQueueBtn).setVisible(false);
+                            popupMenu.findItem(R.id.lockQueueBtn).setVisible(false);
                             popupMenu.findItem(R.id.notBusyQueueBtn).setVisible(false);
-                            popupMenu.findItem(R.id.lockQueueBtn).setTitle("Mở khóa");
-                        }
-                        else if(queueList.get(position).getStatus().toString().equals("2")) {
-                            popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Dừng nhận khách");
-                            popupMenu.findItem(R.id.notBusyQueueBtn).setTitle("Hàng đợi đã đông và phải đợi");
+                        } else {
+                            if (queueList.get(position).getStatus().toString().equals("0"))
+                                popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Bắt đầu nhận khách");
+                            else if (queueList.get(position).getStatus().toString().equals("1"))
+                                popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Dừng nhận khách");
+                            else if (queueList.get(position).getStatus().toString().equals("-1")) {
+                                popupMenu.findItem(R.id.closeOpenQueueBtn).setVisible(false);
+                                popupMenu.findItem(R.id.notBusyQueueBtn).setVisible(false);
+                                popupMenu.findItem(R.id.lockQueueBtn).setTitle("Mở khóa");
+                            } else if (queueList.get(position).getStatus().toString().equals("2")) {
+                                popupMenu.findItem(R.id.closeOpenQueueBtn).setTitle("Dừng nhận khách");
+                                popupMenu.findItem(R.id.notBusyQueueBtn).setTitle("Hàng đợi đã đông và phải đợi");
+                            }
                         }
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override

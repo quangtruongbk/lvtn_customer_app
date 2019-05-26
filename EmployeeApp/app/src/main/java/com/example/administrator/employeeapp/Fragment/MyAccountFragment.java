@@ -117,6 +117,7 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
         waitingDialogBuilder = new AlertDialog.Builder(getActivity());
         changeInfoDialogBuilder = new AlertDialog.Builder(getActivity());
         changePasswordDialogBuilder = new AlertDialog.Builder(getActivity());
+        waitingDialog = waitingDialogBuilder.create();
     }
 
     public void showChangeInfoDialog() {
@@ -237,11 +238,21 @@ public class MyAccountFragment extends Fragment implements MyAccountContract.Vie
     }
 
     @Override
-    @TargetApi(21)
     public void showProgressBar() {
-        waitingDialogBuilder.setView(R.layout.waiting_dialog);
-        waitingDialogBuilder.setCancelable(false);
-        waitingDialog = waitingDialogBuilder.show();
+        if (waitingDialog != null) {
+            if (!waitingDialog.isShowing()) {
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                } else {
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null));
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                }
+            }
+        }
     }
 
     @Override

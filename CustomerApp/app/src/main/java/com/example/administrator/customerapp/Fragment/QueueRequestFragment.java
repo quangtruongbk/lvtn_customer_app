@@ -137,17 +137,19 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     @Override
     public void onStop() {
         super.onStop();
-        queueRequestPresenter.disconnectSocket(onQueueChange);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("7abc", "onDestroy");
+        queueRequestPresenter.disconnectSocket(onQueueChange);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("7abc", "onResume");
         if (!mSocket.connected()) {
             queueRequestPresenter.listeningSocket(onQueueChange);
             mSocket.on("onQueueChange", onQueueChange);
@@ -200,13 +202,16 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void showProgressBar() {
         if (waitingDialog != null) {
             if (!waitingDialog.isShowing()) {
-               /* waitingDialogBuilder.setView(R.layout.waiting_dialog);
-                waitingDialogBuilder.setCancelable(false);
-                waitingDialog = waitingDialogBuilder.show(); */
-                LayoutInflater inflater = mActivity.getLayoutInflater();
-                waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null));
-                waitingDialogBuilder.setCancelable(false);
-                waitingDialog = waitingDialogBuilder.show();
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                } else {
+                    LayoutInflater inflater = mActivity.getLayoutInflater();
+                    waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null));
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                }
             }
         }
     }
@@ -259,7 +264,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
 
     @Override
     public void hideCountDown() {
-        if (countDownTimer != null){
+        if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
             Log.d("6abc", "cancel");
@@ -329,7 +334,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     };
 
     @Override
-    public void refreshFragment(){
+    public void refreshFragment() {
         Bundle args = new Bundle();
         args.putString("queueName", queueName);
         args.putString("queueID", queueID);

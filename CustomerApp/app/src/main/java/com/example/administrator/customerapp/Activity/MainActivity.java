@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity
     private void assignDialog(){
         noticeDialog = new AlertDialog.Builder(this);
         waitingDialogBuilder = new AlertDialog.Builder(this);
+        waitingDialog = waitingDialogBuilder.create();
     }
 
     @Override
@@ -201,12 +202,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    @TargetApi(21)
     public void showProgressBar() {
-        waitingDialogBuilder.setView(R.layout.waiting_dialog);
-        waitingDialogBuilder.setCancelable(false);
-        waitingDialog = waitingDialogBuilder.show();
+        if (waitingDialog != null) {
+            if (!waitingDialog.isShowing()) {
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                } else {
+                    LayoutInflater inflater = this.getLayoutInflater();
+                    waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null));
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                }
+            }
+        }
     }
+
 
     @Override
     public void hideProgressBar() {

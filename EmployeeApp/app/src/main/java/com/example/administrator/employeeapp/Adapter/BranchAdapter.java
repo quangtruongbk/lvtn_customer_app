@@ -112,6 +112,9 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                 ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.frameFragment, queueFragment).addToBackStack(null).commit();
             }
         });
+        if (!employee.getRole().checkEditBranch(branchList.get(position).getId()) && !employee.getRole().checkControlBranch(branchList.get(position).getId())) {
+            holder.moreBtn.setVisibility(View.GONE);
+        }
         holder.moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

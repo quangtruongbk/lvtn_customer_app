@@ -79,6 +79,7 @@ public class QueueFragment extends Fragment implements QueueContract.View{
     private void assignDialog(){
         noticeDialog = new AlertDialog.Builder(getActivity());
         waitingDialogBuilder = new AlertDialog.Builder(getActivity());
+        waitingDialog = waitingDialogBuilder.create();
     }
 
     @Override
@@ -108,12 +109,23 @@ public class QueueFragment extends Fragment implements QueueContract.View{
     }
 
     @Override
-    @TargetApi(21)
     public void showProgressBar() {
-        waitingDialogBuilder.setView(R.layout.waiting_dialog);
-        waitingDialogBuilder.setCancelable(false);
-        waitingDialog = waitingDialogBuilder.show();
+        if (waitingDialog != null) {
+            if (!waitingDialog.isShowing()) {
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                } else {
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null));
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                }
+            }
+        }
     }
+
 
     @Override
     public void hideProgressBar() {

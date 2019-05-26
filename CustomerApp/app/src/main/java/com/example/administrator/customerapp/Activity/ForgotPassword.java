@@ -52,6 +52,7 @@ public class ForgotPassword extends AppCompatActivity implements ForgotPasswordC
         }
         editor =sharedPreferences.edit();
         waitingDialogBuilder = new AlertDialog.Builder(this);
+        waitingDialog = waitingDialogBuilder.create();
         noticeDialog = new AlertDialog.Builder(this);
         resendEmailDialog = new AlertDialog.Builder(this);
         forgotPasswordPresenter = new ForgotPasswordPresenter(this);
@@ -106,11 +107,21 @@ public class ForgotPassword extends AppCompatActivity implements ForgotPasswordC
     }
 
     @Override
-    @TargetApi(21)
     public void showProgressBar() {
-        waitingDialogBuilder.setView(R.layout.waiting_dialog);
-        waitingDialogBuilder.setCancelable(false);
-        waitingDialog = waitingDialogBuilder.show();
+        if (waitingDialog != null) {
+            if (!waitingDialog.isShowing()) {
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                } else {
+                    LayoutInflater inflater = this.getLayoutInflater();
+                    waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null));
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                }
+            }
+        }
     }
 
     @Override

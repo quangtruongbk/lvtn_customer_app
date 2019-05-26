@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -48,7 +49,8 @@ public class Login extends AppCompatActivity implements LoginContract.View{
     private Button loginBtn;
     private ProgressBar progressBar;
     private LoginContract.Presenter loginPresenter;
-    private Dialog waitingDialog;
+    private AlertDialog waitingDialog;
+    private AlertDialog.Builder waitingDialogBuilder;
     private AlertDialog.Builder noticeDialog;
     private AlertDialog.Builder resendEmailDialog;
     private SharedPreferences sharedPreferences;
@@ -60,11 +62,13 @@ public class Login extends AppCompatActivity implements LoginContract.View{
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_login);
-        showProgressBar();
         noticeDialog = new AlertDialog.Builder(this);
         resendEmailDialog = new AlertDialog.Builder(this);
         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         editor =sharedPreferences.edit();
+        waitingDialogBuilder = new AlertDialog.Builder(this);
+        waitingDialog = waitingDialogBuilder.create();
+        showProgressBar();
         loginPresenter = new LoginPresenter(this);
         Boolean isLogin = sharedPreferences.getBoolean("isLogin", false);
         Log.d("1abc", "isLogin: " + isLogin);
@@ -154,10 +158,20 @@ public class Login extends AppCompatActivity implements LoginContract.View{
 
     @Override
     public void showProgressBar() {
-        waitingDialog = new Dialog(this);
-        waitingDialog.setContentView(R.layout.waiting_dialog);
-        waitingDialog.setCancelable(false);
-        waitingDialog.show();
+        if (waitingDialog != null) {
+            if (!waitingDialog.isShowing()) {
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    waitingDialogBuilder.setView(R.layout.waiting_dialog);
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                } else {
+                    LayoutInflater inflater = this.getLayoutInflater();
+                    waitingDialogBuilder.setView(inflater.inflate(R.layout.waiting_dialog, null));
+                    waitingDialogBuilder.setCancelable(false);
+                    waitingDialog = waitingDialogBuilder.show();
+                }
+            }
+        }
     }
 
     @Override
