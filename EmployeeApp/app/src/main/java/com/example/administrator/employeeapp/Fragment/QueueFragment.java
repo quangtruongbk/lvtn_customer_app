@@ -86,7 +86,6 @@ public class QueueFragment extends Fragment implements QueueContract.View{
             pathTxt.setText(branchName);
         }
         if(branchID!=null) {
-            Log.d("1abc", branchID);
             queuePresenter.getQueueFromServer(branchID);
         }
         sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);

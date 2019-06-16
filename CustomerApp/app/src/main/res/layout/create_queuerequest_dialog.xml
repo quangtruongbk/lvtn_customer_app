@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:background="@color/colorOrange"
-                android:text="Tạo"
+                android:text="Đăng ký"
                 android:textColor="@color/colorWhite"
                 android:textSize="20dp" />
         </LinearLayout>

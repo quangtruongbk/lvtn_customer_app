@@ -82,10 +82,10 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
             }
         }
         holder.sttTxt.setText(Integer.toString(position + 1));
-        Log.d("6abc", "position" + position + "acountID: " + queueRequestList.get(position).getAccountID() + " name: " + queueRequestList.get(position).getCustomerName());
         if(account.getId().equals(queueRequestList.get(position).getAccountID())){
-            Log.d("6abc", "position" + position +  "Same Request acountID: " + queueRequestList.get(position).getAccountID() + " name: " + queueRequestList.get(position).getCustomerName());
-            holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(135,206,250));
+            holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(41,86,143));
+            holder.emailTxt.setTextColor(Color.rgb(255,255,255));
+            holder.phoneTxt.setTextColor(Color.rgb(255,255,255));
             holder.moreLinearLayout.setVisibility(View.VISIBLE);
             holder.moreLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -169,8 +169,29 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                     emailTxt.setError("Bạn phải điền ít nhất một trong 2 số điện thoại hoặc email");
                     validFlag = false;
                 } else {
-                    phoneTxt.setError(null);
-                    emailTxt.setError(null);
+                    if(!TextUtils.isEmpty(email) || !email.equals("")) {
+                        Pattern emailP = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+                        Matcher emailM = emailP.matcher(email);
+                        boolean emailB = emailM.find();
+                        if (!emailB) {
+                            emailTxt.setError("Email không đúng định dạng");
+                            validFlag = false;
+                        } else {
+                            emailTxt.setError(null);
+                        }
+                    }
+
+                    if(!TextUtils.isEmpty(phone) || !phone.equals("")) {
+                        Pattern phoneP = Pattern.compile("[0-9]{8,15}$");
+                        Matcher phoneM = phoneP.matcher(phone);
+                        boolean phoneB = phoneM.find();
+                        if (!phoneB) {
+                            phoneTxt.setError("Số điện thoại không đúng định dạng hoặc bị để trống");
+                            validFlag = false;
+                        } else {
+                            phoneTxt.setError(null);
+                        }
+                    }
                 }
                 Pattern p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
                 Matcher m = p.matcher(name);

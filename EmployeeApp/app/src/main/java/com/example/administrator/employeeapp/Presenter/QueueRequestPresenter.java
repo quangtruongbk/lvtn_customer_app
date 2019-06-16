@@ -39,20 +39,17 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
      *************************************************/
     @Override
     public void getQueueRequestFromServer(final String queueID) {
-        Log.d("6abc", "getQueueRequestFromServer");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.getQueueRequest(queueID, "0").enqueue(new Callback<ArrayList<QueueRequest>>() {
             @Override
             public void onResponse(Call<ArrayList<QueueRequest>> call, Response<ArrayList<QueueRequest>> response) {
                 if (response.code() == 200) {
-                    Log.d("6abc", "2");
                     ArrayList<QueueRequest> newQueueRequest = new ArrayList<QueueRequest>();
                     newQueueRequest = response.body();
                     if (newQueueRequest != null) {
                         mView.setUpAdapter(newQueueRequest);
                     }
-                    Log.d("6abc", "getOnGoingQueueRequestFromServer");
                     getOnGoingUsingQueueRequestFromServer(queueID);
                 } else if (response.code() == 500) {
                     mView.hideProgressBar();
@@ -64,7 +61,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
             public void onFailure(Call<ArrayList<QueueRequest>> call, Throwable t) {
                 t.printStackTrace();
                 mView.hideProgressBar();
-                Log.d("6abc", "4");
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
@@ -88,7 +84,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                     if (newQueueRequest != null) {
                         mView.setUpOnGoingRequestAdapter(newQueueRequest);
                     }
-                    Log.d("6abc", "6");
                 } else if (response.code() == 500) {
                     mView.showDialog("Không thể lấy được danh sách lượt đăng ký đang sử dụng dịch vụ do lỗi hệ thống. Xin vui lòng thử lại!", false);
                 }
@@ -98,7 +93,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
             public void onFailure(Call<ArrayList<QueueRequest>> call, Throwable t) {
                 mView.hideProgressBar();
                 t.printStackTrace();
-                Log.d("6abc", "8");
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }
         });
@@ -209,7 +203,7 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
      Description: cancel a Queue Request
      *************************************************/
     @Override
-    public void cancelQueueRequest(String token,String queueID, String queueRequestID) {
+    public void cancelQueueRequest(String token, String queueID, String queueRequestID) {
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.cancelQueueRequest(token, queueID, queueRequestID).enqueue(new Callback<Void>() {
@@ -245,7 +239,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         mView.showProgressBar();
         if (type.equals("0")) {
-            Log.d("6abc", "showprogress 2");
             callAPIService.checkInOut(token, queueRequestID, "0").enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -269,7 +262,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
                 }
             });
         } else {
-            Log.d("6abc", "showprogress 3");
             callAPIService.checkInOut(token, queueRequestID, "1").enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -313,13 +305,42 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
         }
         if (ongoingQueueRequestArrayList != null) {
             for (int i = 0; i < ongoingQueueRequestArrayList.size(); i++) {
-                if (scanResult.equals(queueRequestArrayList.get(i).getId())) {
+                if (scanResult.equals(ongoingQueueRequestArrayList.get(i).getId())) {
                     checkInOut(token, scanResult, "1");
                     return;
                 }
             }
         }
         mView.showDialog("QR code này không thuộc về lượt đăng ký nào", false);
+    }
+
+
+    /***************************************************
+     Function: addTime
+     Creator: Quang Truong
+     Description: Add time for whole queue
+     *************************************************/
+    @Override
+    public void addTime(String token, String queueID, String addTime, String type) {
+        mView.showProgressBar();
+        callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+        callAPIService.addTimeQueueRequest(token, queueID, addTime, type).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                mView.hideProgressBar();
+                if (response.code() == 200) {
+                    mView.showDialog("Thêm/bớt thời gian chờ đợi cho cả hàng đợi thành công", true);
+                } else if (response.code() == 500) {
+                    mView.showDialog("Không thể Thêm/bớt thời gian chờ đợi cho cả hàng đợi do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                mView.hideProgressBar();
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
+            }
+        });
     }
 
     @Override

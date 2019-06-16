@@ -62,7 +62,6 @@ public class Login extends AppCompatActivity implements LoginContract.View{
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_login);
-        Log.d("1abc", "ON CREATE");
         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         Boolean isLogin = sharedPreferences.getBoolean("isLogin", false);
         if(isLogin){
@@ -85,7 +84,6 @@ public class Login extends AppCompatActivity implements LoginContract.View{
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("1abc", "Login");
                 showProgressBar();
                 loginPresenter.logIn(emailTxt.getText().toString(), passwordTxt.getText().toString());
             }

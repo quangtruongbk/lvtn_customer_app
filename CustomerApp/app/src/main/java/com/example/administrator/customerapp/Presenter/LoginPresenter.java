@@ -42,10 +42,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                 mView.hideProgressBar();
                 if (response.code() == 200) {
                     if (response.body() != null) account = response.body();
-                    Log.d("1abc", response.toString());
                     if (response.body() != null) {
                         String tempBody = response.body().toString();
-                        Log.d("1abc", "Dang nhap thanh cong" + response.body().getStatus());
                     }
                     if (response.body().getStatus().equals("1")) {
                         mView.openMainActivity(account);
@@ -58,11 +56,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                         Log.d("1abc", response.errorBody().toString());
 
                 } else if (response.code() == 401) {
-                    Log.d("1abc", "Đang nhap that bai");
                     mView.showDialog("Đăng nhập thất bại, hãy kiểm tra lại email và mật khẩu!", false);
                 } else if (response.code() == 403) {
-                    Log.d("1abc", "Da dang nhap roi");
-                    Log.d("1abc", "Da dang nhap roi");
                 } else if (response.code() == 500) {
                     mView.showDialog("Đăng nhập thất bại do lỗi hệ thống", false);
                 }
@@ -88,7 +83,6 @@ public class LoginPresenter implements LoginContract.Presenter {
         } else {
             String accountID = account.getId();
             String email = account.getEmail();
-            Log.d("1abc", "AccountID: " + accountID);
             callAPIService = APIClient.getClient().create(RetrofitInterface.class);
             callAPIService.resendVerifyEmail(accountID, email).enqueue(new Callback<Void>() {
                 @Override

@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.administrator.employeeapp.Contract.QueueRequestContract;
 import com.example.administrator.employeeapp.Fragment.QueueRequestFragment;
 import com.example.administrator.employeeapp.Model.Account;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Model.Queue;
 import com.example.administrator.employeeapp.Model.QueueRequest;
 import com.example.administrator.employeeapp.R;
@@ -37,7 +38,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapter.RecyclerViewHolder> {
-
     private ArrayList<QueueRequest> queueRequestList = new ArrayList<QueueRequest>();
     private Context context;
     private Account account;
@@ -48,14 +48,17 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
     private AlertDialog editQueueRequestDialog;
     private static String remainerMessage = "Hệ thống quản lý hàng đợi xin thông báo: Lượt đăng ký của bạn đang chuẩn bị tới lượt, xin vui lòng hãy đến ngay cơ sở để chuẩn bị. Xin cảm ơn quý khách.";
     private static String accidentMessage = "Hệ thống quản lý hàng đợi xin thông báo: Do sự cố ngoài ý muốn mà hệ thống  buộc lòng phải hủy lượt đăng ký của bạn. Mong quý khách thông cảm.";
+    private Employee employee;
+    private String branchID;
 
-    public QueueRequestAdapter(ArrayList<QueueRequest> data, QueueRequestContract.Presenter presenter, Context context, Account account) {
+    public QueueRequestAdapter(ArrayList<QueueRequest> data, QueueRequestContract.Presenter presenter, Context context, Account account, Employee employee, String branchID) {
         this.queueRequestList = data;
         this.context = context;
         this.account = account;
         this.queueRequestPresenter = presenter;
         sendEmailDialogBuilder = new AlertDialog.Builder(context);
         editQueueRequestDialogBuilder = new AlertDialog.Builder(context);
+        this.branchID = branchID;
     }
 
     @Override
@@ -67,6 +70,13 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
 
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
+        if(employee != null){
+            if(!employee.getRole().checkControlQueue(branchID)){
+                holder.moreLinearLayout.setVisibility(View.GONE);
+                holder.cancelLayout.setVisibility(View.GONE);
+            }
+        }
+
         holder.nameTxt.setText(queueRequestList.get(position).getCustomerName());
         if (queueRequestList.get(position).getCustomerEmail() != null)
             holder.emailTxt.setText("Email: " + queueRequestList.get(position).getCustomerEmail().toString());
@@ -88,12 +98,12 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
                                 queueRequestPresenter.checkInOut(account.getToken(), queueRequestList.get(position).getId(), "0");
                                 return true;
                             case R.id.callCustomerBtn:
-                                if (holder.phoneTxt.getText() == null || holder.phoneTxt.getText().equals("")) {
+                                if (queueRequestList.get(position).getCustomerPhone().toString() == null || queueRequestList.get(position).getCustomerPhone().toString().equals("")) {
                                     Toast.makeText(context, "Không có số điện thoại của khách", Toast.LENGTH_SHORT).show();
                                     return true;
                                 }
                                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                                intent.setData(Uri.parse("tel:" + holder.phoneTxt.getText()));
+                                intent.setData(Uri.parse("tel:" + queueRequestList.get(position).getCustomerPhone().toString()));
                                 context.startActivity(intent);
                                 return true;
                             case R.id.emailCustomerBtn:
@@ -121,26 +131,33 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
 
         long distance;
         distance = queueRequestList.get(position).getExpiredDate() - System.currentTimeMillis();
-        Log.d("6abc", "distance truoc if: " + distance);
         if (distance > 0) {
-            Log.d("6abc", "distance: " + distance);
             new CountDownTimer(distance, 1000) {
 
                 public void onTick(long millisUntilFinished) {
-                    holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: " + ((millisUntilFinished - millisUntilFinished % 60) / 60 / 1000));
+                    holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: " + ((millisUntilFinished - millisUntilFinished % 60) / 60 / 1000 + 1));
                 }
 
                 public void onFinish() {
                     holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: 0");
-                    holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(255, 204, 203));
+                    if(queueRequestList.get(position).getExpiredDate() != 0) {
+                        holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(255, 204, 203));
+                        holder.cancelLayout.setVisibility(View.VISIBLE);
+                    }
                 }
 
             }.start();
         } else {
             holder.timeCountDownTxt.setText("Thời gian còn lại ước tính: 0");
             holder.queueRequestLinearLayout.setBackgroundColor(Color.rgb(255, 204, 203));
+            holder.cancelLayout.setVisibility(View.VISIBLE);
         }
-
+        holder.cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelDialog(queueRequestList.get(position));
+            }
+        });
     }
 
     @Override
@@ -156,7 +173,8 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
         TextView timeCountDownTxt;
         LinearLayout queueRequestLinearLayout;
         LinearLayout moreLinearLayout;
-
+        LinearLayout cancelLayout;
+        TextView cancelBtn;
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             nameTxt = (TextView) itemView.findViewById(R.id.nameTxt);
@@ -166,6 +184,8 @@ public class QueueRequestAdapter extends RecyclerView.Adapter<QueueRequestAdapte
             timeCountDownTxt = (TextView) itemView.findViewById(R.id.timeCountDownTxt);
             queueRequestLinearLayout = (LinearLayout) itemView.findViewById(R.id.queueRequestLinearLayout);
             moreLinearLayout = (LinearLayout) itemView.findViewById(R.id.moreLayout);
+            cancelLayout = (LinearLayout) itemView.findViewById(R.id.cancelLayout);
+            cancelBtn = (TextView) itemView.findViewById(R.id.cancelBtn);
         }
     }
 

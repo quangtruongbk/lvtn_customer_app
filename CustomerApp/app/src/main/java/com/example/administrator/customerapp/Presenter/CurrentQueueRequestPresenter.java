@@ -36,6 +36,7 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
                 mView.hideProgressBar();
                 if(response.code() == 200) {
                     getRequestFromEmailPhone(token, accountID, email, phone);
+                    getUsingQueueRequest(token, accountID);
                     SpecificQueueRequest newSpecificQueueRequest = new SpecificQueueRequest();
                     newSpecificQueueRequest = response.body();
                     mView.setUpView(newSpecificQueueRequest);
@@ -45,6 +46,35 @@ public class CurrentQueueRequestPresenter implements CurrentQueueRequestContract
             }
             @Override
             public void onFailure(Call<SpecificQueueRequest> call, Throwable t) {
+                mView.hideProgressBar();
+                mView.showDialog("Không thể kết nối được với máy chủ!", false);
+            }
+        });
+    }
+
+    /***************************************************
+     Function: getCurrentQueueRequest
+     Creator: Quang Truong
+     Description: Get a request of account that still waiting
+     *************************************************/
+    @Override
+    public void getUsingQueueRequest(final String token, final String accountID){
+        mView.showProgressBar();
+        callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+        callAPIService.getUsingQueueRequest(token, accountID).enqueue(new Callback<ArrayList<SpecificQueueRequest>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SpecificQueueRequest>> call, Response<ArrayList<SpecificQueueRequest>> response) {
+                mView.hideProgressBar();
+                if(response.code() == 200) {
+                    ArrayList<SpecificQueueRequest> newSpecificQueueRequest = new ArrayList<SpecificQueueRequest>();
+                    newSpecificQueueRequest = response.body();
+                    mView.setUpUsingAdapter(newSpecificQueueRequest);
+                }else if(response.code() == 500){
+                    mView.showDialog("Không thể lấy được lượt đăng ký hiện tại do lỗi hệ thống. Xin vui lòng thử lại!", false);
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<SpecificQueueRequest>> call, Throwable t) {
                 mView.hideProgressBar();
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
             }

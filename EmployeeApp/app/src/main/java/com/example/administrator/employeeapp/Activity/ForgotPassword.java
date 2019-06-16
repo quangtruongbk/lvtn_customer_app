@@ -40,7 +40,6 @@ public class ForgotPassword extends AppCompatActivity implements ForgotPasswordC
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.setContentView(R.layout.activity_forgot_password);
-        Log.d("1abc", "ON CREATE");
         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         Boolean isLogin = sharedPreferences.getBoolean("isLogin", false);
         if(isLogin){

@@ -33,12 +33,11 @@ public class EmployeeListForStatisticAdapter extends RecyclerView.Adapter<Employ
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
         holder.nameTxt.setText(employeeListForStatistics.get(position).getName());
         holder.emailTxt.setText(employeeListForStatistics.get(position).getAccountEmail());
-        holder.roleTxt.setText(employeeListForStatistics.get(position).getName());
-        if(employeeListForStatistics.get(position).checkEditQueue()) holder.roleTxt.setText("Chỉnh sửa thông tin hàng đợi\n");
-        if(employeeListForStatistics.get(position).checkControlQueue()) holder.roleTxt.setText("Quản lý hàng đợi\n");
-        if(employeeListForStatistics.get(position).checkCreateQueue()) holder.roleTxt.setText("Tạo hàng đợi\n");
-        if(employeeListForStatistics.get(position).checkEditBranch()) holder.roleTxt.setText("Chỉnh sửa thông tin cơ sở\n");
-        if(employeeListForStatistics.get(position).checkControlBranch()) holder.roleTxt.setText("Quản lý cả cơ sở\n");
+        if(employeeListForStatistics.get(position).checkEditQueue()) holder.changeInfoQueueTxt.setVisibility(View.VISIBLE);
+        if(employeeListForStatistics.get(position).checkControlQueue()) holder.controlQueueTxt.setVisibility(View.VISIBLE);
+        if(employeeListForStatistics.get(position).checkCreateQueue()) holder.createQueueTxt.setVisibility(View.VISIBLE);
+        if(employeeListForStatistics.get(position).checkEditBranch()) holder.changeInfoBranchTxt.setVisibility(View.VISIBLE);
+        if(employeeListForStatistics.get(position).checkControlBranch()) holder.controlBranchTxt.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -49,13 +48,21 @@ public class EmployeeListForStatisticAdapter extends RecyclerView.Adapter<Employ
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
         TextView nameTxt;
         TextView emailTxt;
-        TextView roleTxt;
+        TextView changeInfoQueueTxt;
+        TextView controlQueueTxt;
+        TextView createQueueTxt;
+        TextView changeInfoBranchTxt;
+        TextView controlBranchTxt;
 
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             nameTxt = (TextView) itemView.findViewById(R.id.nameTxt);
             emailTxt = (TextView) itemView.findViewById(R.id.emailTxt);
-            roleTxt = (TextView) itemView.findViewById(R.id.roleTxt);
+            changeInfoQueueTxt = (TextView) itemView.findViewById(R.id.changeInfoQueueTxt);
+            controlQueueTxt = (TextView) itemView.findViewById(R.id.controlQueueTxt);
+            createQueueTxt = (TextView) itemView.findViewById(R.id.createQueueTxt);
+            changeInfoBranchTxt = (TextView) itemView.findViewById(R.id.changeInfoBranchTxt);
+            controlBranchTxt = (TextView) itemView.findViewById(R.id.controlBranchTxt);
         }
     }
 }

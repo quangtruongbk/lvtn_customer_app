@@ -3,9 +3,11 @@ package com.example.administrator.employeeapp.Fragment;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.employeeapp.Activity.Login;
+import com.example.administrator.employeeapp.Activity.MainActivity;
 import com.example.administrator.employeeapp.Adapter.BranchAdapter;
 import com.example.administrator.employeeapp.Contract.HomeContract;
 import com.example.administrator.employeeapp.Model.Account;
@@ -51,6 +55,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     private AlertDialog.Builder waitingDialogBuilder;
     private AlertDialog.Builder noticeDialog;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Nullable
     @Override
@@ -62,6 +67,9 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         toolbarTitle.setText("Trang chủ");
         branchRecyclerView = (RecyclerView) view.findViewById(R.id.branchRecyclerView);
         assignDialog();
+        sharedPreferences = getActivity().getSharedPreferences("data", MODE_PRIVATE);
+        editor =sharedPreferences.edit();
+        homePresenter = new HomePresenter(this, account);
         sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);
         String accountString = sharedPreferences.getString("MyAccount", "empty");
         Gson gson = new Gson();
@@ -69,13 +77,18 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         if (!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
         }
+        homePresenter.getAccount(account.getToken(), account.getId());
+        accountString = sharedPreferences.getString("MyAccount", "empty");
+        account = new Account();
+        if (!accountString.equals("empty")) {
+            account = gson.fromJson(accountString, Account.class);
+        }
+        Log.d("6abc", "Account String: " + accountString);
         String employeeString = sharedPreferences.getString("Employee", "empty");
         employee = new Employee();
         if (!employeeString.equals("empty")) {
             employee = gson.fromJson(employeeString, Employee.class);
         }
-
-        homePresenter = new HomePresenter(this, account);
         homePresenter.getBranchFromServer();
         return view;
     }
@@ -138,7 +151,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void setUpAdapter(ArrayList<Branch> branch) {
-        Log.d("1abc", "Branch: " + branch.get(0).getName());
         if (branch != null)
             branchAdapter = new BranchAdapter(branch, getActivity(), homePresenter, account, employee);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -147,5 +159,17 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         branchRecyclerView.setAdapter(branchAdapter);
     }
 
-
+    @Override
+    public void updateEmployeeAccount(Account account, Employee employee) {
+        Gson gson = new Gson();
+        String accountJSON = gson.toJson(account);
+        editor.putString("MyAccount", accountJSON);
+        String employeeJSON = gson.toJson(employee);
+        editor.putString("Employee", employeeJSON);
+        editor.commit();
+        NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.navView);
+        View headerView = navigationView.getHeaderView(0);
+        TextView nameTxt = (TextView) headerView.findViewById(R.id.nameTxt);
+        nameTxt.setText(account.getName());
+    }
 }

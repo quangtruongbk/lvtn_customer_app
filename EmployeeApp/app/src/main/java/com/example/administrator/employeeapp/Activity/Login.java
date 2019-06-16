@@ -65,16 +65,15 @@ public class Login extends AppCompatActivity implements LoginContract.View{
         noticeDialog = new AlertDialog.Builder(this);
         resendEmailDialog = new AlertDialog.Builder(this);
         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+
         editor =sharedPreferences.edit();
         waitingDialogBuilder = new AlertDialog.Builder(this);
         waitingDialog = waitingDialogBuilder.create();
         showProgressBar();
         loginPresenter = new LoginPresenter(this);
         Boolean isLogin = sharedPreferences.getBoolean("isLogin", false);
-        Log.d("1abc", "isLogin: " + isLogin);
         if(isLogin){
             String accountString = sharedPreferences.getString("MyAccount", "empty");
-            Log.d("1abc", "accountString: " + accountString);
             Gson gson = new Gson();
             Account account = new Account();
             if(!accountString.equals("empty")) {
@@ -91,7 +90,6 @@ public class Login extends AppCompatActivity implements LoginContract.View{
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("1abc", "Login");
                     showProgressBar();
                     loginPresenter.logIn(emailTxt.getText().toString(), passwordTxt.getText().toString());
                 }

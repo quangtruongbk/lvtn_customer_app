@@ -309,6 +309,18 @@ public class QueueStatisticFragment extends Fragment implements QueueStatisticCo
         YAxis rightAxis = lineChart.getAxisRight();
         rightAxis.setTextColor(Color.BLACK);
 
+        Legend l = lineChart.getLegend();
+
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setWordWrapEnabled(true);
+        l.setDrawInside(false);
+        l.setTextSize(12f);
+        l.setStackSpace(5f);
+        l.setXEntrySpace(25f);
+        l.setYOffset(20f);
+
     }
 
     @Override
@@ -333,5 +345,18 @@ public class QueueStatisticFragment extends Fragment implements QueueStatisticCo
         pieChart.setTransparentCircleRadius(58f);
         pieChart.setDrawEntryLabels(false);
         pieChart.setHoleRadius(58f);
+
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+
+        l.setWordWrapEnabled(true);
+        l.setDrawInside(false);
+        l.setTextSize(13f);
+        l.setStackSpace(5f);
+        l.setYOffset(80f);
+        l.setXEntrySpace(20f);
+
     }
 }

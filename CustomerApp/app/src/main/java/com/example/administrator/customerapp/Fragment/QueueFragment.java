@@ -73,6 +73,7 @@ public class QueueFragment extends Fragment implements QueueContract.View{
         if(branchID!=null) {
             queuePresenter.getQueueFromServer(branchID);
         }
+        Log.d("6abc", "onCreateView");
         return view;
     }
 

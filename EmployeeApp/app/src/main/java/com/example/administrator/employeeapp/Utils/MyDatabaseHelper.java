@@ -116,7 +116,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             do {
                 cityName.add(cursor.getString(1));
                 cityID.add(cursor.getString(0));
-                Log.d("1abc", "getString: " + cursor.getString(0) + " " + cursor.getString(1));
             } while (cursor.moveToNext());
         }
         GetAddressHelper list = new GetAddressHelper(cityName, cityID);
@@ -140,7 +139,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             do {
                 districtName.add(cursor.getString(1));
                 districtID.add(cursor.getString(0));
-                Log.d("1abc", "getString: " + cursor.getString(0) + " " + cursor.getString(1));
             } while (cursor.moveToNext());
         }
         GetAddressHelper list = new GetAddressHelper(provinceID, districtName, districtID);
@@ -164,7 +162,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             do {
                 wardName.add(cursor.getString(1));
                 wardID.add(cursor.getString(0));
-                Log.d("1abc", "getString: " + cursor.getString(0) + " " + cursor.getString(1));
             } while (cursor.moveToNext());
         }
         GetAddressHelper list = new GetAddressHelper();
@@ -188,7 +185,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cityID = cursor.getString(0);
-                Log.d("1abc", "getString: " + cursor.getString(0) + " " + cursor.getString(1));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -209,7 +205,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cityID = cursor.getString(0);
-                Log.d("1abc", "getString: " + cursor.getString(0) + " " + cursor.getString(1));
             } while (cursor.moveToNext());
         }
         cursor.close();

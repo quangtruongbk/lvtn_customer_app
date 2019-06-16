@@ -18,7 +18,10 @@ public interface CurrentQueueRequestContract {
 
         void setUpAdapter(ArrayList<SpecificQueueRequest> specificQueueRequest);
 
+        void setUpUsingAdapter(ArrayList<SpecificQueueRequest> specificQueueRequest);
+
         void resetFragment();
+
     }
 
     interface Presenter extends BasePresenter {
@@ -30,5 +33,6 @@ public interface CurrentQueueRequestContract {
 
         void cancelQueueRequest(String token, String accountID, String queueID, String queueRequestID);
 
+        void getUsingQueueRequest(String token, String accountID);
     }
 }

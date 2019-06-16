@@ -51,7 +51,6 @@
                 android:backgroundTint="@color/colorOrange"
                 android:drawablePadding="15dp"
                 android:padding="8dp"
-                android:textColor="@color/colorOrange"
                 android:textColorHint="@color/colorOrange" />
 
             <TextView
@@ -74,7 +73,6 @@
                 android:drawablePadding="15dp"
                 android:inputType="number"
                 android:padding="8dp"
-                android:textColor="@color/colorOrange"
                 android:textColorHint="@color/colorOrange" />
 
             <TextView
@@ -97,7 +95,6 @@
                 android:drawablePadding="15dp"
                 android:inputType="number"
                 android:padding="8dp"
-                android:textColor="@color/colorOrange"
                 android:textColorHint="@color/colorOrange" />
 
             <Button

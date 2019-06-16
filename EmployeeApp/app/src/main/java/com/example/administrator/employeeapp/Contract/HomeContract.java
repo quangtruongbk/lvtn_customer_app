@@ -2,7 +2,9 @@ package com.example.administrator.employeeapp.Contract;
 
 import com.example.administrator.employeeapp.BasePresenter;
 import com.example.administrator.employeeapp.BaseView;
+import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Model.SupportedModel.Address;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ public interface HomeContract {
 
         void setUpAdapter(ArrayList<Branch> branch);
 
+        void updateEmployeeAccount(Account account, Employee employee);
     }
 
     interface Presenter extends BasePresenter {
@@ -27,6 +30,10 @@ public interface HomeContract {
                               Integer capacity, String openHour, String closeHour, String workingDay, String note);
 
         void closeOpenBranch(String token, String branchID, String newStatus);
+
+        void getAccount(String token, String accountID);
+
+        void getEmployeeInfo(String token, String accountID, Account account);
 
         }
 }

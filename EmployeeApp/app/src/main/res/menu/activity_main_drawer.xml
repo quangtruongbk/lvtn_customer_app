@@ -19,7 +19,7 @@
         <item
             android:id="@+id/navData"
             android:icon="@drawable/data"
-            android:title="Dữ liệu và Thống kê" />
+            android:title="Thống kê và Dữ liệu" />
         <item
             android:id="@+id/navLogout"
             android:icon="@drawable/logout"

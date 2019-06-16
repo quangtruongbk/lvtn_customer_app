@@ -1,13 +1,17 @@
 package com.example.administrator.employeeapp.Presenter;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.administrator.employeeapp.CallAPI.APIClient;
 import com.example.administrator.employeeapp.CallAPI.RetrofitInterface;
 import com.example.administrator.employeeapp.Contract.HomeContract;
 import com.example.administrator.employeeapp.Model.Account;
 import com.example.administrator.employeeapp.Model.Branch;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Model.SupportedModel.Address;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -15,10 +19,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class HomePresenter implements HomeContract.Presenter {
     private RetrofitInterface callAPIService;
     private HomeContract.View mView;
     private Account account;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     public HomePresenter(@NonNull HomeContract.View mView, Account account) {
         this.mView = mView;
@@ -168,5 +176,72 @@ public class HomePresenter implements HomeContract.Presenter {
                 }
             });
         }
+    }
+
+    /***************************************************
+     Function: getAccount
+     Creator: Quang Truong
+     Description: Update newest Account Information
+     *************************************************/
+    @Override
+    public void getAccount(String token, String accountID) {
+        callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+        callAPIService.getAccount(token, accountID).enqueue(new Callback<Account>() {
+            @Override
+            public void onResponse(Call<Account> call, Response<Account> response) {
+                if (response.code() == 200) {
+                    if (response.body() != null) {
+                        account = response.body();
+                        getEmployeeInfo(account.getToken(), account.getId(), account);
+                    }
+                } else if (response.code() == 500) {
+                    mView.hideProgressBar();
+                    mView.showDialog("Lấy dữ liệu tài khoản thất bại do lỗi hệ thống", false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Account> call, Throwable t) {
+                t.printStackTrace();
+                mView.hideProgressBar();
+                mView.showDialog("Kết nối với máy chủ thất bại", false);
+            }
+        });
+    }
+
+    /***************************************************
+     Function: getEmployeeInfo
+     Creator: Quang Truong
+     Description: Get Information of an employee
+     *************************************************/
+    @Override
+    public void getEmployeeInfo(String token, String accountID, final Account account) {
+        callAPIService = APIClient.getClient().create(RetrofitInterface.class);
+        callAPIService.getEmployeeInfo(token, accountID).enqueue(new Callback<Employee>() {
+            @Override
+            public void onResponse(Call<Employee> call, Response<Employee> response) {
+                if (response.code() == 200) {
+                    mView.hideProgressBar();
+                    if (response.body() != null) {
+                        Employee employee;
+                        employee = response.body();
+                        if (employee != null && account != null) {
+                            mView.updateEmployeeAccount(account, employee);
+                        }
+                        Log.d("6abc", "Account String done" + account.getName());
+
+                    }
+                } else if (response.code() == 500) {
+                    mView.showDialog("Lấy dữ liệu về quyền và vai trò của tài khoản thất bại do lỗi hệ thống", false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Employee> call, Throwable t) {
+                t.printStackTrace();
+                mView.hideProgressBar();
+                mView.showDialog("Kết nối với máy chủ thất bại", false);
+            }
+        });
     }
 }

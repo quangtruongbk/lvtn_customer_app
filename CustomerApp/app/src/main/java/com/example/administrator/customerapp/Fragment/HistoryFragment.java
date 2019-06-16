@@ -139,7 +139,6 @@ public class HistoryFragment extends Fragment implements HistoryContract.View{
 
     @Override
     public void setUpAdapter(ArrayList<History> historyRequest){
-        for(int i = 0; i < historyRequest.size(); i++) Log.d("1abc", "history: " + historyRequest.get(i).getCustomerName());
         if(historyRequest != null && account!=null) historyAdapter = new HistoryAdapter(historyRequest, getActivity(), historyPresenter, account);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -178,7 +177,7 @@ public class HistoryFragment extends Fragment implements HistoryContract.View{
         statusTxt.setText("Trạng thái: " + history.getStatus()); //Bo sung status
         branchNameTxt.setText("Cơ sở: " + history.getBranchName());
         queueNameTxt.setText("Hàng đợi: " + history.getQueueName());
-        startTimeTxt.setText("Thời gian băt đầu: " + history.getStartTime());
+        startTimeTxt.setText("Thời gian bắt đầu: " + history.getStartTime());
         endTimeTxt.setText("Thời gian kết thúc: " + history.getEndTime());
         waitingScoreTxt.setText("Điểm thời gian chờ đợi: " + review.getWaitingScore());
         serviceScoreTxt.setText("Điểm phục vụ: " + review.getServiceScore());

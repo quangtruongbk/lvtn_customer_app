@@ -65,10 +65,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         holder.branchRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("1abc", "Vi Tri: " + Integer.toString(position));
                 Bundle args = new Bundle();
-                Log.d("1abc", "BranchID: " + branchList.get(position).getId());
-                Log.d("1abc", "BranchID: " + branchList.get(position).getName());
                 args.putString("branchID", branchList.get(position).getId());
                 args.putString("branchName", branchList.get(position).getName());
                 QueueFragment queueFragment = new QueueFragment();

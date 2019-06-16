@@ -20,9 +20,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textStyle="bold"
+                android:textColor="@color/colorLightOrange"
                 android:textSize="20dp"
-                android:textColor="@color/colorLightOrange"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -267,7 +267,7 @@
                         android:id="@+id/noOfInLineTimeTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="XXXXX"
+                        android:text=""
                         android:textAlignment="center"
                         android:textColor="@color/colorBlue"
                         android:textSize="25dp"
@@ -309,7 +309,7 @@
                         android:id="@+id/usingTimeTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="XXXXX"
+                        android:text=""
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="25dp"
@@ -322,17 +322,15 @@
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_marginTop = "10dp"
-                android:layout_marginBottom = "10dp"
-                />
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/piechart"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_marginTop = "10dp"
-                android:layout_marginBottom = "10dp"
-                />
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -359,8 +357,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:background="@color/colorWhite"
+                    android:orientation="vertical"
                     android:padding="10dp">
 
                     <TextView
@@ -372,7 +370,9 @@
                     <RatingBar
                         android:id="@+id/waitingScoreBar"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:secondaryProgressTint="#00000000"
+                        android:stepSize="0.1" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -383,7 +383,9 @@
                     <RatingBar
                         android:id="@+id/serviceScoreBar"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:secondaryProgressTint="#00000000"
+                        android:stepSize="0.1" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -394,7 +396,9 @@
                     <RatingBar
                         android:id="@+id/spaceScoreBar"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:secondaryProgressTint="#00000000"
+                        android:stepSize="0.1" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -405,9 +409,9 @@
                 android:layout_margin="10dp"
                 android:text="Đánh giá"
                 android:textAlignment="center"
-                android:textStyle="italic"
                 android:textColor="@color/colorLightOrange"
-                android:textSize="25dp" />
+                android:textSize="25dp"
+                android:textStyle="italic" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/reviewRecyclerView"
@@ -420,9 +424,9 @@
                 android:layout_margin="10dp"
                 android:text="Xem dữ liệu chi tiết từng hàng đợi"
                 android:textAlignment="center"
-                android:textStyle="italic"
                 android:textColor="@color/colorLightOrange"
-                android:textSize="25dp" />
+                android:textSize="25dp"
+                android:textStyle="italic" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/queueRecyclerView"

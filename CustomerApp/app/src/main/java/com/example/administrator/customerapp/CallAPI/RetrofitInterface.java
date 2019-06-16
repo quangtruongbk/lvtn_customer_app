@@ -49,6 +49,8 @@ public interface RetrofitInterface {
     @GET("queuerequest/ongoing?")
     Call<SpecificQueueRequest> getCurrrentQueueRequest(@Header("token") String token, @Query("accountid") String accountID);
 
+    @GET("queuerequest/using?")
+    Call<ArrayList<SpecificQueueRequest>> getUsingQueueRequest(@Header("token") String token, @Query("accountid") String accountID);
 
     @GET("queuerequest/fromemailphone?")
     Call<ArrayList<SpecificQueueRequest>> getRequestFromEmailPhone(@Header("token") String token,@Query("accountid") String accountID, @Query("customeremail") String email, @Query("customerphone") String phone);

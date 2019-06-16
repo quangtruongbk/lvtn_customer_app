@@ -20,7 +20,7 @@
         android:layout_width="0px"
         android:layout_height="match_parent"
         android:layout_marginRight="5dp"
-        android:layout_weight="0.2"
+        android:layout_weight="0.15"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -28,7 +28,7 @@
             android:id="@+id/STTTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="9999"
+            android:text="999"
             android:textColor="#ff0000"
             android:textSize="25dp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
         android:id="@+id/infoLayout"
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:layout_weight="0.75"
+        android:layout_weight="0.7"
         android:orientation="vertical">
 
         <TextView
@@ -78,6 +78,26 @@
             android:textSize="16dp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cancelLayout"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible">
+        <TextView
+            android:id="@+id/cancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff0000"
+            android:text="X"
+            android:textSize="40dp"
+            android:clickable="true"/>
+    </LinearLayout>
+
+
     <LinearLayout
         android:id="@+id/moreLayout"
         android:layout_width="0px"

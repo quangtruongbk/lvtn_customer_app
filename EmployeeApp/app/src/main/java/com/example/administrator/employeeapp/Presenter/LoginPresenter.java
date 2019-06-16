@@ -86,7 +86,6 @@ public class LoginPresenter implements LoginContract.Presenter {
         } else {
             String accountID = account.getId();
             String email = account.getEmail();
-            Log.d("1abc", "AccountID: " + accountID);
             callAPIService = APIClient.getClient().create(RetrofitInterface.class);
             callAPIService.resendVerifyEmail(accountID, email).enqueue(new Callback<Void>() {
                 @Override

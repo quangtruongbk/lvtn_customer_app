@@ -102,7 +102,6 @@
                 android:backgroundTint="@color/colorOrange"
                 android:drawablePadding="15dp"
                 android:padding="8dp"
-                android:textColor="@color/colorOrange"
                 android:textColorHint="@color/colorOrange" />
 
             <Button

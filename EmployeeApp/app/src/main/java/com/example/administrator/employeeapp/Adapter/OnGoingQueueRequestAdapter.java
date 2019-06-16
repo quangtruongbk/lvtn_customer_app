@@ -66,7 +66,6 @@ public class OnGoingQueueRequestAdapter extends RecyclerView.Adapter<OnGoingQueu
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.checkoutCustomerBtn:
-                                Log.d("6abc", "queueRequestList.get(position).getId()" + queueRequestList.get(position).getId());
                                 queueRequestPresenter.checkInOut(account.getToken(), queueRequestList.get(position).getId(), "1");
                                 return true;
                             default:

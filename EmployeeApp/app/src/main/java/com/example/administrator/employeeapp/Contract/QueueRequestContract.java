@@ -29,6 +29,7 @@ public interface QueueRequestContract {
         void createQueueRequest(String token, String accountID, String queueID, String name, String phone, String email);
         void cancelQueueRequest(String token, String queueID, String queueRequestID);
         void editQueueRequest(String token, String queueRequestID, String name, String phone, String email);
+        void addTime(String token, String queueID, String addTime, String type);
         void disconnectSocket(Emitter.Listener onQueueChange);
         void listeningSocket(Emitter.Listener onQueueChange);
     }

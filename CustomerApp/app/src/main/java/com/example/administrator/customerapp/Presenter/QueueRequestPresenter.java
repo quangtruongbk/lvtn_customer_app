@@ -82,7 +82,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
      *************************************************/
     @Override
     public void createQueueRequest(String token, String accountID, final String queueID, String name, String phone, String email) {
-        Log.d("6abc", "createQueueRequest");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.createQueueRequest(token, accountID, queueID, name, phone, email).enqueue(new Callback<ResponseBody>() {
@@ -129,7 +128,6 @@ public class QueueRequestPresenter implements QueueRequestContract.Presenter {
      *************************************************/
     @Override
     public void editQueueRequest(String token, String queueRequestID, String name, String phone, String email) {
-        Log.d("6abc", "editQueueRequest");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.editQueueRequest(token, queueRequestID, name, phone, email).enqueue(new Callback<Void>() {

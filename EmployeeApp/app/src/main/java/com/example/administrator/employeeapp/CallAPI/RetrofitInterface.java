@@ -58,6 +58,10 @@ public interface RetrofitInterface {
     @PUT("/queuerequest/edit")
     Call<Void> editQueueRequest(@Header("token") String token, @Field("queuerequestid")String queueRequestID, @Field("customername")String name, @Field("customerphone")String phone, @Field("customeremail")String email);
 
+    @FormUrlEncoded
+    @PUT("/queuerequest/addtime")
+    Call<Void> addTimeQueueRequest(@Header("token") String token, @Field("queueid")String queueID, @Field("time")String addTime, @Field("addtype")String type);
+
     @GET("history/accountid={accountID}/json")
     Call<ArrayList<History>> getHistory(@Header("token") String token, @Path("accountID") String accountID);
 

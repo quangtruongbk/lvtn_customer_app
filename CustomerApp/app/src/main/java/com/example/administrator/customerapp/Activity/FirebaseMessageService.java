@@ -125,6 +125,19 @@ public class FirebaseMessageService extends FirebaseMessagingService {
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.notify(0, builder.build());
+        }else if (data.get("type").equals("addtime")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                    PendingIntent.FLAG_ONE_SHOT);
+            createNotificationChannel();
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "6abc")
+                    .setSmallIcon(R.drawable.queue)
+                    .setContentTitle("Thay đổi ở hàng đợi")
+                    .setContentText("Hàng đợi đã có sự thay đổi ở thời gian chờ đợi. Xin hãy chú ý theo dõi!")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(0, builder.build());
         }
     }
 

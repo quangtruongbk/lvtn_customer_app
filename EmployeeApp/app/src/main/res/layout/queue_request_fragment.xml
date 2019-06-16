@@ -27,7 +27,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorLightYellow"
+                android:background="@color/colorBackgroundBlue"
                 android:orientation="vertical"
                 android:paddingBottom="10dp"
                 android:paddingTop="5dp">
@@ -99,7 +99,7 @@
                 android:id="@+id/queueRequestRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"></android.support.v7.widget.RecyclerView>
+                android:layout_marginBottom="60dp"></android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
 
@@ -116,6 +116,18 @@
         app:fabSize="normal"
         app:layout_anchor="@+id/linearLayout"
         app:layout_anchorGravity="bottom|right|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addTimeFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/math"
+        app:backgroundTint="@color/colorGreen"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/linearLayout"
+        app:layout_anchorGravity="bottom|center" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/qrFab"

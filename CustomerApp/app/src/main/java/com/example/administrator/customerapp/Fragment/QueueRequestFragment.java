@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -45,6 +46,9 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -77,7 +81,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private Activity mActivity;
     private CountDownTimer countDownTimer;
     private Socket mSocket;
-
     {
         try {
             //  mSocket = IO.socket("http://192.168.1.9:3000");
@@ -108,7 +111,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         queueName = getArguments().getString("queueName");
         queueRequestPresenter = new QueueRequestPresenter(this, mSocket, queueID);
         if (queueID != null) {
-            Log.d("1abc", queueID);
             queueRequestPresenter.getQueueRequestFromServer(queueID);
         }
 
@@ -142,14 +144,12 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("7abc", "onDestroy");
         queueRequestPresenter.disconnectSocket(onQueueChange);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("7abc", "onResume");
         if (!mSocket.connected()) {
             queueRequestPresenter.listeningSocket(onQueueChange);
             mSocket.on("onQueueChange", onQueueChange);
@@ -221,7 +221,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         if (waitingDialog != null) {
             if (waitingDialog.isShowing()) waitingDialog.dismiss();
         }
-        Log.d("6abc", "Hide progress bar");
     }
 
     @Override
@@ -231,18 +230,25 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             queueRequestAdapter = new QueueRequestAdapter(queueRequest, mActivity, queueRequestPresenter, account);
             for (int i = 0; i < queueRequest.size(); i++) {
                 if (queueRequest.get(i).getAccountID().equals(account.getId())) {
-                    Log.d("6abc", "equals: " + account.getId());
+                    break;
+                } else {
+                    if ((i == queueRequest.size() - 1) && timeCountDownLinear.getVisibility() == View.VISIBLE) {
+                        hideCountDown();
+                        timeCountDownLinear.setVisibility(View.GONE);
+                        refreshFragment();
+                    }
+                }
+            }
+            for (int i = 0; i < queueRequest.size(); i++) {
+                if (queueRequest.get(i).getAccountID().equals(account.getId())) {
                     timeCountDownLinear.setVisibility(View.VISIBLE);
                     long distance = 0;
                     distance = queueRequest.get(i).getExpiredDate() - System.currentTimeMillis();
-                    Log.d("6abc", "distance truoc if: " + distance);
                     if (distance > 0) {
-                        Log.d("6abc", "distance: " + distance / 1000 / 60);
                         countDownTimer = new CountDownTimer(distance, 1000) {
 
                             public void onTick(long millisUntilFinished) {
-                                Log.d("6abc", "millisUntilFinished: " + millisUntilFinished);
-                                timeCountDownTxt.setText("" + ((millisUntilFinished - millisUntilFinished % 60) / 60 / 1000));
+                                timeCountDownTxt.setText("" + ((millisUntilFinished - millisUntilFinished % 60) / 60 / 1000 + 1));
                             }
 
                             public void onFinish() {
@@ -267,7 +273,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
-            Log.d("6abc", "cancel");
         }
         timeCountDownLinear.setVisibility(View.INVISIBLE);
     }
@@ -327,7 +332,18 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    queueRequestPresenter.getQueueRequestFromServer(queueID);
+                    JSONObject data = (JSONObject) args[0];
+                    String message;
+                    try {
+                        message = data.getString("data");
+                    } catch (JSONException e) {
+                        return;
+                    }
+                    if(data != null && data.equals("Add time")){
+                        refreshFragment();
+                    }else {
+                        queueRequestPresenter.getQueueRequestFromServer(queueID);
+                    }
                 }
             });
         }
@@ -342,6 +358,15 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         QueueRequestFragment queueRequestFragment = new QueueRequestFragment();
         queueRequestFragment.setArguments(args);
         this.getFragmentManager().beginTransaction().replace(R.id.frameFragment, queueRequestFragment).addToBackStack(null).commit();
+    }
 
+    public void refreshFragment2(){
+        Bundle args = new Bundle();
+        args.putString("queueName", queueName);
+        args.putString("queueID", queueID);
+        args.putString("branchName", branchName);
+        QueueRequestFragment queueRequestFragment = new QueueRequestFragment();
+        queueRequestFragment.setArguments(args);
+        this.getFragmentManager().beginTransaction().remove(this).replace(R.id.frameFragment, queueRequestFragment).addToBackStack(null).commit();
     }
 }

@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.example.administrator.employeeapp.CallAPI.APIClient;
 import com.example.administrator.employeeapp.CallAPI.RetrofitInterface;
 import com.example.administrator.employeeapp.Contract.QueueRequestContract;
 import com.example.administrator.employeeapp.Model.Account;
+import com.example.administrator.employeeapp.Model.Employee;
 import com.example.administrator.employeeapp.Model.QueueRequest;
 import com.example.administrator.employeeapp.Presenter.QueueRequestPresenter;
 import com.example.administrator.employeeapp.R;
@@ -64,20 +66,26 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     private QueueRequestContract.Presenter queueRequestPresenter;
     private AlertDialog waitingDialog;
     private AlertDialog.Builder waitingDialogBuilder;
+    private AlertDialog.Builder addTimeDialogBuilder;
     private AlertDialog.Builder noticeDialog;
     private AlertDialog createQueueRequestDialog;
+    private AlertDialog addTimeDialog;
     private AlertDialog.Builder createQueueRequestDialogBuilder;
     private FloatingActionButton createQueueRequestFab;
     private FloatingActionButton qrFab;
+    private FloatingActionButton addTimeFab;
     private SharedPreferences sharedPreferences;
     private Account account;
     private String queueID;
+    private String branchID;
     private Socket mSocket;
     protected Activity mActivity;
+    private Employee employee;
+
     {
         try {
-         //   mSocket = IO.socket("http://192.168.1.6:3000");
-            mSocket = IO.socket(GetIP.IP+":3000");
+            //   mSocket = IO.socket("http://192.168.1.6:3000");
+            mSocket = IO.socket(GetIP.IP + ":3000");
         } catch (URISyntaxException e) {
             Log.d("5abc", e.toString());
         }
@@ -96,17 +104,18 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         ongoingQueueRequestRecyclerView = (RecyclerView) view.findViewById(R.id.onGoingQueueRequestRecyclerView);
         createQueueRequestFab = (FloatingActionButton) view.findViewById(R.id.createQueueRequestFab);
         qrFab = (FloatingActionButton) view.findViewById(R.id.qrFab);
+        addTimeFab = (FloatingActionButton) view.findViewById(R.id.addTimeFab);
         numberOfPeopleTxt = (TextView) view.findViewById(R.id.numberOfPeopleTxt);
         pathTxt = (TextView) view.findViewById(R.id.pathTxt);
         queueID = getArguments().getString("queueID");
         assignDialog();
         queueRequestPresenter = new QueueRequestPresenter(this, mSocket, queueID);
         if (queueID != null) {
-            Log.d("6abc", "Before getQueueRequestFromServer: " + queueID);
             queueRequestPresenter.getQueueRequestFromServer(queueID);
         }
         String branchName = getArguments().getString("branchName");
         String queueName = getArguments().getString("queueName");
+        branchID = getArguments().getString("branchID");
         if (branchName != null && queueName != null) {
             pathTxt.setText(branchName + " > " + queueName);
         }
@@ -118,10 +127,31 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
             account = gson.fromJson(accountString, Account.class);
         }
 
+        String employeeString = sharedPreferences.getString("Employee", "empty");
+        employee = new Employee();
+        if (!employeeString.equals("empty")) {
+            employee = gson.fromJson(employeeString, Employee.class);
+        }
+
+        if(employee != null){
+            if(!employee.getRole().checkControlQueue(branchID)){
+                createQueueRequestFab.setVisibility(View.GONE);
+                addTimeFab.setVisibility(View.GONE);
+                qrFab.setVisibility(View.GONE);
+            }
+        }
+
         createQueueRequestFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showCreateQueueRequestDialog();
+            }
+        });
+
+        addTimeFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddTimeDialog();
             }
         });
 
@@ -131,6 +161,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                 IntentIntegrator.forSupportFragment(QueueRequestFragment.this).initiateScan();
             }
         });
+
         queueRequestPresenter.listeningSocket(onQueueChange);
         mSocket.on("onQueueChange", onQueueChange);
 
@@ -141,11 +172,13 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         String qrcode = result.getContents();
-        if(qrcode!=null){
-            Log.d("6abc", "QR Code: " + qrcode);
+        if (qrcode != null) {
+            if (!mSocket.connected()) {
+                queueRequestPresenter.listeningSocket(onQueueChange);
+                mSocket.on("onQueueChange", onQueueChange);
+            }
             queueRequestPresenter.checkInOutByQR(account.getToken(), qrcode, queueRequestArrayList, ongoingQueueRequestArrayList);
-        }
-        else showDialog("Không quét được QR Code", false);
+        } else showDialog("Không quét được QR Code", false);
     }
 
     @Override
@@ -166,8 +199,8 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof Activity){
-            mActivity =(Activity) context;
+        if (context instanceof Activity) {
+            mActivity = (Activity) context;
         }
     }
 
@@ -178,10 +211,11 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     }
 
     private void assignDialog() {
-        noticeDialog = new AlertDialog.Builder(getActivity());
-        waitingDialogBuilder = new AlertDialog.Builder(getActivity());
-        createQueueRequestDialogBuilder = new AlertDialog.Builder(getActivity());
+        noticeDialog = new AlertDialog.Builder(mActivity);
+        waitingDialogBuilder = new AlertDialog.Builder(mActivity);
+        createQueueRequestDialogBuilder = new AlertDialog.Builder(mActivity);
         waitingDialog = waitingDialogBuilder.create();
+        addTimeDialogBuilder = new AlertDialog.Builder(mActivity);
     }
 
     @Override
@@ -240,7 +274,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
         queueRequestArrayList = queueRequest;
         if (queueRequest != null && account != null) {
             numberOfPeopleTxt.setText(Integer.toString(queueRequest.size()));
-            queueRequestAdapter = new QueueRequestAdapter(queueRequest, queueRequestPresenter, mActivity, account);
+            queueRequestAdapter = new QueueRequestAdapter(queueRequest, queueRequestPresenter, mActivity, account, employee, branchID);
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -253,7 +287,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
     public void setUpOnGoingRequestAdapter(ArrayList<QueueRequest> queueRequest) {
         ongoingQueueRequestArrayList = queueRequest;
         if (queueRequest != null && account != null) {
-            Log.d("6abc", "onGoingQueueRequestRecyclerView " + queueRequest.size());
             ongoingQueueRequestAdapter = new OnGoingQueueRequestAdapter(queueRequest, queueRequestPresenter, getActivity(), account);
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -289,7 +322,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                     emailTxt.setError("Bạn phải điền ít nhất một trong 2 số điện thoại hoặc email");
                     validFlag = false;
                 } else {
-                    if(!TextUtils.isEmpty(email) || !email.equals("")) {
+                    if (!TextUtils.isEmpty(email) || !email.equals("")) {
                         Pattern emailP = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
                         Matcher emailM = emailP.matcher(email);
                         boolean emailB = emailM.find();
@@ -301,7 +334,7 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                         }
                     }
 
-                    if(!TextUtils.isEmpty(phone) || !phone.equals("")) {
+                    if (!TextUtils.isEmpty(phone) || !phone.equals("")) {
                         Pattern phoneP = Pattern.compile("[0-9]{8,15}$");
                         Matcher phoneM = phoneP.matcher(phone);
                         boolean phoneB = phoneM.find();
@@ -323,13 +356,55 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                     nameTxt.setError(null);
                 }
 
-                if (validFlag == true){
+                if (validFlag == true) {
                     queueRequestPresenter.createQueueRequest(account.getToken(), account.getId(), queueID, name, phone, email);
-                    if(createQueueRequestDialog.isShowing()) createQueueRequestDialog.dismiss();
+                    if (createQueueRequestDialog.isShowing()) createQueueRequestDialog.dismiss();
                 }
             }
         });
     }
+
+    public void showAddTimeDialog() {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.add_time_queue_dialog, null);
+        addTimeDialogBuilder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                addTimeDialog.dismiss();
+            }
+        });
+        addTimeDialogBuilder.setView(v);
+        addTimeDialog = addTimeDialogBuilder.show();
+        final EditText addTimeTxt = (EditText) v.findViewById(R.id.addTimeTxt);
+        final RadioButton addBtn = (RadioButton) v.findViewById(R.id.addTimeButton);
+        final RadioButton subtractBtn = (RadioButton) v.findViewById(R.id.substractTimeButton);
+        Button addTimeBtn = (Button) v.findViewById(R.id.addTimeBtn);
+        addTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean validFlag = true;
+                String time = addTimeTxt.getText().toString().trim();
+                String type = "+";
+                if(addBtn.isChecked()) type="+";
+                else if(subtractBtn.isChecked()) type="-";
+                if (!TextUtils.isEmpty(time) || !time.equals("")) {
+                    Pattern timeP = Pattern.compile("^[0-9]*$");
+                    Matcher timeM = timeP.matcher(time);
+                    boolean timeB = timeM.find();
+                    if (!timeB) {
+                        addTimeTxt.setError("Thời gian không đúng định dạng hoặc bị để trống");
+                        validFlag = false;
+                    } else {
+                        addTimeTxt.setError(null);
+                    }
+                }
+                if (validFlag == true) {
+                    queueRequestPresenter.addTime(account.getToken(), queueID, time, type);
+                    if (addTimeDialog.isShowing()) addTimeDialog.dismiss();
+                }
+            }
+        });
+    }
+
 
     private Emitter.Listener onQueueChange = new Emitter.Listener() {
         @Override
@@ -338,7 +413,6 @@ public class QueueRequestFragment extends Fragment implements QueueRequestContra
                 @Override
                 public void run() {
                     queueRequestPresenter.getQueueRequestFromServer(queueID);
-                    Log.d("6abc", "On queue change");
                 }
             });
         }

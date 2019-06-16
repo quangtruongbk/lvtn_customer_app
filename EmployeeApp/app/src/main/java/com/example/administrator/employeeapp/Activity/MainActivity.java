@@ -58,9 +58,11 @@ public class MainActivity extends AppCompatActivity
 
         //Get Account Infomation
         sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+
         String accountString = sharedPreferences.getString("MyAccount", "empty");
         Gson gson = new Gson();
         account = new Account();
+
         if(!accountString.equals("empty")) {
             account = gson.fromJson(accountString, Account.class);
         }
@@ -140,7 +142,6 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         FragmentTransaction fragmentTransaction = framentManager.beginTransaction();
-        Log.d("1abc", "ID: " + id);
 
         if (id == R.id.navHome) {
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);

@@ -36,7 +36,6 @@ public class MyMarkerView extends MarkerView {
             tvContent.setText("" + Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
             Calendar calendar = Calendar.getInstance();
-            Log.d("6abc", "Date: " + calendar.get(Calendar.DATE));
             calendar.add(Calendar.DATE,  -(day - Math.round(e.getX()) - 1));
             Integer month = calendar.get(Calendar.MONTH)+1;
             tvContent.setText("" + Utils.formatNumber(e.getY(), 0, true) + ", ngày: " + calendar.get(Calendar.DAY_OF_MONTH) + "/"+month);

@@ -39,11 +39,9 @@ public class BranchStatisticPresenter implements BranchStatisticContract.Present
             @Override
             public void onResponse(Call<Statistic> call, Response<Statistic> response) {
                 mView.hideProgressBar();
-                Log.d("6abc", "After Get branch statistic" + response.code());
                 if(response.code() == 200) {
                     Statistic statistic = new Statistic();
                     statistic = response.body();
-                    Log.d("6abc", statistic.getNoOfDone().toString());
                     if(statistic!=null) {
                         mView.renderPieChart(statistic);
                         mView.renderLineChart(statistic);

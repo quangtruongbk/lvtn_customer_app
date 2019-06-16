@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity
             account = gson.fromJson(accountString, Account.class);
         }
         editor = sharedPreferences.edit();
-        Log.d("1abc", "Token: " + account.getId() + account.getName() + " " + account.getToken());
         mainActivityPresenter = new MainActivityPresenter(this, this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         FragmentTransaction fragmentTransaction = framentManager.beginTransaction();
-        Log.d("1abc", "ID: " + id);
 
         if (id == R.id.navHome) {
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);

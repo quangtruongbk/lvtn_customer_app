@@ -49,7 +49,6 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
         callAPIService.changeInfo(token, accountID, name, phone).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("6abc", "Change info" + response.code());
                 mView.hideProgressBar();
                 if (response.code() == 200) {
                     mView.showDialog("Cập nhật thông tin tài khoản thành công!", true);
@@ -72,7 +71,6 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("6abc", "Change info onfailure");
                 mView.hideProgressBar();
                 t.printStackTrace();
                 mView.showDialog("Không thể kết nối được với máy chủ!", false);
@@ -88,13 +86,11 @@ public class MyAccountPresenter implements MyAccountContract.Presenter {
     @Override
     public void changePassword(String token, String accountID, String oldPassword, String newPassword) {
         mView.showProgressBar();
-        Log.d("6abc","accountID : " + accountID);
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.changePassword(token, accountID, oldPassword, newPassword).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 mView.hideProgressBar();
-                Log.d("6abc", "changePassword: " + response.code());
                 if (response.code() == 200) {
                     mView.showDialog("Cập nhật mật khẩu thành công!", true);
                     mView.openMainActivity();

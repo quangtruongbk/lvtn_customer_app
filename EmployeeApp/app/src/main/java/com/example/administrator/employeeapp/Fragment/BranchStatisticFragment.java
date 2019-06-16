@@ -42,6 +42,7 @@ import com.example.administrator.employeeapp.Model.Statistic;
 import com.example.administrator.employeeapp.Presenter.BranchStatisticPresenter;
 import com.example.administrator.employeeapp.Presenter.QueuePresenter;
 import com.example.administrator.employeeapp.R;
+import com.example.administrator.employeeapp.Utils.CustomPercentFormatter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -55,10 +56,13 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
@@ -204,6 +208,7 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
             }
         }
     }
+
     @Override
     public void hideProgressBar() {
         waitingDialog.dismiss();
@@ -249,6 +254,10 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
         waitingScoreBar.setRating(statistic.getWaitingScore().floatValue());
         serviceScoreBar.setRating(statistic.getServiceScore().floatValue());
         spaceScoreBar.setRating(statistic.getSpaceScore().floatValue());
+        Log.d("6abc", "statistic.getWaitingScore().floatValue(): " + statistic.getWaitingScore().floatValue() + " " + statistic.getServiceScore().floatValue() + " " + statistic.getSpaceScore().floatValue());
+        waitingScoreBar.setIsIndicator(true);
+        serviceScoreBar.setIsIndicator(true);
+        spaceScoreBar.setIsIndicator(true);
     }
 
     @Override
@@ -294,10 +303,10 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
 
         LineDataSet lineDataSet2 = new LineDataSet(noOfDone, "Hoàn thành");
         lineDataSet2.setAxisDependency(YAxis.AxisDependency.LEFT);
-        lineDataSet2.setColors(Color.rgb(80,220,100));
+        lineDataSet2.setColors(Color.rgb(80, 220, 100));
         lineDataSet2.setLineWidth(3);
         lineDataSet2.setHighlightEnabled(true);
-        lineDataSet2.setCircleColor(Color.rgb(80,220,100));
+        lineDataSet2.setCircleColor(Color.rgb(80, 220, 100));
         lineDataSet2.setCircleRadius(6);
         lineDataSet2.setCircleHoleRadius(3);
         lineDataSet2.setDrawHighlightIndicators(true);
@@ -321,10 +330,10 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
 
         LineDataSet lineDataSet3 = new LineDataSet(noOfCancel, "Hủy");
         lineDataSet3.setAxisDependency(YAxis.AxisDependency.LEFT);
-        lineDataSet3.setColors(Color.rgb(255,223,0));
+        lineDataSet3.setColors(Color.rgb(255, 223, 0));
         lineDataSet3.setLineWidth(3);
         lineDataSet3.setHighlightEnabled(true);
-        lineDataSet3.setCircleColor(Color.rgb(255,223,0));
+        lineDataSet3.setCircleColor(Color.rgb(255, 223, 0));
         lineDataSet3.setCircleRadius(6);
         lineDataSet3.setCircleHoleRadius(3);
         lineDataSet3.setDrawHighlightIndicators(true);
@@ -354,7 +363,7 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
         xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
         xAxis.setCenterAxisLabels(false);
-     //   xAxis.setDrawGridLines(true);
+        //   xAxis.setDrawGridLines(true);
         xAxis.setTextColor(Color.BLACK);
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
         xAxis.setDrawLabels(false);
@@ -363,6 +372,17 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
         YAxis rightAxis = lineChart.getAxisRight();
         rightAxis.setTextColor(Color.BLACK);
 
+        Legend l = lineChart.getLegend();
+
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setWordWrapEnabled(true);
+        l.setDrawInside(false);
+        l.setTextSize(12f);
+        l.setStackSpace(5f);
+        l.setXEntrySpace(25f);
+        l.setYOffset(20f);
     }
 
     @Override
@@ -375,9 +395,9 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
         yvalues.add(new PieEntry(statistic.getNoOfWaiting(), "Còn chờ"));
         PieDataSet dataSet = new PieDataSet(yvalues, null);
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
+        data.setValueFormatter(new CustomPercentFormatter());
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        data.setValueTextSize(13f);
+        data.setValueTextSize(17f);
         data.setValueTextColor(Color.DKGRAY);
         pieChart.setData(data);
         pieChart.notifyDataSetChanged();
@@ -387,6 +407,19 @@ public class BranchStatisticFragment extends Fragment implements BranchStatistic
         pieChart.setTransparentCircleRadius(58f);
         pieChart.setDrawEntryLabels(false);
         pieChart.setHoleRadius(58f);
+        pieChart.getLegend().setTextSize(11f);
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+
+        l.setWordWrapEnabled(true);
+        l.setDrawInside(false);
+        l.setTextSize(13f);
+        l.setStackSpace(5f);
+        l.setYOffset(80f);
+        l.setXEntrySpace(20f);
 
     }
 }
+

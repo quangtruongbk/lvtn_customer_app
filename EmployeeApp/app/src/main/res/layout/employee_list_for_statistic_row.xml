@@ -35,18 +35,47 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/role"
+        android:id="@+id/controlQueueTxt"
         android:textSize="16dp"
-        android:text="Vai trò:"
+        android:text="Quản lý hàng đợi"
+        android:visibility="gone"
         android:layout_below="@+id/emailTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/roleTxt"
+        android:id="@+id/changeInfoQueueTxt"
         android:textSize="16dp"
-        android:text="Vai trò:"
-        android:layout_below="@+id/role"
+        android:text="Chỉnh sửa thông tin hàng đợi"
+        android:visibility="gone"
+        android:layout_below="@+id/controlQueueTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/createQueueTxt"
+        android:textSize="16dp"
+        android:text="Tạo hàng đợi"
+        android:visibility="gone"
+        android:layout_below="@+id/changeInfoQueueTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/changeInfoBranchTxt"
+        android:textSize="16dp"
+        android:text="Thay đổi thông tin cơ sở"
+        android:visibility="gone"
+        android:layout_below="@+id/createQueueTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/controlBranchTxt"
+        android:textSize="16dp"
+        android:text="Quản lý cả cơ sở"
+        android:visibility="gone"
+        android:layout_below="@+id/changeInfoBranchTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

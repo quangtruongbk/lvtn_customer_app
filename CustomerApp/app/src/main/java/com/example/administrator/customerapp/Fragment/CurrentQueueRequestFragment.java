@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.administrator.customerapp.Adapter.HistoryAdapter;
 import com.example.administrator.customerapp.Adapter.OtherQueueRequestAdapter;
+import com.example.administrator.customerapp.Adapter.UsingQueueRequestAdapter;
 import com.example.administrator.customerapp.CallAPI.APIClient;
 import com.example.administrator.customerapp.CallAPI.RetrofitInterface;
 import com.example.administrator.customerapp.Contract.CurrentQueueRequestContract;
@@ -63,6 +64,8 @@ public class CurrentQueueRequestFragment extends Fragment implements CurrentQueu
     private Button goToQueueBtn;
     private ImageView QRCodeImg;
     private LinearLayout currentQueueRequestLinearLayout;
+    private LinearLayout usingRequestLinear;
+    private RecyclerView usingRequestRecyclerView;
     private TextView noCurrentRequestTxt;
     private CurrentQueueRequestContract.Presenter currentQueueRequestPresenter;
     private AlertDialog waitingDialog;
@@ -75,6 +78,7 @@ public class CurrentQueueRequestFragment extends Fragment implements CurrentQueu
     private Account account;
     private SpecificQueueRequest specificQueueRequest;
     private OtherQueueRequestAdapter adapter;
+    private UsingQueueRequestAdapter usingAdapter;
     private Activity mActivity;
 
     @Nullable
@@ -98,7 +102,9 @@ public class CurrentQueueRequestFragment extends Fragment implements CurrentQueu
         currentQueueRequestLinearLayout = (LinearLayout) view.findViewById(R.id.currentQueueRequestLinearLayout);
         noCurrentRequestTxt = (TextView) view.findViewById(R.id.noCurrentRequestTxt);
         otherRequestLinear = (LinearLayout) view.findViewById(R.id.otherRequestLinear);
+        usingRequestLinear = (LinearLayout) view.findViewById(R.id.usingRequestLinear);
         otherRequestRecyclerView = (RecyclerView) view.findViewById(R.id.otherRequestRecyclerView);
+        usingRequestRecyclerView = (RecyclerView) view.findViewById(R.id.usingRequestRecyclerView);
         assignDialog();
         currentQueueRequestPresenter = new CurrentQueueRequestPresenter(this);
         sharedPreferences = this.getActivity().getSharedPreferences("data", MODE_PRIVATE);
@@ -225,9 +231,7 @@ public class CurrentQueueRequestFragment extends Fragment implements CurrentQueu
 
     @Override
     public void setUpAdapter(ArrayList<SpecificQueueRequest> specificQueueRequest){
-        for(int i = 0 ; i < specificQueueRequest.size(); i++)         Log.d("6abc", "Specific: " + specificQueueRequest.get(i).getCustomerName());
         if(specificQueueRequest != null && account!=null){
-            Log.d("6abc", "SET setVisibility");
             if(specificQueueRequest.size() > 0 ) otherRequestLinear.setVisibility(View.VISIBLE);
             adapter = new OtherQueueRequestAdapter(specificQueueRequest, getActivity(), currentQueueRequestPresenter, account);
         }
@@ -237,6 +241,20 @@ public class CurrentQueueRequestFragment extends Fragment implements CurrentQueu
         otherRequestRecyclerView.setAdapter(adapter);
         if(waitingDialog.isShowing()) waitingDialog.dismiss();
     }
+
+    @Override
+    public void setUpUsingAdapter(ArrayList<SpecificQueueRequest> specificQueueRequest){
+        if(specificQueueRequest != null && account!=null){
+            if(specificQueueRequest.size() > 0 ) usingRequestLinear.setVisibility(View.VISIBLE);
+            usingAdapter = new UsingQueueRequestAdapter(specificQueueRequest, getActivity(), currentQueueRequestPresenter, account);
+        }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        usingRequestRecyclerView.setLayoutManager(layoutManager);
+        usingRequestRecyclerView.setAdapter(usingAdapter);
+        if(waitingDialog.isShowing()) waitingDialog.dismiss();
+    }
+
 
     @Override
     public void resetFragment(){

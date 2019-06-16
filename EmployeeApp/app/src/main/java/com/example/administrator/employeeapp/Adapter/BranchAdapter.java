@@ -73,7 +73,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
     @Override
     public void onBindViewHolder(final RecyclerViewHolder holder, final int position) {
         holder.nameTxt.setText(branchList.get(position).getName());
-        Log.d("1abc", "địa chỉ" + branchList.get(position).getAddress().toString() + branchList.get(position).getAddress().getRest());
         holder.addressTxt.setText("Địa chỉ: " + branchList.get(position).getAddress().getRest() + ", " + branchList.get(position).getAddress().getWard() + ", " + branchList.get(position).getAddress().getDistrict() + ", " + branchList.get(position).getAddress().getCity());
         holder.phoneTxt.setText("Số điện thoại: " + branchList.get(position).getPhone().toString());
         if (branchList.get(position).getStatus().toString() != null) {
@@ -103,7 +102,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
         holder.branchRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("1abc", "Vi Tri: " + Integer.toString(position));
                 Bundle args = new Bundle();
                 args.putString("branchID", branchList.get(position).getId());
                 args.putString("branchName", branchList.get(position).getName());
@@ -146,7 +144,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                                 showChangeInfoBranchDialog(branchList.get(position));
                                 return true;
                             case R.id.closeBranchBtn:
-                                Log.d("6abc", branchList.get(position).getStatus());
                                 if (branchList.get(position).getStatus().equals("1"))
                                     homePresenter.closeOpenBranch(account.getToken(), branchList.get(position).getId(), "0");
                                 else if (branchList.get(position).getStatus().equals("0") || branchList.get(position).getStatus().equals("-1"))
@@ -261,12 +258,10 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                 ArrayList<String> cityID = new ArrayList<>();
                 cityID = getAddressHelper.getCityID();
                 citySpinner.setAdapter(cityAdapter);
-                Log.d("1abc", "branch.getAddress().getCity(): " + branch.getAddress().getCity());
 
                 //Start set current Spinner
                 if (branch.getAddress().getCity() != null) {
                     int spinnerPosition = cityAdapter.getPosition(branch.getAddress().getCity());
-                    Log.d("1abc", "citySpinner: " + spinnerPosition);
                     citySpinner.setSelection(spinnerPosition, false);
                 }
                 String currentCityID = "";
@@ -286,14 +281,12 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                 districtSpinner.setAdapter(districtAdapter);
                 if (branch.getAddress().getDistrict() != null) {
                     int spinnerPosition = districtAdapter.getPosition(branch.getAddress().getDistrict());
-                    Log.d("1abc", "districtSpinner: " + spinnerPosition);
                     districtSpinner.setSelection(spinnerPosition, false);
                 }
                 String currentDistrictID = "";
                 if (branch.getAddress().getDistrict() != null) {
                     currentDistrictID = database.getDistrictID(branch.getAddress().getDistrict());
                 }
-                Log.d("1abc", "currentDistrictID: " + currentDistrictID);
                 getAddressHelper2 = database.getWard(currentDistrictID);
                 ArrayList<String> wardName = new ArrayList<String>();
                 wardName = getAddressHelper2.getWardName();
@@ -306,7 +299,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
 
                 if (branch.getAddress().getWard() != null) {
                     int spinnerPosition = wardAdapter.getPosition(branch.getAddress().getWard());
-                    Log.d("1abc", "wardSpinner: " + spinnerPosition);
                     wardSpinner.setSelection(spinnerPosition);
                 }
                 final ArrayList<String> finalCityID = cityID;
@@ -315,7 +307,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         GetAddressHelper getAddressHelper2 = new GetAddressHelper();
                         getAddressHelper2 = database.getDistrict(finalCityID.get(position));
-                        Log.d("1abc", "finalCityID.get(position): " + finalCityID.get(position));
                         final ArrayList<String> districtName = getAddressHelper2.getDistrictName();
                         final ArrayList<String> districtID = getAddressHelper2.getDistrictID();
                         ArrayAdapter<String> districtAdapter = new ArrayAdapter<String>(
@@ -368,7 +359,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.RecyclerVi
             String openHourMinute = branch.getOpentime().split(":")[1];
             String closeHourHour = branch.getClosetime().split(":")[0];
             String closeHourMinute = branch.getClosetime().split(":")[1];
-            Log.d("2abc", openHourHour + " " + openHourHour + " " + closeHourHour + " " + closeHourMinute);
             if (android.os.Build.VERSION.SDK_INT >= 23) {
                 openHourTimePicker.setHour(Integer.parseInt(openHourHour));
                 openHourTimePicker.setMinute(Integer.parseInt(openHourMinute));

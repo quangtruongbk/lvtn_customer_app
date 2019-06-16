@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
@@ -62,7 +62,7 @@
         android:src="@drawable/filter"
         app:backgroundTint="@color/colorLightOrange"
         app:fabSize="normal"
-        app:layout_anchor="@+id/branchRecyclerView"
+        app:layout_anchor="@+id/linearLayout"
         app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>

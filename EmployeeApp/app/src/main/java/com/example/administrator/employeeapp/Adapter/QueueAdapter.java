@@ -78,6 +78,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.RecyclerView
                 args.putString("queueID", queueList.get(position).getId());
                 args.putString("queueName", queueList.get(position).getName());
                 args.putString("branchName", branchName);
+                args.putString("branchID", branchID);
                 QueueRequestFragment queueRequestFragment = new QueueRequestFragment();
                 queueRequestFragment.setArguments(args);
                 ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.frameFragment, queueRequestFragment).addToBackStack(null).commit();

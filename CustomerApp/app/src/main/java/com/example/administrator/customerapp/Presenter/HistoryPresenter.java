@@ -33,21 +33,15 @@ public class HistoryPresenter implements HistoryContract.Presenter {
      *************************************************/
     @Override
     public void getHistoryFromServer(String token, String accountID) {
-        Log.d("1abc", "getHistoryFromServer");
         mView.showProgressBar();
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.getHistory(token, accountID).enqueue(new Callback<ArrayList<History>>() {
             @Override
             public void onResponse(Call<ArrayList<History>> call, Response<ArrayList<History>> response) {
                 mView.hideProgressBar();
-                Log.d("1abc", "history responce: " + response.code());
                 if (response.code() == 200) {
                     ArrayList<History> newHistory = new ArrayList<History>();
                     newHistory = response.body();
-                    Log.d("1abc", "newHistory.size: " + newHistory.size());
-                    for (int i = 0; i < newHistory.size(); i++) {
-                        Log.d("1abc", newHistory.get(i).getBranchName() + newHistory.get(i).getCustomerName());
-                    }
                     if (newHistory != null) {
                         mView.setUpAdapter(newHistory);
                     }
@@ -102,17 +96,14 @@ public class HistoryPresenter implements HistoryContract.Presenter {
     @Override
     public void getReview(String queueRequestID, final Account account, final History history) {
         mView.showProgressBar();
-        Log.d("1abc", "getReview: " + queueRequestID);
         callAPIService = APIClient.getClient().create(RetrofitInterface.class);
         callAPIService.getReview(queueRequestID).enqueue(new Callback<Review>() {
             @Override
             public void onResponse(Call<Review> call, Response<Review> response) {
-                Log.d("1abc", "getReview SUCCESS");
                 mView.hideProgressBar();
                 if (response.code() == 200) {
                     Review newReview = new Review();
                     newReview = response.body();
-                    Log.d("1abc", "newReivew: " + newReview.getWaitingScore());
                     if (newReview != null) {
                         mView.showFullHistoryDialog(newReview, account, history);
                     }

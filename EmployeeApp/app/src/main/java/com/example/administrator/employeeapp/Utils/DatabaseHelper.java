@@ -30,7 +30,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.context = context;
         DB_PATH = "/data/data/"+context.getApplicationContext().getPackageName()+"/databases/";
         boolean dbexist = checkdatabase();
-        Log.d("1abc", "DB_PATH: " + DB_PATH);
         if(dbexist)
         {
         }
